@@ -1,48 +1,41 @@
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-
-public class Task implements Comparable<Object> {
+public class Task{
 	
-	String description;
-	Calendar start;
-	Calendar end;
+	private String description;
+	private transient Calendar start;
+	private transient Calendar end;
 	
-	public Task(int startYear, int startMonth, int startDate, int startHour, int startMin, int endYear, int endMonth, int endDate, int endHour, int endMin, String userDescription){
+	public Task(int startYear, int startMonth, int startDay, int startHour, int startMin, int endYear, int endMonth, int endDate, int endHour, int endMin, String userDescription){
 		description = userDescription;
-		start.set(startYear, startMonth, startDate, startHour, startMin);
-		end.set(endYear, endMonth, endDate, endHour, endMin);
-	}
-	
-	public Task(int startDate, int startHour, int startMin, int endDate, int endHour, int endMin, String userDescription){
-		description = userDescription;
-		start.set(startDate, startHour, startMin);
-		end.set(endDate,endHour, endMin);
-	}
-	
-	public Task(int startHour, int startMin, int endHour, int endMin, String userDescription){
-		description = userDescription;
-		start.set(startHour, startMin);
-		end.set(endHour, endMin);
-	}
-	
-	public Task(int endHour, int endMin, String userDescription){
-		description = userDescription;
-		end.set(endHour, endMin);
+		start = new GregorianCalendar();
+		end = new GregorianCalendar();
+		start.set(Calendar.YEAR, startYear);
+		start.set(Calendar.MONTH, startMonth);
+		start.set(Calendar.DAY_OF_MONTH, startDay);
+		start.set(Calendar.HOUR, startHour);
+		start.set(Calendar.MINUTE, startMin);
+		end.set(Calendar.YEAR, startYear);
+		end.set(Calendar.MONTH, startMonth);
+		end.set(Calendar.DAY_OF_MONTH, startDay);
+		end.set(Calendar.HOUR, startHour);
+		end.set(Calendar.MINUTE, startMin);
 	}
 	
 	public Task(){
+		start = new GregorianCalendar();
+		end = new GregorianCalendar();
 	}
 	
 	public String getDescription(){
 		return description;
 	}
 	
-	public Calendar getStart(){
-		return start;
+	public void getStart(){
 	}
 	
-	public Calendar getEnd(){
-		return end;
+	public void getEnd(){
 	}
 	
 	public void setStartYear(int year){
@@ -70,32 +63,22 @@ public class Task implements Comparable<Object> {
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
 
-	//@override
-	public boolean equal(Task otherTask){
-		boolean isEqualDescription = this.description.equals(otherTask.getDescription());
-		boolean isEqualStart = this.start.equals(otherTask.getStart());
-		boolean isEqualEnd = this.end.equals(otherTask.getEnd());
+	public String toString(){
+		start = Calendar.getInstance();
 		
-		if (isEqualDescription && isEqualStart && isEqualEnd){
-			return true;
+		end = Calendar.getInstance();
+		
+		if (start.getTime() == null){
+			return "[" + end.get(Calendar.HOUR_OF_DAY) + (end.get(Calendar.MINUTE)) + "] " +  description;
 		}
 		else{
-			return false;
+			return "[" + start.get(Calendar.HOUR_OF_DAY) + (start.get(Calendar.MINUTE)) + "-" + end.get(Calendar.HOUR_OF_DAY) + end.get(Calendar.MINUTE) + description;
 		}
-	}
-	
-	@Override
-	public int compareTo(Object o) {
-		int equalDescription = this.description.compareTo(((Task) o).getDescription());
-		int equalStart = this.start.compareTo(((Task) o).getStart());
-		int equalEnd = this.end.compareTo(((Task) o).getEnd());
 		
-		int compareValue = equalDescription + equalStart + equalEnd;
 		
-	return compareValue;
 	}
 }
+
