@@ -32,10 +32,12 @@ public class Task{
 		return description;
 	}
 	
-	public void getStart(){
+	public Calendar getStart(){
+		return start;
 	}
 	
-	public void getEnd(){
+	public Calendar getEnd(){
+		return end;
 	}
 	
 	public void setStartYear(int year){

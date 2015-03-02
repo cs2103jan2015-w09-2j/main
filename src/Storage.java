@@ -3,8 +3,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 
 public class Storage {
@@ -54,10 +59,11 @@ public class Storage {
 		return String.format(MESSAGE_NEW_FILE_NAME, name);
 	}
 	
-	public void writeToFile(ArrayList<Task> tasks)throws Exception{
+	public void writeToFile(ArrayList<Task> tasks){
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, new TaskSerializer()).create();
 		String json = gson.toJson(tasks);
+		
 		PrintWriter pw;
 		try{
 			pw = new PrintWriter(filePath);
@@ -67,6 +73,8 @@ public class Storage {
 			return;
 		}
 		pw.close();
+		
+		
 	}
 	
 	@SuppressWarnings("resource")
@@ -85,6 +93,10 @@ public class Storage {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		Gson gson = new Gson();
+		Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+		allTasks = gson.fromJson(jsonString, listType);
 		
 		return allTasks;
 		
@@ -118,7 +130,7 @@ public class Storage {
 		testing.add(taskOne);
 		testing.add(taskTwo);
 		storage.writeToFile(testing);
-		storage.getData();
+		System.out.println(storage.getData().get(0).toString());
 
 	}
 
