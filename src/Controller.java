@@ -1,5 +1,3 @@
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class Controller {
 	
@@ -13,8 +11,8 @@ public class Controller {
 	private static final String MESSAGE_NO_VALUE = "please indicate word to %1$s";
 	private static final String MESSAGE_NO_FILE = "file not available";
 			
-	private Data myList;
-	private Storage file;
+	private static Data myList;
+	private static Storage file;
 	
 
 	public Controller(){
@@ -22,20 +20,19 @@ public class Controller {
 		myList = new Data(file.getData());
 	}
 		
-	public String executeCommand(String input)
-			throws IOException, FileNotFoundException, Error {
+	public static String executeCommand(String input) {
 		
-        Parser ps = new Parser(input);
+        //Parser ps = new Parser(input);
         
-		COMMAND_TYPE commandType = ps.getCommandType();
+		COMMAND_TYPE commandType = COMMAND_TYPE.ADD;
 		
 		switch(commandType){
 		case DISPLAY :
 			return display();
 		case ADD:
-			return add(ps.getMessage());
+			return add(new Task(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, input));
 		case EDIT :
-			return edit(ps.getMessage());
+			return edit(0, 2);
 		case EXIT :
 			System.exit(0);
 		default :
@@ -43,7 +40,7 @@ public class Controller {
 		}
 	}
 
-	private String display() {
+	private static String display() {
 		if(myList.isEmpty()){
 			return String.format(MESSAGE_EMPTY, file);
 		}
@@ -52,23 +49,28 @@ public class Controller {
 		}
 	}
 			
-	private String add(Task input) {
-        file.append(input); 
+	private static String add(Task input){ 
         myList.add(input);
+        writeToFile();
         
         return String.format(MESSAGE_ADD, file, input);
 	}
 	
-	private String edit(String input){
+	private static String edit(int index, int changes){
 		if(myList.isEmpty()){
 			return String.format(MESSAGE_EMPTY, file);
 		}
 		else{
-			Task task = myList.get("input 1");
-			task.setSomething("input 2", "input 3", "input 4");
+			Task task = myList.get(index);
+			task.setEndDate(changes);
+			writeToFile();
 			return myList.toString();
 		}
 		
+	}
+	
+	private static void writeToFile() {
+		//file.writeToFile(myList.getData());
 	}
 		
 }

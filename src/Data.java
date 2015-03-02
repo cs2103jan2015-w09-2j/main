@@ -16,6 +16,10 @@ public class Data {
 		return data;
 	}
 	
+	public Task get(int index){
+		return data.get(index);
+	}
+	
 	public void add(Task input){
 		data.add(input);
 	}

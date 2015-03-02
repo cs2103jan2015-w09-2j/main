@@ -23,6 +23,9 @@ public class CmdGui {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		//initialize Controller
+		new Controller();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -75,8 +78,8 @@ public class CmdGui {
 			public void actionPerformed(ActionEvent e) {
 
 				String command = commandFromUser.getText();
-				String showText = "This is the command entered by user ";
-				showToUser.setText(showText + command);
+				String showText = Controller.executeCommand(command);
+				showToUser.setText(showText);
 				commandFromUser.setText("");
 
 			}
