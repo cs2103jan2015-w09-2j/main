@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -102,7 +103,7 @@ public class Storage {
 	}
 	
 	
-	public String checkFileExist(){
+	public String checkFileExist() {
 
 		File file = new File(this.filePath);
 
