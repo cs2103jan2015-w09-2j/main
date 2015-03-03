@@ -73,6 +73,8 @@ public class SimpleGui {
 		commandFromUser.setForeground(new Color(0, 51, 153));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
 
+		showToUser.setText(Controller.display());
+		
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
