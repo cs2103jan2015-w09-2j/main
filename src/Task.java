@@ -77,8 +77,7 @@ public class Task{
 			return "[" + end.get(Calendar.HOUR_OF_DAY) + (end.get(Calendar.MINUTE)) + "] " +  description;
 		}
 		else{
-			return "[" + start.get(Calendar.HOUR_OF_DAY) + (start.get(Calendar.MINUTE)) + "-" + end.get(Calendar.HOUR_OF_DAY) + end.get(Calendar.MINUTE) + "] " + description;
-			
+			return "[" + start.get(Calendar.HOUR_OF_DAY) + (start.get(Calendar.MINUTE)) + "-" + end.get(Calendar.HOUR_OF_DAY) + end.get(Calendar.MINUTE) + description;
 		}
 		
 		
