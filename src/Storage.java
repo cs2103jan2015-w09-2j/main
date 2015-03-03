@@ -96,7 +96,9 @@ public class Storage {
 		Gson gson = new Gson();
 		Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
 		allTasks = gson.fromJson(jsonString, listType);
-		
+		if(allTasks == null){
+			allTasks = new ArrayList<Task>();
+		}
 		return allTasks;
 		
 	}
