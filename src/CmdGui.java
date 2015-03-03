@@ -20,7 +20,7 @@ public class CmdGui {
 	private JTextPane showToUser;
 
 	/**
-	 * Launch the application.
+	 * Launch the application here.
 	 */
 	public static void main(String[] args) {
 		//initialize Controller
