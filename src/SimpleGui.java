@@ -13,7 +13,7 @@ import javax.swing.border.LineBorder;
 import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
-public class CmdGui {
+public class SimpleGui {
 
 	private JFrame frame;
 	private JTextField commandFromUser;
@@ -29,7 +29,7 @@ public class CmdGui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CmdGui window = new CmdGui();
+					SimpleGui window = new SimpleGui();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +41,7 @@ public class CmdGui {
 	/**
 	 * Create the application.
 	 */
-	public CmdGui() {
+	public SimpleGui() {
 		initialize();
 	}
 
