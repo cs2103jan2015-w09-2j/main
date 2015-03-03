@@ -102,7 +102,7 @@ public class Storage {
 	}
 	
 	
-	public String checkFileExist(){
+	private String checkFileExist(){
 
 		File file = new File(this.filePath);
 
