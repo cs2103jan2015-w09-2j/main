@@ -22,15 +22,15 @@ public class Controller {
 		
 	public static String executeCommand(String input) {
 		
-        //Parser ps = new Parser(input);
+        Parser ps = new Parser(input);
         
-		COMMAND_TYPE commandType = COMMAND_TYPE.ADD;
+		COMMAND_TYPE commandType = ps.getCommandType();
 		
 		switch(commandType){
 		case DISPLAY :
 			return display();
 		case ADD:
-			return add(new Task(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, input));
+			return add(new Task(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ps.getMessage()));
 		case EDIT :
 			return edit(0, 2);
 		case EXIT :
@@ -40,7 +40,7 @@ public class Controller {
 		}
 	}
 
-	private static String display() {
+	public static String display() {
 		if(myList.isEmpty()){
 			return String.format(MESSAGE_EMPTY, file);
 		}
@@ -53,7 +53,8 @@ public class Controller {
         myList.add(input);
         writeToFile();
         
-        return String.format(MESSAGE_ADD, file, input);
+        //return String.format(MESSAGE_ADD, file, input);
+        return myList.toString();
 	}
 	
 	private static String edit(int index, int changes){
@@ -70,7 +71,7 @@ public class Controller {
 	}
 	
 	private static void writeToFile() {
-		//file.writeToFile(myList.getData());
+		file.writeToFile(myList.getData());
 	}
 		
 }
