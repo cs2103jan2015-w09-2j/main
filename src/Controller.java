@@ -11,8 +11,8 @@ public class Controller {
 	private static final String MESSAGE_NO_VALUE = "please indicate word to %1$s";
 	private static final String MESSAGE_NO_FILE = "file not available";
 			
-	private static Data myList;
-	private static Storage file;
+	private Data myList;
+	private Storage file;
 	
 
 	public Controller(){
@@ -20,7 +20,7 @@ public class Controller {
 		myList = new Data(file.getData());
 	}
 		
-	public static String executeCommand(String input) {
+	public String executeCommand(String input) {
 		
         Parser ps = new Parser(input);
         
@@ -40,7 +40,7 @@ public class Controller {
 		}
 	}
 
-	public static String display() {
+	public String display() {
 		if(myList.isEmpty()){
 			return String.format(MESSAGE_EMPTY, file);
 		}
@@ -49,7 +49,7 @@ public class Controller {
 		}
 	}
 			
-	private static String add(Task input){ 
+	private String add(Task input){ 
         myList.add(input);
         writeToFile();
         
@@ -57,7 +57,7 @@ public class Controller {
         return myList.toString();
 	}
 	
-	private static String edit(int index, int changes){
+	private String edit(int index, int changes){
 		if(myList.isEmpty()){
 			return String.format(MESSAGE_EMPTY, file);
 		}
@@ -70,7 +70,7 @@ public class Controller {
 		
 	}
 	
-	private static void writeToFile() {
+	private void writeToFile() {
 		file.writeToFile(myList.getData());
 	}
 		
