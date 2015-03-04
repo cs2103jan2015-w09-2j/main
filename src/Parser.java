@@ -5,50 +5,41 @@ public class Parser {
 	private static final int INPUT_SPLIT_FIRST = 0;
 	private static final int INPUT_SPLIT_SECOND = 1;
 	
-	String text;
-	
-	public Parser(String input){
-		text = input;
-	}
-	
-	public String getCommand(){
-		String[] splitString = splitFirstWord(text);
-		String firstWord = splitString[INPUT_SPLIT_FIRST];
+	public static Cmd toCmd(String input){
+		String[] inputArr = input.split(" ", INPUT_SPLIT_SIZE);
+		COMMAND_TYPE command = getCommand(inputArr[INPUT_SPLIT_FIRST]);
+		String message = getMessage(inputArr[INPUT_SPLIT_SECOND]);
 		
-		return firstWord;		
-	}
-	
-	public String getMessage(){
-		String newWord = "";
-		
-		String[] splitString = splitFirstWord(text);
-		
-		if(splitString.length == INPUT_SPLIT_SIZE){
-			newWord = splitString[INPUT_SPLIT_SECOND];
+		switch(command){
+		case DISPLAY :
+			return new ViewCmd();
+		case ADD:
+			return new AddCmd(new Task());
+		case EDIT :
+			return new EditCmd(1, new Task());
+		case EXIT :
+			System.exit(0);
+		default :
+			throw new Error("invalid");
 		}
-		
-		return newWord;	
 	}
 	
-	public COMMAND_TYPE getCommandType() {
-		String commandTypeString = getCommand();
-		
-		if (commandTypeString == null)
+	private static COMMAND_TYPE getCommand(String input){	
+		if (input == null)
 			throw new Error("command type string cannot be null!");
 
-		if (commandTypeString.equalsIgnoreCase("display")) {
+		if (input.equalsIgnoreCase("display")) {
 			return COMMAND_TYPE.DISPLAY;
-		} else if (commandTypeString.equalsIgnoreCase("add")) {
+		} else if (input.equalsIgnoreCase("add")) {
 			return COMMAND_TYPE.ADD;
-		} else if (commandTypeString.equalsIgnoreCase("exit")) {
+		} else if (input.equalsIgnoreCase("exit")) {
 		 	return COMMAND_TYPE.EXIT;
 		} else {
 			return COMMAND_TYPE.INVALID;
-		}
+		}		
 	}
 	
-	private static String[] splitFirstWord(String text){
-		return text.split(" ", INPUT_SPLIT_SIZE);
+	private static String getMessage(String input){	
+		return input;	
 	}
-	
 }
