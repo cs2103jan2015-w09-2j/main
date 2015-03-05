@@ -8,7 +8,7 @@ import javax.swing.JTextPane;
 import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
-public class SimpleGui {
+public class HomeView {
 
 	private JFrame frame;
 	private JTextField commandFromUser;
@@ -20,7 +20,7 @@ public class SimpleGui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					SimpleGui window = new SimpleGui();
+					HomeView window = new HomeView();
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -32,7 +32,7 @@ public class SimpleGui {
 	/**
 	 * Create the application.
 	 */
-	public SimpleGui() {
+	public HomeView() {
 		initialize();
 	}
 
@@ -65,8 +65,7 @@ public class SimpleGui {
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
 		
 		Controller control = new Controller();
-		
-		
+		showToUser.setText(control.executeCommand("display 1"));
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
