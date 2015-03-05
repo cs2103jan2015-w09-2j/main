@@ -64,8 +64,37 @@ public class Task{
 		
 	}
 	
+	//Start of Chun How
+	public void setDescription(String description){
+		if(description != null){
+			this.description = description;
+		}
+	}
+	
+	public void setStart(Calendar start){
+		if(start != null){
+			this.start = start;
+		}
+	}
+	
+	public void setEnd(Calendar end){
+		if(end != null){
+			this.end = end;
+		}
+	}
+	
+	public void update(Task task){
+		String newDescription = task.getDescription();
+		Calendar newStart = task.getStart();
+		Calendar newEnd = task.getEnd();
+		
+		setDescription(newDescription);
+		setStart(newStart);
+		setEnd(newEnd);
+	}
+	//end of Chun How
+	
 	public static void main(String[] args) {
-
 	}
 
 	public String toString(){
