@@ -1,15 +1,10 @@
 import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JTextPane;
-import javax.swing.border.LineBorder;
 import java.awt.Font;
 import javax.swing.border.EtchedBorder;
 
@@ -18,14 +13,10 @@ public class SimpleGui {
 	private JFrame frame;
 	private JTextField commandFromUser;
 	private JTextPane showToUser;
-
 	/**
 	 * Launch the application here.
 	 */
 	public static void main(String[] args) {
-		//initialize Controller
-		new Controller();
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -72,15 +63,15 @@ public class SimpleGui {
 		frame.getContentPane().add(showToUser);
 		commandFromUser.setForeground(new Color(0, 51, 153));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
-
-		showToUser.setText(Controller.display());
+		
+		Controller control = new Controller();
+		
 		
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-
 				String command = commandFromUser.getText();
-				String showText = Controller.executeCommand(command);
+				String showText = control.executeCommand(command);
 				showToUser.setText(showText);
 				commandFromUser.setText("");
 
