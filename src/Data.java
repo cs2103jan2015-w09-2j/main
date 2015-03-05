@@ -3,56 +3,53 @@ import java.util.ArrayList;
 public class Data {
 
 	ArrayList<Task> data;
+	ArrayList<Task> view;
 	
 	public Data(){
 		data = new ArrayList<Task>();
+		view = new ArrayList<Task>();
 	}
 	
 	public Data(ArrayList<Task> data){
 		this.data = data;
+		view = new ArrayList<Task>();
 	}
 	
 	public ArrayList<Task> getData(){
 		return data;
 	}
 	
-	public Task get(int index){
-		return data.get(index);
+	public ArrayList<Task> getView(){
+		return view;
 	}
-	
-	public void add(Task input){
-		data.add(input);
-	}
-	
-	public Task remove(int deleteNum){
-		int deleteIndex = deleteNum - 1;
 		
-		return data.remove(deleteIndex);
+	public boolean add(Task input){
+		boolean isAdded = data.add(input);
+		
+		view = data;
+		
+		return isAdded;
+	}
+		
+	public boolean remove(Task task){		
+		boolean isRemoved = data.remove(task);
+		
+		view = data;
+		
+		return isRemoved;
+	}
+	
+	public Task getViewTask(int index){
+		return view.get(index);
 	}
 	
 	public void clear(){
 		data.clear();
+		view.clear();
 	}
 	
 	public boolean isEmpty(){
 		return data.size() <= 0;
 	}
-		
-	public String toString() {
-		String output = "";
-		
-		int numbering = 0;
-		
-		for(int i = 0; i < data.size(); i++){
-			numbering = i + 1;
-			output += numbering + ". " + data.get(i);
-			
-			int lastIndex = data.size() - 1;
-			if(i != lastIndex){
-				output += "\n";
-			}
-		}
-		
-		return output;
-	}
+
 }

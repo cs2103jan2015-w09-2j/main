@@ -9,15 +9,15 @@ public class EditCmd extends Cmd{
 		this.task = task;
 	}
 	
-	public String execute(Data myList){
+	public Display execute(Data myList){
 		if(myList.isEmpty()){
-			return String.format(MESSAGE_EMPTY);
+			return Display(new ArrayList<Task>, MESSAGE_EMPTY);
 		}
 		else{
-			Task Task = myList.get(index);
-			task.update(task);
+			Task thisTask = myList.getViewTask(index);
+			thisTask.update(task);
 			writeToFile(myList);
-			return myList.toString();
+			return Display(myList.getView(), MESSAGE_EDIT);
 		}
 	}
 }

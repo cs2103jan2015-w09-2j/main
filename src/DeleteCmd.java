@@ -7,11 +7,11 @@ public class DeleteCmd extends Cmd{
 		this.index = index;
 	}
 	
-	public String execute(Data myList){
-		myList.remove(index);
+	public Display execute(Data myList){
+		Task thisTask = myList.getViewTask(index);
+		myList.remove(thisTask);
 		writeToFile(myList);
 	        
-	    //return String.format(MESSAGE_ADD, file, input);
-	    return myList.toString();
+	    return new Display(myList.getView(), MESSAGE_DELETE);
 	}
 }
