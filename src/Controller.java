@@ -9,7 +9,7 @@ public class Controller {
 		myList = new Data(file.getData());
 	}
 		
-	public String executeCommand(String input) {
+	public Display executeCommand(String input) {
 		Cmd cmd = Parser.toCmd(input);
 		return cmd.execute(myList);
 	}
