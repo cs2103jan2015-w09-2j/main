@@ -1,11 +1,11 @@
 import java.util.PriorityQueue;
 
 
-public class TaskToDisplay {
+public class Display {
 	private PriorityQueue<String> collectionOfTasks;
 	private String message;
 	
-	public TaskToDisplay(PriorityQueue<String> collectionOfTasks, String message){
+	public Display(PriorityQueue<String> collectionOfTasks, String message){
 		this.collectionOfTasks = collectionOfTasks;
 		this.message = message;
 	}
