@@ -1,116 +1,133 @@
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 
 public class Task{
 	
+	private static final String EMPTY_STRING = "";
+	private static final String DEADLINE_TASK = "[%1$s] " + "%2$s";
+	private static final String NORMAL_TASK = "[%1$s - %2$s] %3$s";
 	private String description;
-	private transient Calendar start;
-	private transient Calendar end;
+	private LocalDateTime start;
+	private LocalDateTime end;
 	
-	public Task(int startYear, int startMonth, int startDay, int startHour, int startMin, int endYear, int endMonth, int endDate, int endHour, int endMin, String userDescription){
-		description = userDescription;
-		start = Calendar.getInstance();
-		end = Calendar.getInstance();
-		start.set(Calendar.YEAR, startYear);
-		start.set(Calendar.MONTH, startMonth);
-		start.set(Calendar.DAY_OF_MONTH, startDay);
-		start.set(Calendar.HOUR, startHour);
-		start.set(Calendar.MINUTE, startMin);
-		end.set(Calendar.YEAR, startYear);
-		end.set(Calendar.MONTH, startMonth);
-		end.set(Calendar.DAY_OF_MONTH, startDay);
-		end.set(Calendar.HOUR, startHour);
-		end.set(Calendar.MINUTE, startMin);
+	
+	public Task(int startYear, int startMonth, int startDay, int startHour, int startMin, int endYear, int endMonth, int endDay, int endHour, int endMin, String taskDescription){
+		description = taskDescription;
+		start = LocalDateTime.of(startYear, startMonth, startDay, startHour, startMin);
+		end = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMin);
+	}
+	
+	//Floating task
+	public Task(String taskDescription){
+		description = taskDescription;
+	}
+	
+	//Deadline task
+	public Task(int endYear, int endMonth, int endDay, int endHour, int endMin, String taskDescription){
+		description = taskDescription;
+		end = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMin);
 	}
 	
 	public Task(){
-		start = new GregorianCalendar();
-		end = new GregorianCalendar();
+		description = EMPTY_STRING;
+		start = LocalDateTime.now();
+		end = LocalDateTime.now();
 	}
 	
 	public String getDescription(){
 		return description;
 	}
 	
-	public Calendar getStart(){
+	public LocalDateTime getStart(){
 		return start;
 	}
 	
-	public Calendar getEnd(){
+	public LocalDateTime getEnd(){
 		return end;
 	}
 	
-	public void setStartYear(int year){
-		
+	public LocalTime getStartTime(){
+		return start.toLocalTime();
 	}
 	
-	public void setStartDate(int date){
-		
+	public LocalTime getEndTime(){
+		return end.toLocalTime();
 	}
 	
-	public void setStartTime(int startHour, int startMin){
-		
+	public void setDescription(String newDescription){
+			description = newDescription;
 	}
 	
-	public void setEndYear(int year){
-		
+	public void setStart(LocalDateTime newStart){
+			start = newStart;		
 	}
 	
-	public void setEndDate(int date){
-		
+	public void setEnd(LocalDateTime newEnd){
+			end = newEnd;
 	}
 	
-	public void setEndTime(int endHour, int endMin){
-		
-	}
-	
-	//Start of Chun How
-	public void setDescription(String description){
-		if(description != null){
-			this.description = description;
-		}
-	}
-	
-	public void setStart(Calendar start){
-		if(start != null){
-			this.start = start;
-		}
-	}
-	
-	public void setEnd(Calendar end){
-		if(end != null){
-			this.end = end;
-		}
-	}
-	
-	public void update(Task task){
-		String newDescription = task.getDescription();
-		Calendar newStart = task.getStart();
-		Calendar newEnd = task.getEnd();
+	public void update(Task newTask){
+		String newDescription = newTask.getDescription();
+		LocalDateTime newStart = newTask.getStart();
+		LocalDateTime newEnd = newTask.getEnd();
 		
 		setDescription(newDescription);
 		setStart(newStart);
 		setEnd(newEnd);
 	}
-	//end of Chun How
 	
-	public static void main(String[] args) {
-	}
-
-	public String toString(){
-		start = Calendar.getInstance();
+	private boolean isFloatingTask(){
 		
-		end = Calendar.getInstance();
-		
-		if (start.getTime() == null){
-			return "[" + end.get(Calendar.HOUR_OF_DAY) + (end.get(Calendar.MINUTE)) + "] " +  description;
+		if (start == null && end == null){
+			return true;
 		}
 		else{
-			return "[" + start.get(Calendar.HOUR_OF_DAY) + (start.get(Calendar.MINUTE)) + "-" + end.get(Calendar.HOUR_OF_DAY) + end.get(Calendar.MINUTE) + "] " + description;
-			
+		return false;
+		}
+	}
+	
+	private boolean isDeadlineTask(){
+		if (start == null && end !=null){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	private boolean isNormalTask(){
+		if (start !=null && end != null){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	
+
+	public String toString(){
+		String toPrint = EMPTY_STRING;	
+		if (isFloatingTask()){
+				toPrint = description;
+			}
+			else if (isDeadlineTask()){
+				toPrint = String.format(DEADLINE_TASK, getEndTime().toString(), description);
+			}
+			else if (isNormalTask()){
+				toPrint = String.format(NORMAL_TASK, getStartTime().toString(), getEndTime().toString(), description);
+			}
+		
+		return toPrint;
 		}
 		
-		
+	public static void main(String[] args) {
+	
 	}
-}
+
+	
+	
+	
+	}
 

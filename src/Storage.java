@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -102,7 +101,7 @@ public class Storage {
 			e.printStackTrace();
 		}
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, new TaskDeserializer()).create();
 		Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
 		allTasks = gson.fromJson(jsonString, listType);
 		
@@ -136,8 +135,8 @@ public class Storage {
 		Storage storage = new Storage();
 		storage.checkFileExist();
 		
-		Task taskOne = new Task(2015,2,0, 15, 21, 2015, 2, 0, 15,21, "Do something");
-		Task taskTwo = new Task(2015,2,0, 15, 21, 2015, 2, 0, 15,21, "Do Other Thing");
+		Task taskOne = new Task(2015,2,1, 15, 21, 2015, 2, 1, 15,21, "Do something");
+		Task taskTwo = new Task(2015,2,1, 15, 21, 2015, 2, 1, 15,21, "Do Other Thing");
 		ArrayList<Task> testing = new ArrayList<Task>();
 		testing.add(taskOne);
 		testing.add(taskTwo);
