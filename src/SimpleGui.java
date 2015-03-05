@@ -71,7 +71,7 @@ public class SimpleGui {
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
 		
 		Controller control = new Controller();
-		showToUser.setText(control.display());
+		showToUser.setText(control.executeCommand("display"));
 		
 		commandFromUser.addActionListener(new ActionListener() {
 
