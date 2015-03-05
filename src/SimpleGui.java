@@ -22,10 +22,7 @@ public class SimpleGui {
 	/**
 	 * Launch the application here.
 	 */
-	public static void main(String[] args) {
-		//initialize Controller
-		new Controller();
-		
+	public static void main(String[] args) {	
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -72,15 +69,16 @@ public class SimpleGui {
 		frame.getContentPane().add(showToUser);
 		commandFromUser.setForeground(new Color(0, 51, 153));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
-
-		showToUser.setText(Controller.display());
+		
+		Controller control = new Controller();
+		showToUser.setText(control.display());
 		
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 
 				String command = commandFromUser.getText();
-				String showText = Controller.executeCommand(command);
+				String showText = control.executeCommand(command);
 				showToUser.setText(showText);
 				commandFromUser.setText("");
 
