@@ -1,6 +1,11 @@
+/*
+ * @author: Ng Zhi Hua
+ */
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -20,9 +25,9 @@ public class Storage {
 	
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
+	
 	private String fileName = "oneTag.json";  //default name is oneTag.json
 	private String filePath;
-	
 	private ArrayList<Task> allTasks;
 	
 	
@@ -60,18 +65,22 @@ public class Storage {
 	
 	public void writeToFile(ArrayList<Task> tasks){
 		
-		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, new TaskSerializer()).create();
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.setPrettyPrinting().registerTypeAdapter(Task.class, new TaskSerializer());
+		Gson gson = gsonBuilder.create();
 		String json = gson.toJson(tasks);
+		System.out.println(json);
 		
-		PrintWriter pw;
+		FileWriter fw;
 		try{
-			pw = new PrintWriter(filePath);
-			pw.write(json);;	
+			fw = new FileWriter(filePath);
+			fw.write(json);;
+			fw.flush();
+			fw.close();
 		}catch(Exception e){
 			e.printStackTrace();
 			return;
 		}
-		pw.close();
 		
 		
 	}
@@ -96,9 +105,11 @@ public class Storage {
 		Gson gson = new Gson();
 		Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
 		allTasks = gson.fromJson(jsonString, listType);
-		if(allTasks == null){
+		
+		if (allTasks == null){
 			allTasks = new ArrayList<Task>();
 		}
+		
 		return allTasks;
 		
 	}
@@ -131,7 +142,7 @@ public class Storage {
 		testing.add(taskOne);
 		testing.add(taskTwo);
 		storage.writeToFile(testing);
-		System.out.println(storage.getData().get(0).toString());
+		System.out.println(storage.getData().toString());
 
 	}
 
