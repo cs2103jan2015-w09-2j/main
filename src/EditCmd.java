@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class EditCmd extends Cmd{
 	
@@ -11,13 +13,13 @@ public class EditCmd extends Cmd{
 	
 	public Display execute(Data myList){
 		if(myList.isEmpty()){
-			return Display(new ArrayList<Task>, MESSAGE_EMPTY);
+			return new Display(new ArrayList<Task>(), MESSAGE_EMPTY);
 		}
 		else{
 			Task thisTask = myList.getViewTask(index);
 			thisTask.update(task);
 			writeToFile(myList);
-			return Display(myList.getView(), MESSAGE_EDIT);
+			return new Display(myList.getView(), MESSAGE_EDIT);
 		}
 	}
 }
