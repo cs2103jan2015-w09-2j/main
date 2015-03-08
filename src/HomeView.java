@@ -65,12 +65,12 @@ public class HomeView {
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
 		
 		Controller control = new Controller();
-		showToUser.setText(control.executeCommand("display 1"));
+		showToUser.setText(control.executeCommand("display 1").getTasks());
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				String command = commandFromUser.getText();
-				String showText = control.executeCommand(command);
+				String showText = control.executeCommand(command).getTasks();
 				showToUser.setText(showText);
 				commandFromUser.setText("");
 
