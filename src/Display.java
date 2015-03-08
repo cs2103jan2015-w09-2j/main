@@ -1,16 +1,16 @@
-import java.util.PriorityQueue;
+import java.util.ArrayList;
 
 
 public class Display {
-	private PriorityQueue<String> collectionOfTasks;
-	private String message;
+	private static ArrayList<Task> collectionOfTasks;
+	private static String message;
 	
-	public Display(PriorityQueue<String> collectionOfTasks, String message){
-		this.collectionOfTasks = collectionOfTasks;
-		this.message = message;
+	public  Display(ArrayList<Task> arrayList, String msg){
+		collectionOfTasks = arrayList;
+		message = msg;
 	}
 	
-	public String getTasks(){
+	public static String getTasks(){
 		String tasks = collectionOfTasks.toString();
 		return tasks;
 	}

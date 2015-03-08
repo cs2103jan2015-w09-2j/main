@@ -1,14 +1,23 @@
 import java.awt.Color;
 import java.awt.EventQueue;
+
 import javax.swing.JFrame;
 import javax.swing.JTextField;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JTextPane;
-import java.awt.Font;
-import javax.swing.border.EtchedBorder;
 
-public class HomeView {
+import javax.swing.JTextPane;
+
+import java.awt.Font;
+
+import javax.swing.border.EtchedBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+
+public class HomeView{
 
 	private JFrame frame;
 	private JTextField commandFromUser;
@@ -29,19 +38,19 @@ public class HomeView {
 		});
 	}
 
+	
 	/**
 	 * Create the application.
 	 */
 	public HomeView() {
 		initialize();
 	}
-
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.getContentPane().setBackground(new Color(204, 255, 255));
+		frame = new JFrame();	frame.getContentPane().setBackground(new Color(204, 255, 255));
 		frame.setBounds(100, 100, 628, 464);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -64,17 +73,32 @@ public class HomeView {
 		commandFromUser.setForeground(new Color(0, 51, 153));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
 		
-		Controller control = new Controller();
-		showToUser.setText(control.executeCommand("display 1"));
+		//Controller control = new Controller();
+		//showToUser.setText(control.executeCommand("display 1"));
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				String command = commandFromUser.getText();
-				String showText = control.executeCommand(command);
-				showToUser.setText(showText);
-				commandFromUser.setText("");
+				//String showText = control.executeCommand(command);
+				//showToUser.setText(showText);
+				//commandFromUser.setText("");
 
 			}
 		});
 	}
+	
+    private void appendToPane(JTextPane tp, String msg, Color c)
+    {
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+
+        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
+        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
+
+        int len = tp.getDocument().getLength();
+        tp.setCaretPosition(len);
+        tp.setCharacterAttributes(aset, false);
+        tp.replaceSelection(msg);
+    }
+	
 }
