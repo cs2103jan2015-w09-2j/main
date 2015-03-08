@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 
 public class Display {
+
 	private static ArrayList<Task> collectionOfTasks;
 	private static String message;
 	
