@@ -52,7 +52,7 @@ public class HomeView{
 	 * @throws BadLocationException 
 	 */
 	private void initialize() throws BadLocationException {
-		frame = new JFrame();	frame.getContentPane().setBackground(new Color(204, 255, 255));
+		frame = new JFrame();	frame.getContentPane().setBackground(new Color(176, 224, 230));
 		frame.setBounds(100, 100, 628, 464);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -78,21 +78,31 @@ public class HomeView{
 		//Colouring and styling of text
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
-		StyleConstants.setForeground(style, Color.BLUE);
+		StyleConstants.setForeground(style, Color.BLUE.darker());
 		doc.insertString(doc.getLength(), "Today: \n", style);
-		
 		
 		Controller control = new Controller();
 		control.executeCommand("display 1");		
-		StyleConstants.setForeground(style, Color.black);
-		doc.insertString(doc.getLength(), Display.getTasks(), style);
+		StyleConstants.setForeground(style, Color.ORANGE.darker());
+		doc.insertString(doc.getLength(), Display.getToday(),style);
+		
+		StyleConstants.setForeground(style, Color.BLUE.darker());
+		doc.insertString(doc.getLength(), "\nUpcoming: \n", style);
+		StyleConstants.setForeground(style, Color.ORANGE.darker());
+		doc.insertString(doc.getLength(), Display.getUpcoming(),style);
+		
+		StyleConstants.setForeground(style, Color.BLUE.darker());
+		doc.insertString(doc.getLength(), "\nSomeday: \n", style);
+		StyleConstants.setForeground(style,Color.ORANGE.darker());
+		doc.insertString(doc.getLength(), Display.getSomeday(),style);
+		
 		
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				String command = commandFromUser.getText();
 				control.executeCommand(command);
-				String showText = Display.getTasks();
+				String showText = "";//Display.getTasks();
 				showToUser.setText(showText);
 				commandFromUser.setText("");
 
