@@ -12,11 +12,16 @@ public class Display {
 	}
 	
 	public static String getTasks(){
-		String tasks = collectionOfTasks.toString();
+		String tasks = "";
+		for (Task task : collectionOfTasks){
+			tasks += task.toString() + "\n";
+		}
 		return tasks;
 	}
 	
 	public String getMessage(){
 		return message;
 	}
+	
+
 }
