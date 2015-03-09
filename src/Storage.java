@@ -68,7 +68,6 @@ public class Storage {
 		gsonBuilder.setPrettyPrinting().registerTypeAdapter(Task.class, new TaskSerializer());
 		Gson gson = gsonBuilder.create();
 		String json = gson.toJson(tasks);
-		System.out.println(json);
 		
 		FileWriter fw;
 		try{
@@ -132,17 +131,6 @@ public class Storage {
 	
 	
 	public static void main(String[] args) throws Exception{
-		Storage storage = new Storage();
-		storage.checkFileExist();
-		
-		Task taskOne = new Task(2015,2,1, 15, 21, 2015, 2, 1, 15,21, "Do something");
-		Task taskTwo = new Task(2015,2,1, 15, 21, 2015, 2, 1, 15,21, "Do Other Thing");
-		ArrayList<Task> testing = new ArrayList<Task>();
-		testing.add(taskOne);
-		testing.add(taskTwo);
-		storage.writeToFile(testing);
-		System.out.println(storage.getData().toString());
-
 	}
 
 }

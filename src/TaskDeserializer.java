@@ -5,13 +5,11 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 public class TaskDeserializer implements JsonDeserializer<Task> {
 
   @Override
-  public Task deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
-      throws JsonParseException {
+  public Task deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context){
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	if (json == null){
 		return null;
