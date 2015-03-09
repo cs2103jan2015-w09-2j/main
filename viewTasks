@@ -1,0 +1,40 @@
+	/*This line of code will settle the views.
+	 * 
+	 */
+	public void setViewCommand(){
+		showView = true;
+	}
+	public boolean confirmViewCommand()
+	{
+		return showView;
+	}
+	public void setHomeView(){
+		 homeView = true;
+	}
+	
+	public boolean confirmHomeView(){
+		return homeView;
+	}
+	
+	public void setHashTagView(){
+		hashTagView = true;
+	}
+	
+	public boolean confirmHashTagView(){
+		return hashTagView;
+	}
+	
+	public void setPeopleView(){
+		peopleView = true;
+	}
+	public boolean confirmPeopleView(){
+		return peopleView;
+	}
+	
+	public void setCompletedTaskView(){
+		completedTaskView = true;
+	}
+	
+	public boolean confirmCompletedTaskView(){
+		return completedTaskView;
+	}
