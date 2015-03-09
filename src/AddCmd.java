@@ -11,6 +11,6 @@ public class AddCmd extends Cmd{
 		 myList.add(task);
 		 writeToFile(myList);
 	        
-	     return new Display(myList.getView(), MESSAGE_ADD);
+	     return new Display(myList.toDateView(), MESSAGE_ADD);
 	}
 }

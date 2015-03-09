@@ -19,7 +19,7 @@ public class EditCmd extends Cmd{
 			Task thisTask = myList.getViewTask(index);
 			thisTask.update(task);
 			writeToFile(myList);
-			return new Display(myList.getView(), MESSAGE_EDIT);
+			return new Display(myList.toDateView(), MESSAGE_EDIT);
 		}
 	}
 }

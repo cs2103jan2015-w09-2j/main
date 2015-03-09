@@ -3,30 +3,37 @@ import java.util.ArrayList;
 public class Data {
 
 	ArrayList<Task> data;
-	ArrayList<Task> view;
+	View view;
 	
+	//Constructor
 	public Data(){
 		data = new ArrayList<Task>();
-		view = new ArrayList<Task>();
+		view = toDateView();
 	}
 	
 	public Data(ArrayList<Task> data){
 		this.data = data;
-		view = new ArrayList<Task>();
+		view = toDateView();
 	}
 	
+	//getter
 	public ArrayList<Task> getData(){
 		return data;
 	}
 	
-	public ArrayList<Task> getView(){
+	public View getView(){
 		return view;
 	}
-		
+	
+	public Task getViewTask(int index){
+		return view.getTask(index);
+	}
+	
+	//setter
 	public boolean add(Task input){
 		boolean isAdded = data.add(input);
 		
-		view = data;
+		//view = data;
 		
 		return isAdded;
 	}
@@ -34,22 +41,35 @@ public class Data {
 	public boolean remove(Task task){		
 		boolean isRemoved = data.remove(task);
 		
-		view = data;
+		//view = data;
 		
 		return isRemoved;
 	}
 	
-	public Task getViewTask(int index){
-		return view.get(index);
-	}
-	
+	//others
 	public void clear(){
 		data.clear();
-		view.clear();
+		//view.clear();
 	}
 	
 	public boolean isEmpty(){
 		return data.size() <= 0;
 	}
-
+	
+	public DateView toDateView(){
+		ArrayList<Task> today = new ArrayList<Task>();
+		ArrayList<Task> upcoming = new ArrayList<Task>();
+		ArrayList<Task> someday = new ArrayList<Task>();
+		
+		for(Task element : data){
+			if(element.isNormalTask()){
+				today.add(element);
+			}
+			else{
+				upcoming.add(element);
+			}
+		}
+		
+		return new DateView(today, upcoming, someday);
+	}
 }

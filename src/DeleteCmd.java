@@ -12,6 +12,6 @@ public class DeleteCmd extends Cmd{
 		myList.remove(thisTask);
 		writeToFile(myList);
 	        
-	    return new Display(myList.getView(), MESSAGE_DELETE);
+	    return new Display(myList.toDateView(), MESSAGE_DELETE);
 	}
 }
