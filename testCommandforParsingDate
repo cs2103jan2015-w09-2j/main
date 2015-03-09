@@ -1,0 +1,27 @@
+
+    import java.text.DateFormat;
+    import java.text.ParseException;
+    import java.text.SimpleDateFormat;
+    import java.util.Date;
+
+    public class TestDate {
+
+        /**
+         * @param args
+         */
+        public static void main(String[] args) {
+
+            String startDateString = "25 Sep 2014";
+            DateFormat df = new SimpleDateFormat("dd MMM yyyy"); 
+            Date startDate=null;
+            String newDateString = null;
+            try 
+            {
+                startDate = df.parse(startDateString);
+                newDateString = df.format(startDate);
+                System.out.println(startDate);
+            } catch (ParseException e) 
+            {
+                e.printStackTrace();
+            }
+        }
