@@ -1,0 +1,31 @@
+/**
+ * Auto Generated Java Class.
+ */
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.lang.String;
+
+public class EditTest {
+  public static void main(String[] args) { 
+    DateFormat df = new SimpleDateFormat("dd MMMM yyyy"); 
+    Date startDate=null;
+    int taskNum;
+    String numTask;
+    String date;
+    String newtest = "1-14 Sep 2014";
+    System.out.println(newtest);
+    String[] content = newtest.split("-",2);
+    String testString = content[0];
+    System.out.println(content.length);
+    testString.trim();
+    System.out.println(testString);
+    /*
+    System.out.println(content.length);
+    System.out.println(testString);
+   // numTask = content[0].trim();
+   // taskNum = Integer.parseInt(numTask);
+  // System.out.println(numTask);*/
+  }  
+}
