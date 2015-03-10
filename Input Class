@@ -1,0 +1,173 @@
+/** 
+ * 
+ * @author A0108436H
+ * This class is to create an object to return to the Logic
+ *
+ */
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class Input {
+	/* This command will allow Logic to understand what is happening*/
+	private String command;
+	private boolean validCommand = true;
+	
+	/*declaration for viewTask*/
+	private boolean showView = false;
+	private boolean homeView = false;
+	private boolean hashTagView = false;
+	private boolean peopleView = false;
+	private boolean completedTaskView = false;
+	
+	/*declaration of addTasks*/
+	private boolean addTask = false;
+	private boolean floatingTask = false;
+	private boolean fixedTask = false;
+	private boolean deadlineTask = false;
+	
+	/*store task description*/
+	private String task = null;
+
+	
+	/*store information about date*/
+	private Date startDate;
+	private Date endDate;
+	private boolean isStartDate = false;
+	private boolean isEndDate = false;
+	boolean checkDate = false;
+
+	
+	/* ----------------------End of Declaration----------------*/
+	
+	/*This function is to set command for own internal details
+	 *This method is not open to user as our code is not based on specific keywords
+	 * */
+	private void setCommand(String inputCommand)
+	{
+		command = inputCommand;
+		validCommand = true;
+	}
+	/* This public method will return to the user what is happening with this user Input
+	 * This is to allow Logic and  
+	 * String getCommand
+	 */
+	public String getCommand()
+	{
+		return command;
+	}
+	
+	/*This method will allow user to know if the command is a valid command*/
+	public boolean validCommand()
+	{
+		return validCommand;
+	}
+
+	/*This line of code will settle the views.
+	 * 
+	 */
+	public void setViewCommand(){
+		showView = true;
+	}
+	public boolean confirmViewCommand()
+	{
+		return showView;
+	}
+	public void setHomeView(){
+		 homeView = true;
+	}
+	
+	public boolean confirmHomeView(){
+		return homeView;
+	}
+	
+	public void setHashTagView(){
+		hashTagView = true;
+	}
+	
+	public boolean confirmHashTagView(){
+		return hashTagView;
+	}
+	
+	public void setPeopleView(){
+		peopleView = true;
+	}
+	public boolean confirmPeopleView(){
+		return peopleView;
+	}
+	
+	public void setCompletedTaskView(){
+		completedTaskView = true;
+	}
+	
+	public boolean confirmCompletedTaskView(){
+		return completedTaskView;
+	}
+	
+	/* This line of code will test if add task is done or not.*/
+	
+	public void setAddTask(){
+		addTask = true;
+		setCommand("add");
+	}
+	
+	public boolean confirmAddTask(){
+		return addTask;
+	}
+	
+	public void setFloatingTask(){
+		floatingTask = true;
+	}
+	
+	public boolean confirmFloatingTask(){
+		return floatingTask;
+	}
+	public void setFixedTask(){
+		fixedTask = true;
+	}
+	public boolean confirmFixedTask(){
+		return fixedTask;
+	}
+	public void setDeadlineTask(){
+		deadlineTask = true;
+	}
+	public boolean confirmDeadlineTask(){
+		return deadlineTask;
+	}
+	
+	
+	/*These methods will return the task description*/
+	public void setTaskDescription(String task){
+		this.task = task;
+	}
+	
+	public String getTaskDescription(){
+		return task;
+	}
+	
+	/*This methods will test if there is a Date that is being added*/
+	public void setStartDate(Date inputDate){
+		startDate = inputDate;	
+		isStartDate = true;
+	}	
+	public Date getstartDate()
+	{
+		return startDate;
+	}
+	
+	public boolean checkStartDate(){
+		return isStartDate;
+	}
+
+	public void setEndDate(Date inputDate){
+		endDate = inputDate;
+		isEndDate = true;
+	}
+	
+	public Date getEndDate(Date inputDate){
+		return endDate;
+	}
+	public void checkEndDate(){
+		return isEndDate;
+	}
+}
