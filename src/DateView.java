@@ -25,7 +25,9 @@ public class DateView implements View{
 		return someday;
 	}
 	
-	public Task getTask(int index){
+	public Task getTask(int numbering){
+		int index = numbering - 1;
+		
 		int todaySize = today.size();
 		int dateSize = todaySize + upcoming.size();
 		int allSize = dateSize + someday.size();

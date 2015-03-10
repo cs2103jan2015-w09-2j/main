@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 
 public class EditCmd extends Cmd{
 	
@@ -13,7 +11,7 @@ public class EditCmd extends Cmd{
 	
 	public Display execute(Data myList){
 		if(myList.isEmpty()){
-			return new Display(new ArrayList<Task>(), MESSAGE_EMPTY);
+			return new Display(myList.toDateView(), MESSAGE_EMPTY);
 		}
 		else{
 			Task thisTask = myList.getViewTask(index);

@@ -3,6 +3,7 @@ public enum COMMAND_TYPE {
 	DISPLAY, 
 	ADD, 
 	EDIT,
+	DELETE,
 	EXIT, 
 	INVALID
 }

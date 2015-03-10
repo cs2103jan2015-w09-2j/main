@@ -33,7 +33,7 @@ public class Data {
 	public boolean add(Task input){
 		boolean isAdded = data.add(input);
 		
-		//view = data;
+		toDateView();
 		
 		return isAdded;
 	}
@@ -41,7 +41,7 @@ public class Data {
 	public boolean remove(Task task){		
 		boolean isRemoved = data.remove(task);
 		
-		//view = data;
+		toDateView();
 		
 		return isRemoved;
 	}
@@ -56,7 +56,7 @@ public class Data {
 		return data.size() <= 0;
 	}
 	
-	public DateView toDateView(){
+	public View toDateView(){
 		ArrayList<Task> today = new ArrayList<Task>();
 		ArrayList<Task> upcoming = new ArrayList<Task>();
 		ArrayList<Task> someday = new ArrayList<Task>();
@@ -70,6 +70,7 @@ public class Data {
 			}
 		}
 		
-		return new DateView(today, upcoming, someday);
+		view = new DateView(today, upcoming, someday);
+		return view;
 	}
 }
