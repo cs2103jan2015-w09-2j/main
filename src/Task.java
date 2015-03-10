@@ -23,6 +23,8 @@ public class Task implements Comparable<Task>{
 	// Floating task
 	public Task(String taskDescription) {
 		description = taskDescription;
+		start = null;
+		end = null;
 	}
 
 	// Deadline task
