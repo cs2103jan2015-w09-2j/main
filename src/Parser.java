@@ -16,7 +16,10 @@ public class Parser {
 		case ADD:
 			return new AddCmd(new Task(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, message));
 		case EDIT :
-			return new EditCmd(1, new Task());
+			inputArr = message.split(" ");
+			return new EditCmd(Integer.parseInt(inputArr[0]), new Task(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, inputArr[1]));
+		case DELETE :
+			return new DeleteCmd(Integer.parseInt(message));
 		case EXIT :
 			System.exit(0);
 		default :
@@ -32,6 +35,10 @@ public class Parser {
 			return COMMAND_TYPE.DISPLAY;
 		} else if (input.equalsIgnoreCase("add")) {
 			return COMMAND_TYPE.ADD;
+		} else if (input.equalsIgnoreCase("edit")) {
+			return COMMAND_TYPE.EDIT;
+		} else if (input.equalsIgnoreCase("delete")) {
+			return COMMAND_TYPE.DELETE;
 		} else if (input.equalsIgnoreCase("exit")) {
 		 	return COMMAND_TYPE.EXIT;
 		} else {
