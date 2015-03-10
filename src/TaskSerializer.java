@@ -18,8 +18,12 @@ public class TaskSerializer implements JsonSerializer<Task> {
 		
 		JsonObject result = new JsonObject();
 		result.add("Description", new JsonPrimitive(task.getDescription()));
+		if (task.getStart() != null){
 		result.add("start", new JsonPrimitive(task.getStart().format(formatter).toString()));
+		}
+		if (task.getEnd() != null){
 		result.add("end", new JsonPrimitive(task.getEnd().format(formatter).toString()));
+		}
 		return result;
 	}
 }
