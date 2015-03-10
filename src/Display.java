@@ -8,16 +8,12 @@ public class Display {
 	private static String message;
 	private static int i;
 	
-	public  Display(DateView dateView, String msg){
-		viewsOfDays = dateView;
+	public  Display(View dateView, String msg){
+		viewsOfDays = (DateView)dateView;
 		message = msg;
-	}
-	
-	public Display(ArrayList<Task> arrayList, String messageEmpty) {
-		collectionOfTasks = arrayList;
-		message = messageEmpty;
 		
 	}
+	
 	public static String getToday(){
 		String tasksForToday = "";
 		i=0;
