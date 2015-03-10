@@ -33,7 +33,7 @@ public class Data {
 	public boolean add(Task input){
 		boolean isAdded = data.add(input);
 		
-		//view = data;
+		toDateView();
 		
 		return isAdded;
 	}
@@ -41,7 +41,7 @@ public class Data {
 	public boolean remove(Task task){		
 		boolean isRemoved = data.remove(task);
 		
-		//view = data;
+		toDateView();
 		
 		return isRemoved;
 	}
