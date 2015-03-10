@@ -56,7 +56,7 @@ public class Data {
 		return data.size() <= 0;
 	}
 	
-	public DateView toDateView(){
+	public View toDateView(){
 		ArrayList<Task> today = new ArrayList<Task>();
 		ArrayList<Task> upcoming = new ArrayList<Task>();
 		ArrayList<Task> someday = new ArrayList<Task>();
@@ -70,6 +70,7 @@ public class Data {
 			}
 		}
 		
-		return new DateView(today, upcoming, someday);
+		view = new DateView(today, upcoming, someday);
+		return view;
 	}
 }
