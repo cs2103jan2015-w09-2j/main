@@ -75,17 +75,37 @@ public class HomeView{
 		commandFromUser.setForeground(new Color(0, 51, 153));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(0, 204, 204), new Color(0, 0, 0)));
 		
+		Controller control = new Controller();
+		control.executeCommand("display 1");
+		displayHome();
+		
+		commandFromUser.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				String command = commandFromUser.getText();
+				control.executeCommand(command);
+				try {
+					displayHome();
+				} catch (BadLocationException e1) {
+					e1.printStackTrace();
+				}
+				commandFromUser.setText("");
+
+			}
+		});
+	}
+	
+	public void displayHome() throws BadLocationException{
 		//Colouring and styling of text
+		showToUser.setText("");
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
 		StyleConstants.setForeground(style, Color.BLUE.darker());
 		doc.insertString(doc.getLength(), "Today: \n", style);
-		
-		Controller control = new Controller();
-		control.executeCommand("display 1");		
+				
 		StyleConstants.setForeground(style, Color.ORANGE.darker());
 		doc.insertString(doc.getLength(), Display.getToday(),style);
-		
+				
 		StyleConstants.setForeground(style, Color.BLUE.darker());
 		doc.insertString(doc.getLength(), "\nUpcoming: \n", style);
 		StyleConstants.setForeground(style, Color.ORANGE.darker());
@@ -95,21 +115,6 @@ public class HomeView{
 		doc.insertString(doc.getLength(), "\nSomeday: \n", style);
 		StyleConstants.setForeground(style,Color.ORANGE.darker());
 		doc.insertString(doc.getLength(), Display.getSomeday(),style);
-		
-		
-		commandFromUser.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				String command = commandFromUser.getText();
-				control.executeCommand(command);
-				String showText = "";//Display.getTasks();
-				showToUser.setText(showText);
-				commandFromUser.setText("");
-
-
-			}
-		});
 	}
-	
 	
 }
