@@ -8,8 +8,8 @@ public class Task implements Comparable<Task>{
 	private static final String NORMAL_TASK = "[%1$s - %2$s] %3$s";
 	private static final int EQUAL = 0;
 	private String description;
-	private LocalDateTime start;
-	private LocalDateTime end;
+	private LocalDateTime start = null;
+	private LocalDateTime end = null;
 
 	public Task(int startYear, int startMonth, int startDay, int startHour,
 			int startMin, int endYear, int endMonth, int endDay, int endHour,
@@ -35,9 +35,6 @@ public class Task implements Comparable<Task>{
 	}
 
 	public Task() {
-		description = EMPTY_STRING;
-		start = LocalDateTime.now();
-		end = LocalDateTime.now();
 	}
 
 	public String getDescription() {
@@ -51,12 +48,12 @@ public class Task implements Comparable<Task>{
 	public LocalDateTime getEnd() {
 		return end;
 	}
-
-	public LocalTime getStartTime() {
+	
+	private LocalTime getStartTime(){
 		return start.toLocalTime();
 	}
-
-	public LocalTime getEndTime() {
+	
+	private LocalTime getEndTime(){
 		return end.toLocalTime();
 	}
 
