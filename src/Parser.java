@@ -14,7 +14,7 @@ public class Parser {
 		case DISPLAY :
 			return new ViewCmd();
 		case ADD:
-			return new AddCmd(new Task(message));
+			return new AddCmd(new Task(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, message));
 		case EDIT :
 			return new EditCmd(1, new Task());
 		case EXIT :
