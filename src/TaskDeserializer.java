@@ -1,6 +1,7 @@
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -8,7 +9,9 @@ import com.google.gson.JsonObject;
 
 public class TaskDeserializer implements JsonDeserializer<Task> {
 
-  @Override
+  private static final String EMPTY_STRING = "";
+
+@Override
   public Task deserialize(final JsonElement json, final Type typeOfT, final JsonDeserializationContext context){
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	if (json == null){
@@ -22,9 +25,12 @@ public class TaskDeserializer implements JsonDeserializer<Task> {
     
     final Task task = new Task();
     task.setDescription(description);
-    task.setStart(LocalDateTime.parse(start, formatter));
+    if (!start.equals(EMPTY_STRING)){
+    	task.setStart(LocalDateTime.parse(start, formatter));
+    }
+    if (!end.equals(EMPTY_STRING)){
     task.setEnd(LocalDateTime.parse(end, formatter));
-    
+    }
     return task;
   }
 }
