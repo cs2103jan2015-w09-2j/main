@@ -1,3 +1,4 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -10,6 +11,7 @@ public class Task implements Comparable<Task>{
 	private static final int EQUAL = 0;
 	private static final int AFTER = 1;
 	private static final int UNKNOWN = 2;
+	
 	private String description;
 	private LocalDateTime start = null;
 	private LocalDateTime end = null;
@@ -109,7 +111,52 @@ public class Task implements Comparable<Task>{
 			return false;
 		}
 	}
+	
+	public boolean isTodayTask(){
+		LocalDate now = LocalDate.now();
+		
+		if (this.isFloatingTask()){
+			return false;
+		}else if (this.isDeadlineTask()){
+			if (this.end.toLocalDate().equals(now)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else if (this.isNormalTask()){
+			if (this.start.toLocalDate().equals(now)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isUpcomingTask(){
+		if (!this.isSomedayTask() && !this.isTodayTask()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 
+	public boolean isSomedayTask(){
+		if (this.isFloatingTask()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	
+	
 	public String toString() {
 		String toPrint = EMPTY_STRING;
 		if (isFloatingTask()) {
