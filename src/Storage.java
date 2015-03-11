@@ -128,11 +128,6 @@ public class Storage {
 		return CHARACTER_EMPTY_STRING;
 	}
 
-	
-	
-	public static void main(String[] args) throws Exception{
-	}
-
 }
 
 

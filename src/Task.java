@@ -6,11 +6,15 @@ public class Task implements Comparable<Task>{
 	private static final String EMPTY_STRING = "";
 	private static final String DEADLINE_TASK = "[%1$s] " + "%2$s";
 	private static final String NORMAL_TASK = "[%1$s - %2$s] %3$s";
+	private static final int BEFORE = -1;
 	private static final int EQUAL = 0;
+	private static final int AFTER = 1;
+	private static final int UNKNOWN = 2;
 	private String description;
 	private LocalDateTime start = null;
 	private LocalDateTime end = null;
-
+	
+	// Timed Task
 	public Task(int startYear, int startMonth, int startDay, int startHour,
 			int startMin, int endYear, int endMonth, int endDay, int endHour,
 			int endMin, String taskDescription) {
@@ -33,10 +37,12 @@ public class Task implements Comparable<Task>{
 		description = taskDescription;
 		end = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMin);
 	}
-
-	public Task() {
+	
+	// Used internally by TaskSerializer
+	public Task(){
+		
 	}
-
+	
 	public String getDescription() {
 		return description;
 	}
@@ -131,38 +137,70 @@ public class Task implements Comparable<Task>{
 	    
 	    final Task other = (Task) obj;
 	    
-	    if (!this.getDescription().equals(other.getDescription())){
-	    	return false;
+	    if (this.isFloatingTask() && other.isFloatingTask()){
+	    	return this.getDescription().equals(other.getDescription());
 	    }
-	    if (!this.getStart().equals(other.getStart())){
-	    	return false;
+	    else if (this.isDeadlineTask() && other.isDeadlineTask()){
+	    	return (this.getDescription().equals(other.getDescription()) && this.getEnd().equals(other.getEnd()));
 	    }
-	    if (!this.getEnd().equals(other.getEnd())){
-	    	return false;
+	    else if (this.isNormalTask() && other.isNormalTask()){
+	    	return (this.getDescription().equals(other.getDescription()) && this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd()));
 	    }
 	    
-	    return true;
+	    return false;
 	}
 	
 	public int compareTo(Task object){
-		int compareDescription = description.compareTo(object.getDescription());
-		int compareStart = start.compareTo(object.getStart());
-		int compareEnd = end.compareTo(object.getEnd());
 		
-		if (compareStart == EQUAL){
-			if (compareEnd == EQUAL){
-				return compareDescription;
+		if (this.equals(object)){
+			return EQUAL;
+		}
+		
+		if (this.isFloatingTask() && object.isFloatingTask()){
+			return this.getDescription().compareTo(object.getDescription());
+		}
+		else if (this.isDeadlineTask() && object.isDeadlineTask()){
+			if (this.getEnd().equals(object.getEnd())){
+				return this.getDescription().compareTo(object.getDescription());
 			}
 			else{
-				return compareEnd;
+				return this.getEnd().compareTo(object.getEnd());
+				}
+			}
+		else if (this.isNormalTask() && object.isNormalTask()){
+			if (this.getStart().equals(object.getStart())){
+				if (this.getEnd().equals(object.getEnd())){
+					return this.getDescription().compareTo(object.getDescription());
+				}
+				else{
+					return this.getEnd().compareTo(object.getEnd());
+				}
+			}
+			else{
+				return this.getStart().compareTo(object.getStart());
 			}
 		}
-		else{
-			return compareStart;
+		
+		if (this.isFloatingTask() && object.isDeadlineTask()){
+			return BEFORE;
 		}
-	}
-	
-	public static void main(String[] args) {
+		else if (this.isFloatingTask() && object.isNormalTask()){
+			return BEFORE;
+		}
+		else if (this.isDeadlineTask() && object.isNormalTask()){
+			return BEFORE;
+		}
+		else if (this.isDeadlineTask() && object.isFloatingTask()){
+			return AFTER;
+		}
+		else if (this.isNormalTask() && object.isFloatingTask()){
+			return AFTER;
+		}
+		else if (this.isNormalTask() && object.isDeadlineTask()){
+			return AFTER;
+		}
+		
+		return UNKNOWN;
 
 	}
 
