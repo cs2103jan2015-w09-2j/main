@@ -45,7 +45,6 @@ public class TestTask {
 	private Task earlyDeadlineTask;
 	private Task lateDeadlineTask;
 	private Task dupLateDeadlineTask;
-	private ArrayList<Task> toDo = new ArrayList<Task>();
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -65,12 +64,6 @@ public class TestTask {
 		earlyDeadlineTask = new Task(2015, 3, 10, 21, 30, TASK_GO_RT);
 		lateDeadlineTask = new Task(2015, 3, 10, 22, 30, TASK_MOP_FLOOR);
 		dupLateDeadlineTask = new Task(2015, 3, 10, 22, 30, TASK_MOP_FLOOR);
-		
-		toDo.add(floatingTask);
-		toDo.add(earlyTimedTask);
-		toDo.add(lateTimedTask);
-		toDo.add(earlyDeadlineTask);
-		toDo.add(lateDeadlineTask);
 	}
 
 	@After

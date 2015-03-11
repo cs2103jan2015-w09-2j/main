@@ -26,28 +26,32 @@ public class Storage {
 	private static final String CHARACTER_EMPTY_STRING = "";
 	
 	private String fileName = "oneTag.json";  //default name is oneTag.json
-	private String filePath;
 	private ArrayList<Task> allTasks;
+	private String currentRelativePath = System.getProperty(USER_DIRECTORY);
+	private String filePath = currentRelativePath + CHARACTER_BACKSLASH + fileName;
 	
 	
 	public Storage(){
-		String currentRelativePath = System.getProperty(USER_DIRECTORY);
-		filePath = currentRelativePath + CHARACTER_BACKSLASH + fileName;
 		allTasks = new ArrayList<Task>();
-		checkFileExist();
+		checkFileExist(this.filePath);
+	}
+	
+	public Storage(ArrayList<Task> task){
+		allTasks = task;
+		checkFileExist(this.filePath);
 	}
 	
 	public Storage(String directory, ArrayList<Task> task){
 		filePath = directory;
 		allTasks = task;
-		checkFileExist();
+		checkFileExist(this.filePath);
 	}
 	
-	public Storage(String directory, String name, ArrayList<Task> task ){
-		fileName = name;
+	public Storage(String directory, String fileName, ArrayList<Task> task ){
+		this.fileName = fileName;
 		filePath = directory + CHARACTER_BACKSLASH + fileName;
 		allTasks = task;
-		checkFileExist();
+		checkFileExist(this.filePath);
 	}
 	
 	public String setPath(String newDirectory){
@@ -113,9 +117,9 @@ public class Storage {
 	}
 	
 	
-	private String checkFileExist(){
+	private String checkFileExist(String filePath){
 
-		File file = new File(this.filePath);
+		File file = new File(filePath);
 
 		if (!file.exists()) {
 			try {
