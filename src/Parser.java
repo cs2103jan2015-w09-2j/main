@@ -30,7 +30,7 @@ public class Parser {
 		    
 		    if(userInput.charAt(2) == '/')
 		    {
-		    	startTime = convertToInt(stringStartTime);
+		    	startTime = convertToInt(userInput);
 		    	return new Task(startTime[0], startTime[1],startTime[2], startTime[3], startTime[4], -1,-1,-1,-1,-1,null);
 		    }
 		   // String test = "pick up boiboi from 23/01/2015 23:15 to 24/01/2015 13:14" ;
@@ -72,3 +72,4 @@ public class Parser {
 	private static String getMessage(String input) {
 		return input;
 	}
+}
