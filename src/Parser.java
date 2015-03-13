@@ -14,7 +14,7 @@ public class Parser {
 			return new AddCmd(parseMsg(message));
 		case EDIT:
 			inputArr = message.split(" ",INPUT_SPLIT_SIZE);
-			return new EditCmd(Integer.parseInt(inputArr[INPUT_SPLIT_FIRST]), parseMsg(inputArr[INPUT_SPLIT_SECOND]);
+			return new EditCmd(Integer.parseInt(inputArr[INPUT_SPLIT_FIRST]), parseMsg(inputArr[INPUT_SPLIT_SECOND]));
 		case EXIT:
 			System.exit(0);
 		default:
