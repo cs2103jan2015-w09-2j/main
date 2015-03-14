@@ -45,38 +45,74 @@ public class Task implements Comparable<Task>{
 		
 	}
 	
+	/**
+	 * Returns the description of Task object
+	 * @return String
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * Returns the start date and time of Task object
+	 * @return LocalDateTime
+	 */
 	public LocalDateTime getStart() {
 		return start;
 	}
 
+	/**
+	 * Returns the end date and time of Task object
+	 * @return LocalDateTime
+	 */
 	public LocalDateTime getEnd() {
 		return end;
 	}
 	
+	/**
+	 * Returns the start time of Task object
+	 * @return LocalTime
+	 */
 	private LocalTime getStartTime(){
 		return start.toLocalTime();
 	}
 	
+	/**
+	 * Returns the end time of Task object
+	 * @return LocalTime
+	 */
 	private LocalTime getEndTime(){
 		return end.toLocalTime();
 	}
-
+	
+	/**
+	 * Sets the description of Task object
+	 * @param newDescription Sets the description of Task object
+	 */
 	public void setDescription(String newDescription) {
 		description = newDescription;
 	}
-
+	
+	/**
+	 * Sets the start date and time of Task object
+	 * @param newStart sets the start date and time of Task object
+	 */
 	public void setStart(LocalDateTime newStart) {
 		start = newStart;
 	}
-
+	
+	/**
+	 * Sets the end date and time of Task object
+	 * @param newEnd sets the end date and time of Task object
+	 */
 	public void setEnd(LocalDateTime newEnd) {
 		end = newEnd;
 	}
-
+	
+	/**
+	 * Updates the fields of the current object with the fields of the newTask
+	 * @param newTask updates the fields of the current object with the fields of the newTask
+	 */
 	public void update(Task newTask) {
 		String newDescription = newTask.getDescription();
 		LocalDateTime newStart = newTask.getStart();
@@ -86,7 +122,11 @@ public class Task implements Comparable<Task>{
 		setStart(newStart);
 		setEnd(newEnd);
 	}
-
+	
+	/**
+	 * Returns true if task is a floating task, false otherwise
+	 * @return true if task is a floating task, false otherwise
+	 */
 	public boolean isFloatingTask() {
 
 		if (start == null && end == null) {
@@ -95,7 +135,11 @@ public class Task implements Comparable<Task>{
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Returns true if task is a deadline task, false otherwise
+	 * @return true if Task is a deadline task, false otherwise
+	 */
 	public boolean isDeadlineTask() {
 		if (start == null && end != null) {
 			return true;
@@ -103,7 +147,11 @@ public class Task implements Comparable<Task>{
 			return false;
 		}
 	}
-
+	
+	/** 
+	 * Returns true if task is a timed task, false otherwise
+	 * @return true if Task is a timed task, false otherwise
+	 */
 	public boolean isNormalTask() {
 		if (start != null && end != null) {
 			return true;
@@ -112,6 +160,10 @@ public class Task implements Comparable<Task>{
 		}
 	}
 	
+	/**
+	 * Returns true if deadline task's end field is today or if timed task's start field is today, false otherwise
+	 * @return true if deadline task's end field is today or if timed tasks's start field is today, false otherwise
+	 */
 	public boolean isTodayTask(){
 		LocalDate now = LocalDate.now();
 		
@@ -137,6 +189,10 @@ public class Task implements Comparable<Task>{
 		return false;
 	}
 	
+	/**
+	 * Returns true if task is not some day's task and not today's task, false otherwise
+	 * @return true if task is not some day's task and not today's task, false otherwise
+	 */
 	public boolean isUpcomingTask(){
 		if (!this.isSomedayTask() && !this.isTodayTask()){
 			return true;
@@ -145,7 +201,11 @@ public class Task implements Comparable<Task>{
 			return false;
 		}
 	}
-
+	
+	/**
+	 * Returns true if task is a floating task
+	 * @return true if task is a floating task
+	 */
 	public boolean isSomedayTask(){
 		if (this.isFloatingTask()){
 			return true;
@@ -155,8 +215,11 @@ public class Task implements Comparable<Task>{
 		}
 	}
 	
-	
-	
+	/**
+	 * Returns a String representation of this object
+	 * @returns each task with a specified format - floating task - "Description", Deadline Task - [end time] "Description" Timed task - [start time - end time] "Description
+	 *
+	 */
 	public String toString() {
 		String toPrint = EMPTY_STRING;
 		if (isFloatingTask()) {
@@ -172,6 +235,10 @@ public class Task implements Comparable<Task>{
 		return toPrint;
 	}
 	
+	/**
+	 * Returns true if some other object is "equal to" this one, false otherwise
+	 * @return true if some other object is "equal to" this one, false otherwise
+	 */
 	public boolean equals(Object obj) {
 	    
 		if (obj == null) {

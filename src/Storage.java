@@ -54,18 +54,32 @@ public class Storage {
 		checkFileExist(this.filePath);
 	}
 	
+	/**
+	 * Changes the directory to specified directory
+	 */
 	public String setPath(String newDirectory){
 		filePath = newDirectory + CHARACTER_BACKSLASH + fileName;
 		
 		return String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory);
 	}
 	
+	
+	/**
+	 * Changes the file name to name
+	 * @param name
+	 * @return String
+	 */
 	public String setFileName(String name){
 		fileName = name;
 		
 		return String.format(MESSAGE_NEW_FILE_NAME, name);
 	}
 	
+	
+	/**
+	 * Writes the ArrayList<Task> to file
+	 * @param tasks
+	 */
 	public void writeToFile(ArrayList<Task> tasks){
 		
 		GsonBuilder gsonBuilder = new GsonBuilder();
@@ -87,6 +101,10 @@ public class Storage {
 		
 	}
 	
+	/**
+	 * Gets the list of tasks from file, puts them into an ArrayList
+	 * @return ArrayList<Task>
+	 */
 	@SuppressWarnings("resource")
 	public ArrayList<Task> getData(){
 		
@@ -116,7 +134,11 @@ public class Storage {
 		
 	}
 	
-	
+	/**
+	 * 
+	 * @param filePath
+	 * @return String
+	 */
 	private String checkFileExist(String filePath){
 
 		File file = new File(filePath);
