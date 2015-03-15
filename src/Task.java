@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Task implements Comparable<Task>{
+public class Task{
 
 	private static final String EMPTY_STRING = "";
 	private static final String DEADLINE_TASK = "[%1$s] " + "%2$s";
@@ -264,58 +264,6 @@ public class Task implements Comparable<Task>{
 	    return false;
 	}
 	
-	public int compareTo(Task object){
-		
-		if (this.equals(object)){
-			return EQUAL;
-		}
-		
-		if (this.isFloatingTask() && object.isFloatingTask()){
-			return this.getDescription().compareTo(object.getDescription());
-		}
-		else if (this.isDeadlineTask() && object.isDeadlineTask()){
-			if (this.getEnd().equals(object.getEnd())){
-				return this.getDescription().compareTo(object.getDescription());
-			}
-			else{
-				return this.getEnd().compareTo(object.getEnd());
-				}
-			}
-		else if (this.isNormalTask() && object.isNormalTask()){
-			if (this.getStart().equals(object.getStart())){
-				if (this.getEnd().equals(object.getEnd())){
-					return this.getDescription().compareTo(object.getDescription());
-				}
-				else{
-					return this.getEnd().compareTo(object.getEnd());
-				}
-			}
-			else{
-				return this.getStart().compareTo(object.getStart());
-			}
-		}
-		
-		if (this.isFloatingTask() && object.isDeadlineTask()){
-			return BEFORE;
-		}
-		else if (this.isFloatingTask() && object.isNormalTask()){
-			return BEFORE;
-		}
-		else if (this.isDeadlineTask() && object.isNormalTask()){
-			return BEFORE;
-		}
-		else if (this.isDeadlineTask() && object.isFloatingTask()){
-			return AFTER;
-		}
-		else if (this.isNormalTask() && object.isFloatingTask()){
-			return AFTER;
-		}
-		else if (this.isNormalTask() && object.isDeadlineTask()){
-			return AFTER;
-		}
-		
-		return UNKNOWN;
-
-	}
+	
 
 }

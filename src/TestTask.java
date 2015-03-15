@@ -175,17 +175,6 @@ public class TestTask {
 		assertTrue(MESSAGE_TEST_FLOATING_TASK, dupFloatingTask.equals(floatingTask));
 	}
 
-	@Test
-	public void testCompareTo() {
-		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.compareTo(dupFloatingTask), EQUAL);
-		assertEquals(MESSAGE_TEST_TIMED_TASK, dupLateTimedTask.compareTo(lateTimedTask), EQUAL);
-		assertEquals(MESSAGE_TEST_DEADLINE_TASK, dupLateDeadlineTask.compareTo(lateDeadlineTask), EQUAL);
-		assertEquals(MESSAGE_TEST_FLOATING_TIMED_TASK, floatingTask.compareTo(earlyTimedTask), BEFORE);
-		assertEquals(MESSAGE_TEST_FLOATING_DEADLINE_TASK, floatingTask.compareTo(earlyDeadlineTask), BEFORE);
-		assertEquals(MESSAGE_TEST_TIMED_FLOATING_TASK, earlyTimedTask.compareTo(floatingTask), AFTER);
-		assertEquals(MESSAGE_TEST_TIMED_DEADLINE_TASK, earlyTimedTask.compareTo(earlyDeadlineTask), AFTER);
-		assertEquals(MESSAGE_TEST_DEADLINE_FLOATING_TASK, earlyDeadlineTask.compareTo(floatingTask), AFTER);
-		assertEquals(MESSAGE_TEST_DEADLINE_TIMED_TASK, earlyDeadlineTask.compareTo(earlyTimedTask), BEFORE);
-	}
+	
 
 }
