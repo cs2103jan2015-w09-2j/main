@@ -9,6 +9,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -21,10 +25,11 @@ public class Storage {
 	private static final String CHARACTER_BACKSLASH = "//";
 	private static final String MESSAGE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
 	private static final String MESSAGE_NEW_FILE_NAME = "File name has been set to %1$s";
-	
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
 	
+	private static Logger logger = Logger.getLogger("Storage");
+	private static final String DIRECTORY_LOGGER = "storage.log";
 	private String fileName = "oneTag.json";  //default name is oneTag.json
 	private ArrayList<Task> allTasks;
 	private String currentRelativePath = System.getProperty(USER_DIRECTORY);
@@ -34,17 +39,20 @@ public class Storage {
 	public Storage(){
 		allTasks = new ArrayList<Task>();
 		checkFileExist(this.filePath);
+		initializeLogger();
 	}
 	
 	public Storage(ArrayList<Task> task){
 		allTasks = task;
 		checkFileExist(this.filePath);
+		initializeLogger();
 	}
 	
 	public Storage(String directory, ArrayList<Task> task){
 		filePath = directory;
 		allTasks = task;
 		checkFileExist(this.filePath);
+		initializeLogger();
 	}
 	
 	public Storage(String directory, String fileName, ArrayList<Task> task ){
@@ -52,6 +60,23 @@ public class Storage {
 		filePath = directory + CHARACTER_BACKSLASH + fileName;
 		allTasks = task;
 		checkFileExist(this.filePath);
+		initializeLogger();
+	}
+	
+	private void initializeLogger(){
+		Handler fh;
+		try {
+			fh = new FileHandler(DIRECTORY_LOGGER);
+		} catch (SecurityException e) {
+			e.printStackTrace();
+			return;
+		} catch (IOException e) {
+			System.out.println(String.format(MESSAGE_ERROR_FILE_NOT_FOUND, DIRECTORY_LOGGER));
+			return;
+		}
+		logger.addHandler(fh);
+		logger.setLevel(Level.ALL);
+		
 	}
 	
 	/**
@@ -59,7 +84,7 @@ public class Storage {
 	 */
 	public String setPath(String newDirectory){
 		filePath = newDirectory + CHARACTER_BACKSLASH + fileName;
-		
+		logger.log(Level.FINEST,"Path changed", String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory) );
 		return String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory);
 	}
 	
@@ -153,7 +178,13 @@ public class Storage {
 		}
 		return CHARACTER_EMPTY_STRING;
 	}
-
+	
+	public static void main(String[] args){
+		Storage storage = new Storage();
+		storage.setPath("testing");
+	}
+	
+	
 }
 
 
