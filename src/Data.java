@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class Data {
+public class Data{
 
 	ArrayList<Task> data;
 	View view;
@@ -46,6 +48,7 @@ public class Data {
 		return isRemoved;
 	}
 	
+	
 	//others
 	public void clear(){
 		data.clear();
@@ -57,6 +60,9 @@ public class Data {
 	}
 	
 	public View toDateView(){
+		Comparator myComparator = new DataComparator();
+		Collections.sort(data, myComparator);
+		
 		ArrayList<Task> today = new ArrayList<Task>();
 		ArrayList<Task> upcoming = new ArrayList<Task>();
 		ArrayList<Task> someday = new ArrayList<Task>();
@@ -73,4 +79,5 @@ public class Data {
 		view = new DateView(today, upcoming, someday);
 		return view;
 	}
+	
 }
