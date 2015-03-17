@@ -59,29 +59,39 @@ public class HomeView {
 		designOfInterface();
 		Controller control = new Controller();
 		control.executeCommand("display 1");
-		displayHome();
+		displayView();
 
 		commandFromUser.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 
 				String command = commandFromUser.getText();
-				control.executeCommand(command);
+
+				try{
+					control.executeCommand(command);
+				} catch(IndexOutOfBoundsException emptyField) {
+					JOptionPane.showMessageDialog(null,
+							"Command field is empty!");
+				}
 
 				try {
-					displayHome();
-				} catch (BadLocationException e1) {
+					displayView();
+				} catch (BadLocationException badlocation) {
 					JOptionPane.showMessageDialog(null, "Error Message!");
 				}
 
 				commandFromUser.setText("");
 
 			}
+
 		});
 	}
 
-	public void displayHome() throws BadLocationException {
+
+	public void displayView() throws BadLocationException {
 		// Colouring and styling of text
+		String messageToShow = Display.getMessage();
+		if(!messageToShow.isEmpty()){
 		showToUser.setText("");
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
@@ -100,6 +110,11 @@ public class HomeView {
 		doc.insertString(doc.getLength(), "\nSomeday: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), Display.getSomeday(), style);
+		}
+		
+		else{
+			JOptionPane.showMessageDialog(null, messageToShow);
+		}
 	}
 
 	public void designOfInterface() {
