@@ -84,7 +84,9 @@ public class Storage {
 	 */
 	public String setPath(String newDirectory){
 		filePath = newDirectory + CHARACTER_BACKSLASH + fileName;
+		
 		logger.log(Level.FINEST,"Path changed", String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory) );
+		
 		return String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory);
 	}
 	

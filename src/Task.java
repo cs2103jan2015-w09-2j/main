@@ -244,7 +244,6 @@ public class Task{
 		if (obj == null) {
 	        return false;
 	    }
-	    
 	    if (getClass() != obj.getClass()) {
 	        return false;
 	    }
