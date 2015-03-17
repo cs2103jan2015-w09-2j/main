@@ -1,12 +1,10 @@
-import java.util.ArrayList;
-
 
 public class Display {
 
 	private static DateView viewsOfDays;
-	private static ArrayList<Task> collectionOfTasks;
 	private static String message;
 	private static int i;
+	
 	
 	public  Display(View dateView, String msg){
 		viewsOfDays = (DateView)dateView;
