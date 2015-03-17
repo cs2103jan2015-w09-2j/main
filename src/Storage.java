@@ -13,6 +13,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,7 +28,6 @@ public class Storage {
 	private static final String MESSAGE_NEW_FILE_NAME = "File name has been set to %1$s";
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
-	
 	private static Logger logger = Logger.getLogger("Storage");
 	private static final String DIRECTORY_LOGGER = "storage.log";
 	private String fileName = "oneTag.json";  //default name is oneTag.json
@@ -74,9 +74,10 @@ public class Storage {
 			System.out.println(String.format(MESSAGE_ERROR_FILE_NOT_FOUND, DIRECTORY_LOGGER));
 			return;
 		}
+		SimpleFormatter formatter = new SimpleFormatter();
+		fh.setFormatter(formatter);
 		logger.addHandler(fh);
 		logger.setLevel(Level.ALL);
-		
 	}
 	
 	/**
@@ -85,7 +86,7 @@ public class Storage {
 	public String setPath(String newDirectory){
 		filePath = newDirectory + CHARACTER_BACKSLASH + fileName;
 		
-		logger.log(Level.FINEST,"Path changed", String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory) );
+		logger.log(Level.FINEST, String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory) );
 		
 		return String.format(MESSAGE_NEW_USER_DIRECTORY, newDirectory);
 	}
@@ -121,7 +122,7 @@ public class Storage {
 			fw.flush();
 			fw.close();
 		}catch(Exception e){
-			e.printStackTrace();
+			logger.log(Level.WARNING, e.getMessage());
 			return;
 		}
 		
@@ -146,7 +147,7 @@ public class Storage {
 				jsonString += line;
 			}
 		} catch(Exception e){
-			e.printStackTrace();
+			logger.log(Level.WARNING, e.getMessage());
 		}
 		
 		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, new TaskDeserializer()).create();

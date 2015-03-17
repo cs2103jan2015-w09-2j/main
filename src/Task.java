@@ -240,14 +240,20 @@ public class Task{
 	 * @return true if some other object is "equal to" this one, false otherwise
 	 */
 	public boolean equals(Object obj) {
-	    
-		if (obj == null) {
+	    boolean isNullObj = (obj == null);
+		
+		if (isNullObj) {
 	        return false;
 	    }
+		
+		assert !isNullObj;
+		
 	    if (getClass() != obj.getClass()) {
 	        return false;
 	    }
-	    assert false;
+	    
+	    assert this.getClass() == obj.getClass();
+	    
 	    final Task other = (Task) obj;
 	    
 	    if (this.isFloatingTask() && other.isFloatingTask()){
