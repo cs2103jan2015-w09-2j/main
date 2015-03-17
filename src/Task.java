@@ -247,7 +247,7 @@ public class Task{
 	    if (getClass() != obj.getClass()) {
 	        return false;
 	    }
-	    
+	    assert false;
 	    final Task other = (Task) obj;
 	    
 	    if (this.isFloatingTask() && other.isFloatingTask()){
