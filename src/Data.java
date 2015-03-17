@@ -60,7 +60,7 @@ public class Data{
 	}
 	
 	public View toDateView(){
-		Comparator myComparator = new DataComparator();
+		Comparator<Task> myComparator = new DataComparator<Task>();
 		Collections.sort(data, myComparator);
 		
 		ArrayList<Task> today = new ArrayList<Task>();

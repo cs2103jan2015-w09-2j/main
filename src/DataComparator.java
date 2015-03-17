@@ -1,9 +1,9 @@
 import java.util.Comparator;
 
 
-public class DataComparator<Task> implements Comparator<Task>{
+public class DataComparator<T> implements Comparator<T>{
 	@Override
-	public int compare(Task task1, Task task2){
+	public int compare(T obj1, T obj2){
 		return 0;
 	}
 }
