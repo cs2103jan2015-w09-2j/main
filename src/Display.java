@@ -43,7 +43,7 @@ public class Display {
 	}
 	
 	
-	public String getMessage(){
+	public static String getMessage(){
 		return message;
 	}
 	
