@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public abstract class Cmd {
 	
@@ -15,7 +17,9 @@ public abstract class Cmd {
 	
 	protected void writeToFile(Data myList){
 		Storage file = new Storage();
-		file.writeToFile(myList.getData());
+		ArrayList<Task> tasks = myList.getData();
+		assert tasks != null;
+		file.writeToFile(tasks);
 	}
 
 }
