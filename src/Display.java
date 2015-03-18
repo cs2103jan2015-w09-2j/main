@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class Display {
 
@@ -13,37 +15,32 @@ public class Display {
 	}
 	
 	public static String getToday(){
-		String tasksForToday = "";
-		i=0;
-		for (Task task : viewsOfDays.getToday()){
-			i++;
-			tasksForToday +=  i+"."+task.toString() + "\n";
-		}
+		String tasksForToday = getTask(viewsOfDays.getToday());
 		return tasksForToday;
 	}
 	
 	public static String getUpcoming(){
-		String upcomingTasks = "";
-		i=0;
-		for (Task task : viewsOfDays.getUpcoming()){
-			i++;
-			upcomingTasks +=  task.toString() + "\n";
-		}
+		String upcomingTasks = getTask(viewsOfDays.getUpcoming());
 		return upcomingTasks;
 	}
 
 	public static String getSomeday(){
-		String tasksForSomeday = "";
-		i=0;
-		for (Task task : viewsOfDays.getSomeday()){
-		    i++;
-			tasksForSomeday +=  i+"."+ task.toString() + "\n";
-		}
+		String tasksForSomeday = getTask(viewsOfDays.getSomeday());
 		return tasksForSomeday;
+
 	}
 	
 	
-	public String getMessage(){
+	public static String getTask(ArrayList<Task> taskArray){
+		String tasks = "";
+		for (Task task : taskArray){
+		    i++;
+			tasks +=  i+"."+ task.toString() + "\n";
+		}
+		return tasks;
+	}
+	
+	public static String getMessage(){
 		return message;
 	}
 	

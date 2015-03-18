@@ -66,13 +66,8 @@ public class HomeView {
 			public void actionPerformed(ActionEvent e) {
 
 				String command = commandFromUser.getText();
-
-				try{
 					control.executeCommand(command);
-				} catch(IndexOutOfBoundsException emptyField) {
-					JOptionPane.showMessageDialog(null,
-							"Command field is empty!");
-				}
+				
 
 				try {
 					displayView();
@@ -90,8 +85,7 @@ public class HomeView {
 
 	public void displayView() throws BadLocationException {
 		// Colouring and styling of text
-		String messageToShow = Display.getMessage();
-		if(!messageToShow.isEmpty()){
+	
 		showToUser.setText("");
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
@@ -110,11 +104,8 @@ public class HomeView {
 		doc.insertString(doc.getLength(), "\nSomeday: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), Display.getSomeday(), style);
-		}
 		
-		else{
-			JOptionPane.showMessageDialog(null, messageToShow);
-		}
+		
 	}
 
 	public void designOfInterface() {
