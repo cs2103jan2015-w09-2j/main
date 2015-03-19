@@ -7,14 +7,11 @@ public class Task{
 	private static final String EMPTY_STRING = "";
 	private static final String DEADLINE_TASK = "[%1$s] " + "%2$s";
 	private static final String NORMAL_TASK = "[%1$s - %2$s] %3$s";
-	private static final int BEFORE = -1;
-	private static final int EQUAL = 0;
-	private static final int AFTER = 1;
-	private static final int UNKNOWN = 2;
 	
 	private String description;
 	private LocalDateTime start = null;
 	private LocalDateTime end = null;
+	private boolean isCompleted = false;
 	
 	// Timed Task
 	public Task(int startYear, int startMonth, int startDay, int startHour,
@@ -51,8 +48,8 @@ public class Task{
 	 */
 	public String getDescription() {
 		return description;
-	}
-
+	}	
+	
 	/**
 	 * Returns the start date and time of Task object
 	 * @return LocalDateTime
@@ -86,6 +83,14 @@ public class Task{
 	}
 	
 	/**
+	 * Returns whether the task is completed
+	 * @return boolean
+	 */
+	public boolean getIsCompleted(){
+		return isCompleted;
+	}
+	
+	/**
 	 * Sets the description of Task object
 	 * @param newDescription Sets the description of Task object
 	 */
@@ -110,17 +115,26 @@ public class Task{
 	}
 	
 	/**
+	 * Sets the task as completed
+	 */
+	public void setIsCompleted(boolean isCompleted){
+		this.isCompleted = isCompleted;
+	}
+	
+	/**
 	 * Updates the fields of the current object with the fields of the newTask
 	 * @param newTask updates the fields of the current object with the fields of the newTask
 	 */
-	public void update(Task newTask) {
-		String newDescription = newTask.getDescription();
-		LocalDateTime newStart = newTask.getStart();
-		LocalDateTime newEnd = newTask.getEnd();
+	public void update(Task otherTask) {
+		String otherDescription = otherTask.getDescription();
+		LocalDateTime otherStart = otherTask.getStart();
+		LocalDateTime otherEnd = otherTask.getEnd();
+		boolean isCompletedOther = otherTask.getIsCompleted();
 
-		setDescription(newDescription);
-		setStart(newStart);
-		setEnd(newEnd);
+		setDescription(otherDescription);
+		setStart(otherStart);
+		setEnd(otherEnd);
+		setIsCompleted(isCompletedOther);
 	}
 	
 	/**
@@ -128,7 +142,7 @@ public class Task{
 	 * @return true if task is a floating task, false otherwise
 	 */
 	public boolean isFloatingTask() {
-
+		
 		if (start == null && end == null) {
 			return true;
 		} else {
@@ -141,6 +155,7 @@ public class Task{
 	 * @return true if Task is a deadline task, false otherwise
 	 */
 	public boolean isDeadlineTask() {
+
 		if (start == null && end != null) {
 			return true;
 		} else {
@@ -153,6 +168,7 @@ public class Task{
 	 * @return true if Task is a timed task, false otherwise
 	 */
 	public boolean isNormalTask() {
+	
 		if (start != null && end != null) {
 			return true;
 		} else {
@@ -165,6 +181,10 @@ public class Task{
 	 * @return true if deadline task's end field is today or if timed tasks's start field is today, false otherwise
 	 */
 	public boolean isTodayTask(){
+		if (this.isCompleted){
+			return false;
+		}
+		
 		LocalDate now = LocalDate.now();
 		
 		if (this.isFloatingTask()){
@@ -193,7 +213,10 @@ public class Task{
 	 * Returns true if task is not some day's task and not today's task, false otherwise
 	 * @return true if task is not some day's task and not today's task, false otherwise
 	 */
-	public boolean isUpcomingTask(){
+	public boolean isUpcomingTask(){	
+		if (this.isCompleted){
+			return false;
+		}
 		if (!this.isSomedayTask() && !this.isTodayTask()){
 			return true;
 		}
@@ -207,6 +230,9 @@ public class Task{
 	 * @return true if task is a floating task
 	 */
 	public boolean isSomedayTask(){
+		if (this.isCompleted){
+			return false;
+		}
 		if (this.isFloatingTask()){
 			return true;
 		}
@@ -254,7 +280,10 @@ public class Task{
 	    
 	    assert this.getClass() == obj.getClass();
 	    
+	    
 	    final Task other = (Task) obj;
+	    
+	    if (this.isCompleted == other.isCompleted){
 	    
 	    if (this.isFloatingTask() && other.isFloatingTask()){
 	    	return this.getDescription().equals(other.getDescription());
@@ -266,6 +295,10 @@ public class Task{
 	    	return (this.getDescription().equals(other.getDescription()) && this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd()));
 	    }
 	    
+	    }
+	    else{
+	    	return false;
+	    }
 	    return false;
 	}
 	

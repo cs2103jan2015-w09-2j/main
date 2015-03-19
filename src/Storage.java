@@ -123,7 +123,6 @@ public class Storage {
 			fw.close();
 		}catch(Exception e){
 			logger.log(Level.WARNING, e.getMessage());
-			return;
 		}
 		
 		
