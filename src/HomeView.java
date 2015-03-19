@@ -1,3 +1,5 @@
+//@author A0112715R
+
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -24,7 +26,7 @@ public class HomeView {
 	private JFrame frame;
 	private JTextField commandFromUser;
 	private JTextPane showToUser;
-
+	private Display display = Display.getInstanceOfDisplay();
 	/**
 	 * Launch the application here.
 	 */
@@ -41,25 +43,15 @@ public class HomeView {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 * 
-	 * @throws BadLocationException
-	 */
 	public HomeView() throws BadLocationException {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 * 
-	 * @throws BadLocationException
-	 */
 	private void initialize() throws BadLocationException {
 		designOfInterface();
 		Controller control = new Controller();
 		control.executeCommand("display 1");
-		displayView();
+		displayHomeView();
 
 		commandFromUser.addActionListener(new ActionListener() {
 
@@ -70,7 +62,7 @@ public class HomeView {
 				
 
 				try {
-					displayView();
+					displayHomeView();
 				} catch (BadLocationException badlocation) {
 					JOptionPane.showMessageDialog(null, "Error Message!");
 				}
@@ -83,7 +75,7 @@ public class HomeView {
 	}
 
 
-	public void displayView() throws BadLocationException {
+	public void displayHomeView() throws BadLocationException {
 		// Colouring and styling of text
 	
 		showToUser.setText("");
@@ -93,17 +85,17 @@ public class HomeView {
 		doc.insertString(doc.getLength(), "Today: \n", style);
 
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), Display.getToday(), style);
+		doc.insertString(doc.getLength(), display.getToday(), style);
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
 		doc.insertString(doc.getLength(), "\nUpcoming: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), Display.getUpcoming(), style);
+		doc.insertString(doc.getLength(), display.getUpcoming(), style);
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
 		doc.insertString(doc.getLength(), "\nSomeday: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), Display.getSomeday(), style);
+		doc.insertString(doc.getLength(), display.getSomeday(), style);
 		
 		
 	}
