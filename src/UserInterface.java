@@ -103,6 +103,7 @@ public class UserInterface {
                     setCharacterAttributes(before, after - before, attrBlack, false);
                 }
             }
+
         };
         
 
@@ -131,10 +132,8 @@ public class UserInterface {
 			}
 		});
 
-		
 	    showToUser = new JTextPane();
 		panel.add(showToUser, BorderLayout.CENTER);
-		showToUser = new JTextPane();
 		showToUser.setFont(new Font("Calibri", Font.PLAIN, 20));
 		showToUser.setBackground(new Color(255, 255, 255));
 		showToUser.setEditable(false);
