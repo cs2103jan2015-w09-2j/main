@@ -168,18 +168,18 @@ public class UserInterface {
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "Today: \n", style);
+		doc.insertString(doc.getLength(), " Today: \n", style);
 
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), display.getToday(), style);
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\nUpcoming: \n", style);
+		doc.insertString(doc.getLength(), "\n Upcoming: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), display.getUpcoming(), style);
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\nSomeday: \n", style);
+		doc.insertString(doc.getLength(), "\n Someday: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), display.getSomeday(), style);
 
