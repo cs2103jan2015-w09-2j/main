@@ -1,50 +1,35 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.Observable;
 
-public class Data{
+public class Data extends Observable{
 
 	ArrayList<Task> data;
-	View view;
 	
 	//Constructor
 	public Data(){
 		data = new ArrayList<Task>();
-		view = toDateView();
 	}
 	
 	public Data(ArrayList<Task> data){
 		this.data = data;
-		view = toDateView();
 	}
 	
 	//getter
 	public ArrayList<Task> getData(){
 		return data;
 	}
-	
-	public View getView(){
-		return view;
-	}
-	
-	public Task getViewTask(int index){
-		return view.getTask(index);
-	}
-	
+			
 	//setter
 	public boolean add(Task input){
 		boolean isAdded = data.add(input);
-		
-		toDateView();
 		
 		return isAdded;
 	}
 		
 	public boolean remove(Task task){		
 		boolean isRemoved = data.remove(task);
-		
-		toDateView();
-		
+
 		return isRemoved;
 	}
 	
@@ -59,7 +44,7 @@ public class Data{
 		return data.size() <= 0;
 	}
 	
-	public View toDateView(){
+	/*public View toDateView(){
 		Collections.sort(data, new DataComparator());
 		
 		ArrayList<Task> today = new ArrayList<Task>();
@@ -77,6 +62,6 @@ public class Data{
 		
 		view = new DateView(today, upcoming, someday);
 		return view;
-	}
+	}*/
 		
 }
