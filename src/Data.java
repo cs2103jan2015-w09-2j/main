@@ -23,11 +23,8 @@ public class Data extends Observable{
 		return theOne;
 	}
 	
-	public static Data getInstance(ArrayList<Task> data){
-		if(theOne == null){
-			theOne = new Data(data);
-		}
-		return theOne;
+	public static void setInstance(ArrayList<Task> data){
+		theOne = new Data(data);
 	}
 	
 	//getter

@@ -1,11 +1,17 @@
 import java.util.ArrayList;
 
 
-public class DateView implements View{
+public class DateView extends View{
 
 	ArrayList<Task> today;
 	ArrayList<Task> upcoming;
 	ArrayList<Task> someday;
+	
+	public DateView(){
+		this.today = null;
+		this.upcoming = null;
+		this.someday = null;
+	}
 	
 	public DateView(ArrayList<Task> today, ArrayList<Task> upcoming, ArrayList<Task> someday) {
 		this.today = today;
