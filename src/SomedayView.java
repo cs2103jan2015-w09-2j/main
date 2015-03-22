@@ -1,7 +1,7 @@
 import java.util.Observable;
 import java.util.Observer;
 
-public class SomedayView implements View, Observer{
+public class SomedayView extends View implements Observer{
 
 	Data data = null;
 	

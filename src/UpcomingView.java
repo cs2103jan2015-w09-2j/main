@@ -1,7 +1,7 @@
 import java.util.Observable;
 import java.util.Observer;
 
-public class UpcomingView implements View, Observer{
+public class UpcomingView extends View implements Observer{
 
 	Data data = null;
 	
