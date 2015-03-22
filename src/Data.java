@@ -24,12 +24,18 @@ public class Data extends Observable{
 	public boolean add(Task input){
 		boolean isAdded = data.add(input);
 		
+	    setChanged();
+	    notifyObservers();
+	      
 		return isAdded;
 	}
 		
 	public boolean remove(Task task){		
 		boolean isRemoved = data.remove(task);
 
+	    setChanged();
+	    notifyObservers();
+	    
 		return isRemoved;
 	}
 	
