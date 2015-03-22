@@ -1,0 +1,35 @@
+
+public class SearchCmd extends Cmd{
+	String searchYear , searchMonth , searchDay , searchHour , searchMinute;
+	String taskDescription;
+	
+	//Search <date/time>
+	public SearchCmd(String searchYear , String searchMonth , String searchDay , String searchHour, String searchMinute)
+	{
+		this.searchYear = searchYear;
+		this.searchMonth = searchMonth;
+		this.searchDay = searchDay;
+		this.searchHour = searchHour;
+		this.searchMinute = searchMinute;
+	}
+	//Search <keyword>
+	public SearchCmd(String keyword)
+	{
+		this.taskDescription = keyword; 
+	}
+	
+	public SearchCmd(String searchYear , String searchMonth , String searchDay , String searchHour, String searchMinute, String keyword)
+	{
+		this.searchYear = searchYear;
+		this.searchMonth = searchMonth;
+		this.searchDay = searchDay;
+		this.searchHour = searchHour;
+		this.searchMinute = searchMinute;
+		this.taskDescription = keyword;
+	}
+	@Override
+	public Display execute(Data myList) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}
