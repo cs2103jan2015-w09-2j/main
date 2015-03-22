@@ -5,5 +5,10 @@ public enum COMMAND_TYPE {
 	EDIT,
 	DELETE,
 	EXIT, 
-	INVALID
+	INVALID,
+	DONE,
+	HELP,
+	SEARCH,
+	UNDO,
+	SAVE
 }
