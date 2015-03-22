@@ -9,11 +9,12 @@ public class DeleteCmd extends Cmd{
 	
 	public Display execute(){
 		Data myList = Data.getInstance();
+		View myView = View.getInstance();
 		
-		Task thisTask = myList.getViewTask(index);
+		Task thisTask = myView.getTask(index);
 		myList.remove(thisTask);
 		writeToFile();
 	        
-	    return new Display(myList.toDateView(), MESSAGE_DELETE);
+	    return new Display(myView, MESSAGE_DELETE);
 	}
 }

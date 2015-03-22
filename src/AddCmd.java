@@ -13,6 +13,6 @@ public class AddCmd extends Cmd{
 		myList.add(task);
 		writeToFile();
 	        
-	    return new Display(myList.toDateView(), MESSAGE_ADD);
+	    return new Display(View.getInstance(), MESSAGE_ADD);
 	}
 }

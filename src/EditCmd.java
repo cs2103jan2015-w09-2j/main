@@ -11,15 +11,16 @@ public class EditCmd extends Cmd{
 	
 	public Display execute(){
 		Data myList = Data.getInstance();
+		View myView = View.getInstance();
 		
 		if(myList.isEmpty()){
-			return new Display(myList.toDateView(), MESSAGE_EMPTY);
+			return new Display(myView, MESSAGE_EMPTY);
 		}
 		else{
-			Task thisTask = myList.getViewTask(index);
+			Task thisTask = myView.getTask(index);
 			thisTask.update(task);
 			writeToFile();
-			return new Display(myList.toDateView(), MESSAGE_EDIT);
+			return new Display(myView, MESSAGE_EDIT);
 		}
 	}
 }

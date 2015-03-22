@@ -11,6 +11,6 @@ public class ViewCmd extends Cmd{
 	public Display execute(){
 		Data myList = Data.getInstance();
 		
-	     return new Display(myList.toDateView(), "");
+	     return new Display(View.getInstance(), "");
 	}
 }
