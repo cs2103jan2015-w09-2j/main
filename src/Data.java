@@ -35,6 +35,7 @@ public class Data extends Observable{
 	//setter
 	public boolean add(Task input){
 		boolean isAdded = data.add(input);
+		sort();
 		
 	    setChanged();
 	    notifyObservers();
@@ -44,14 +45,26 @@ public class Data extends Observable{
 		
 	public boolean remove(Task task){		
 		boolean isRemoved = data.remove(task);
-
+		
 	    setChanged();
 	    notifyObservers();
 	    
 		return isRemoved;
 	}
+	
+	public void update(Task currTask, Task updateElement){
+		currTask.update(updateElement);
+		sort();
+		
+	    setChanged();
+	    notifyObservers();
+	}
 		
 	//others
+	public void sort(){
+		Collections.sort(data, new DataComparator());
+	}
+	
 	public void clear(){
 		data.clear();
 		//view.clear();

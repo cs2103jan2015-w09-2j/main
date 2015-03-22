@@ -18,7 +18,7 @@ public class EditCmd extends Cmd{
 		}
 		else{
 			Task thisTask = myView.getTask(index);
-			thisTask.update(task);
+			myList.update(thisTask, task);
 			writeToFile();
 			return new Display(myView, MESSAGE_EDIT);
 		}
