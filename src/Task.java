@@ -302,6 +302,47 @@ public class Task{
 	    return false;
 	}
 	
-	
+	//@author A0111867A
+	public int compareTo(Task task) {
+
+		return compareCompleted(task) + compareFloating(task) + compareTimed(task);
+	}
+
+	private int compareTimed(Task task) {
+		if(!this.start.equals(task.start) && !this.end.equals(task.end)){
+			return this.start.compareTo(task.start);
+		}
+		
+		else if(this.start.equals(task.start) && !this.end.equals(task.end)){
+			return this.end.compareTo(task.end);
+		}
+		else{
+			return 0;
+		}
+	}
+
+	private int compareFloating(Task task) {
+		if(this.isFloatingTask() && !task.isFloatingTask()){
+			return -1;
+		}
+		else if(!this.isFloatingTask() && task.isFloatingTask()){
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}
+
+	private int compareCompleted(Task task) {
+		if(this.isCompleted && !task.isCompleted){
+			return -1;
+		}
+		else if(!this.isCompleted && task.isCompleted){
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}
 
 }
