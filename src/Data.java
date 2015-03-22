@@ -4,15 +4,30 @@ import java.util.Observable;
 
 public class Data extends Observable{
 
-	ArrayList<Task> data;
+	private static Data theOne;
+	private ArrayList<Task> data;
 	
 	//Constructor
-	public Data(){
+	private Data(){
 		data = new ArrayList<Task>();
 	}
 	
-	public Data(ArrayList<Task> data){
+	private Data(ArrayList<Task> data){
 		this.data = data;
+	}
+	
+	public static Data getInstance(){
+		if(theOne == null){
+			theOne = new Data();
+		}
+		return theOne;
+	}
+	
+	public static Data getInstance(ArrayList<Task> data){
+		if(theOne == null){
+			theOne = new Data(data);
+		}
+		return theOne;
 	}
 	
 	//getter
@@ -38,8 +53,7 @@ public class Data extends Observable{
 	    
 		return isRemoved;
 	}
-	
-	
+		
 	//others
 	public void clear(){
 		data.clear();
