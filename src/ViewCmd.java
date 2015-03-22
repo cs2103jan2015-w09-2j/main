@@ -8,7 +8,9 @@ public class ViewCmd extends Cmd{
 		// TODO Auto-generated constructor stub
 	}
 
-	public Display execute(Data myList){
+	public Display execute(){
+		Data myList = Data.getInstance();
+		
 	     return new Display(myList.toDateView(), "");
 	}
 }

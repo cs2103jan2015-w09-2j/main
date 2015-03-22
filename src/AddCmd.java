@@ -7,10 +7,12 @@ public class AddCmd extends Cmd{
 		this.task = task;
 	}
 	
-	public Display execute(Data myList){
-		 myList.add(task);
-		 writeToFile(myList);
+	public Display execute(){
+		Data myList = Data.getInstance();
+		
+		myList.add(task);
+		writeToFile();
 	        
-	     return new Display(myList.toDateView(), MESSAGE_ADD);
+	    return new Display(myList.toDateView(), MESSAGE_ADD);
 	}
 }

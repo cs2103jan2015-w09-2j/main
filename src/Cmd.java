@@ -13,10 +13,12 @@ public abstract class Cmd {
 	protected static final String MESSAGE_NO_VALUE = "please indicate word to %1$s";
 	protected static final String MESSAGE_NO_FILE = "file not available";
 	
-	public abstract Display execute(Data myList);
+	public abstract Display execute();
 	
-	protected void writeToFile(Data myList){
+	protected void writeToFile(){
+		Data myList = Data.getInstance();
 		Storage file = new Storage();
+		
 		ArrayList<Task> tasks = myList.getData();
 		assert tasks != null;
 		file.writeToFile(tasks);

@@ -7,14 +7,16 @@ public class CompletedCmd extends Cmd{
 		this.index = index;
 	}
 	
-	public Display execute(Data myList){
+	public Display execute(){
+		Data myList = Data.getInstance();
+		
 		if(myList.isEmpty()){
 			return new Display(myList.toDateView(), MESSAGE_EMPTY);
 		}
 		else{
 			Task thisTask = myList.getViewTask(index);
-			//thisTask.complete();
-			writeToFile(myList);
+			thisTask.setIsCompleted(true);
+			writeToFile();
 			return new Display(myList.toDateView(), MESSAGE_EDIT);
 		}
 	}
