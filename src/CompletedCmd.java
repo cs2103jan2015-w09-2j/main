@@ -16,7 +16,7 @@ public class CompletedCmd extends Cmd{
 		}
 		else{
 			Task thisTask = myView.getTask(index);
-			thisTask.setIsCompleted(true);
+			myList.update(thisTask, true);
 			writeToFile();
 			return new Display(myView, MESSAGE_EDIT);
 		}

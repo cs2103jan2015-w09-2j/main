@@ -52,6 +52,14 @@ public class Data extends Observable{
 		return isRemoved;
 	}
 	
+	public void update(Task currTask, Boolean isCompleted){
+		currTask.setIsCompleted(isCompleted);
+		sort();
+		
+	    setChanged();
+	    notifyObservers();
+	}
+	
 	public void update(Task currTask, Task updateElement){
 		currTask.update(updateElement);
 		sort();
