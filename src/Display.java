@@ -55,4 +55,10 @@ public class Display {
 		return message;
 	}
 
+	protected String getView(){
+		String view = "home";
+		
+		return view;
+	}
+
 }
