@@ -24,7 +24,6 @@ public class UserInterface {
 	private JFrame frame;
 	private JTextPane commandFromUser;
 	private JTextPane showToUser;
-	private Display display = Display.getInstanceOfDisplay();
 	private Controller control;
 	private JPanel panel;
 	private DefaultStyledDocument doc = new DefaultStyledDocument();
@@ -34,12 +33,15 @@ public class UserInterface {
 	 */
 	private static UserInterface UI = new UserInterface();
 
-	public static UserInterface getInstanceOfDisplay() {
+	public static UserInterface getInstance() {
 		if (UI == null) {
 			UI = new UserInterface();
 		}
 		return UI;
+	}
 
+	public JTextPane getShowToUser() {
+		return showToUser;
 	}
 
 	public static void main(String[] args) {
@@ -55,9 +57,12 @@ public class UserInterface {
 	public UserInterface() {
 		initialize();
 		control = new Controller();
-		// control.executeCommand("display 1");
-		HomeView hm = new HomeView();
-
+		//control.executeCommand("view");
+		try {
+			DateView.getInstance().show();
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -101,83 +106,17 @@ public class UserInterface {
 			public void keyPressed(java.awt.event.KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					String command = commandFromUser.getText();
-					//control.executeCommand(command);
+					control.executeCommand(command);
 					try {
-						processCommand(command);
+						DateView.getInstance().show();
 					} catch (BadLocationException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						System.out.println("Error");
 					}
 					e.consume();
 					commandFromUser.setText("");
 				}
 			}
 		});
-	}
-	
-	private void processCommand(String command) throws BadLocationException{
-		String[] getCommand = command.split(" ");
-		switch (getCommand[0].toLowerCase()) {
-		case "home":
-			ViewHome();
-			break;
-
-		case "today":
-			ViewToday();
-			break;
-
-		case "upcoming":
-		//	ViewUpcoming();
-			break;
-			
-		case "someday":
-		//	ViewSomeday();
-			break;
-
-		case "search":
-			//ViewSearch();
-			break;
-
-		case "exit":
-			//exitProgram();
-
-		default:
-			JOptionPane.showMessageDialog (null, "Please enter a valid command!", "Error message", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-
-	private void ViewHome() throws BadLocationException {
-		// TODO Auto-generated method stub
-		StyledDocument doc = showToUser.getStyledDocument();
-		Style style = showToUser.addStyle("Style", null);
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), " Today: \n", style);
-
-		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), display.getToday(), style);
-
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\n Upcoming: \n", style);
-		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), display.getUpcoming(), style);
-
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\n Someday: \n", style);
-		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), display.getSomeday(), style);
-
-	}
-
-	private void ViewToday() throws BadLocationException {
-		// TODO Auto-generated method stub
-		StyledDocument doc = showToUser.getStyledDocument();
-		Style style = showToUser.addStyle("Style", null);
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), " Today: \n", style);
-
-		StyleConstants.setForeground(style, Color.BLACK);
-		//doc.insertString(doc.getLength(), display.getToday(), style);
-		
 	}
 
 	private void colourCommand() {
