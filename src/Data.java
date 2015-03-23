@@ -4,38 +4,34 @@ import java.util.Observable;
 
 public class Data extends Observable{
 
-	private static Data theOne;
-	private ArrayList<Task> data;
+	private static Data data;
+	private ArrayList<Task> myList;
 	
 	//Constructor
 	private Data(){
-		data = new ArrayList<Task>();
-	}
-	
-	private Data(ArrayList<Task> data){
-		this.data = data;
+		myList = new ArrayList<Task>();
 	}
 	
 	public static Data getInstance(){
-		if(theOne == null){
-			theOne = new Data();
+		if(data == null){
+			data = new Data();
 		}
-		return theOne;
+		return data;
 	}
 	
-	public static void setInstance(ArrayList<Task> data){
-		theOne = new Data(data);
+	public void set(ArrayList<Task> myList){
+		this.myList = myList;
 	}
 	
 	//getter
 	public ArrayList<Task> getData(){
-		return data;
+		return myList;
 	}
 		
 	public ArrayList<Task> getToday(){
 		ArrayList<Task> todayList = new ArrayList<Task>();
 		
-		for(Task task : data){
+		for(Task task : myList){
 			if(task.isTodayTask()){
 				todayList.add(task);
 			}
@@ -46,7 +42,7 @@ public class Data extends Observable{
 	public ArrayList<Task> getUpcoming(){
 		ArrayList<Task> upcomingList = new ArrayList<Task>();
 		
-		for(Task task : data){
+		for(Task task : myList){
 			if(task.isTodayTask()){
 				upcomingList.add(task);
 			}
@@ -57,7 +53,7 @@ public class Data extends Observable{
 	public ArrayList<Task> getSomeday(){
 		ArrayList<Task> somedayList = new ArrayList<Task>();
 		
-		for(Task task : data){
+		for(Task task : myList){
 			if(task.isTodayTask()){
 				somedayList.add(task);
 			}
@@ -67,7 +63,7 @@ public class Data extends Observable{
 	
 	//setter
 	public boolean add(Task input){
-		boolean isAdded = data.add(input);
+		boolean isAdded = myList.add(input);
 		sort();
 		
 	    setChanged();
@@ -77,7 +73,7 @@ public class Data extends Observable{
 	}
 		
 	public boolean remove(Task task){		
-		boolean isRemoved = data.remove(task);
+		boolean isRemoved = myList.remove(task);
 		
 	    setChanged();
 	    notifyObservers();
@@ -103,16 +99,11 @@ public class Data extends Observable{
 		
 	//others
 	public void sort(){
-		Collections.sort(data, new DataComparator());
+		Collections.sort(myList, new DataComparator());
 	}
-	
-	public void clear(){
-		data.clear();
-		//view.clear();
-	}
-	
+		
 	public boolean isEmpty(){
-		return data.size() <= 0;
+		return myList.size() <= 0;
 	}
 	
 	/*public View toDateView(){
