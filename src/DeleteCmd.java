@@ -4,17 +4,15 @@ public class DeleteCmd extends Cmd{
 	int index;
 	
 	public DeleteCmd(int index){
+		System.out.println("Successfully into Delete Cmd");
 		this.index = index;
 	}
 	
-	public Display execute(){
-		Data myList = Data.getInstance();
-		View myView = View.getInstance();
-		
-		Task thisTask = myView.getTask(index);
+	public Display execute(Data myList){
+		Task thisTask = myList.getViewTask(index);
 		myList.remove(thisTask);
-		writeToFile();
+		writeToFile(myList);
 	        
-	    return new Display(myView, MESSAGE_DELETE);
+	    return new Display(myList.toDateView(), MESSAGE_DELETE);
 	}
 }
