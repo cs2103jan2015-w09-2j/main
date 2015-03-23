@@ -1,3 +1,4 @@
+
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -32,6 +33,7 @@ public class OneTagParser {
 	}
 
 	public static Cmd toCmd(String input) {
+		input.trim();
 		String[] inputArr = input.split(" ", INPUT_SPLIT_SIZE);
 	//	System.out.println("Command : "+inputArr[0]);
 		String firstWord = inputArr[0].trim();
@@ -39,6 +41,14 @@ public class OneTagParser {
 		{
 			String view = firstWord;
 			return new ViewCmd(view);
+		}
+		else if(checkHelpCmd(firstWord))
+		{
+			return new HelpCmd();
+		}
+		else if(firstWord.equals("Undo"))
+		{
+			return new UndoCmd();
 		}
 		COMMAND_TYPE command = getCommand(inputArr[INPUT_SPLIT_FIRST]);
 		System.out.println(command);
@@ -51,13 +61,9 @@ public class OneTagParser {
 		case DELETE: 	
 			return new DeleteCmd(parseNum(message));
 		case DONE : 
-			return new DoneCmd(parseNum(message));
-		case HELP : 
-			 return new HelpCmd();
+			return new CompletedCmd(parseNum(message));
 		case SEARCH :
-			  return new SearchCmd(parseSearchString(message));
-		case UNDO : 
-			 return new UndoCmd();
+			  return null;
 		case SAVE : 
 			 String storageLocation = message;
 			 return new SaveCmd(storageLocation);
@@ -67,20 +73,58 @@ public class OneTagParser {
 			throw new Error("invalid");
 		}
 	}
+
+	private static boolean checkHelpCmd(String firstWord) {
+		return firstWord.equals("Help");
+	}
 //	search 23 Jan 
+/*
 	private static String parseSearchString(String message) {
+		String testDate = null;
 		System.out.println(message);
-		if(message.contains("/"))
+		Parser dateParser = new Parser();
+		List<DateGroup> groups = dateParser.parse(message);
+		if(groups != null)
 		{
+			//user has entered a date task          
+			for(DateGroup group:groups) 
+			{
+				List<Date> dates = group.getDates();
+				System.out.println("Size of dates in dates : "+dates.size());
+				testDate = dates.get(0).toString();
+				System.out.println("Date parsed : "+testDate);
+				break;
+			}//public SearchCmd(int searchYear , int searchMonth , int searchDay , int searchHour, int searchMinute, String keyword)
+			int[] infoDT = findTime(testDate);
 			if(message.contains(":"))
 			{
-				//search 23/04/2015 12:15
-				
+				return SearchCmd(infoDT[0],infoDT[1],infoDT[2],infoDT[3], infoDT[4]);
+			}
+			else
+			{
+				return SearchCmd(infoDT[0],infoDT[1],infoDT[2],-1,-1);
+			}
+			for(int content : informationDateAndTime)
+			{
+				System.out.println(content+"_");
+			}
+			if(testDate == null)
+			{
+				 System.out.println("The user has entered a task");
+				 System.out.println(message);			 
 			}
 		}
+		else
+		{
+			//Simply return the message to the user.
+			System.out.println("return SearchCmd("+message+")");
+		}
+	
 		
 		return null;
 	}
+*/
+	
 
 	private static boolean checkIfViewCmd(String firstWord) {
 		return firstWord.equals(Home) || firstWord.equals(Done) || firstWord.equals(Today) || firstWord.equals(Upcoming) || firstWord.equals(Someday);
@@ -339,10 +383,6 @@ public class OneTagParser {
 		return parseDate;
 	}
 
-
-
-	
-
 	private static boolean checkTimedTask(String testWord) {
 		return testWord.equals(STRING_FROM) || testWord.equals(STRING_TO);
 	}
@@ -396,7 +436,9 @@ public class OneTagParser {
 			return COMMAND_TYPE.DONE;
 		} else if (input.equalsIgnoreCase("search")){
 			return COMMAND_TYPE.SEARCH;
-		}else {
+		} else if (input.equalsIgnoreCase("delete")){
+			return COMMAND_TYPE.DELETE;
+		} else {
 			return COMMAND_TYPE.INVALID;
 		}
 }
