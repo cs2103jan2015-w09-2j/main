@@ -24,14 +24,14 @@ public class UserInterface {
 	private JFrame frame;
 	private JTextPane commandFromUser;
 	private JTextPane showToUser;
-	private Controller control;
+	private static Controller control;
 	private JPanel panel;
 	private DefaultStyledDocument doc = new DefaultStyledDocument();
 
 	/**
 	 * Launch the application.
 	 */
-	private static UserInterface UI = new UserInterface();
+	private static UserInterface UI = null;
 
 	public static UserInterface getInstance() {
 		if (UI == null) {
@@ -45,7 +45,14 @@ public class UserInterface {
 	}
 
 	public static void main(String[] args) {
-		UserInterface window = new UserInterface();
+		control = new Controller();
+		UserInterface window = UserInterface.getInstance();
+		window.initialize();
+		try {
+			DateView.getInstance().show();
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
 		window.frame.setVisible(true);
 	}
 
@@ -55,14 +62,13 @@ public class UserInterface {
 	 * @throws BadLocationException
 	 */
 	public UserInterface() {
-		initialize();
-		control = new Controller();
+
 		//control.executeCommand("view");
-		try {
+		/*try {
 			DateView.getInstance().show();
 		} catch (BadLocationException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**
