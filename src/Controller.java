@@ -9,7 +9,7 @@ public class Controller {
 	}
 		
 	public Display executeCommand(String input) {
-		Cmd cmd = Parser.toCmd(input);
+		Cmd cmd = OneTagParser.toCmd(input);
 		return cmd.execute();
 	}
 
