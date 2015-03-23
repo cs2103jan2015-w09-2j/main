@@ -4,7 +4,7 @@ public class DeleteCmd extends Cmd{
 	int index;
 	
 	public DeleteCmd(int index){
-	//	System.out.println("Successfully into Delete Cmd");
+		System.out.println("Successfully into Delete Cmd");
 		this.index = index;
 	}
 	
