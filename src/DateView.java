@@ -1,4 +1,11 @@
+import java.awt.Color;
 import java.util.ArrayList;
+
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 
 public class DateView extends View{
@@ -30,17 +37,57 @@ public class DateView extends View{
 	public static void setInstance(ArrayList<Task> today, ArrayList<Task> upcoming, ArrayList<Task> someday){
 		dateView = new DateView(today, upcoming, someday);
 	}
-
-	public ArrayList<Task> getToday() {
-		return today;
+	
+	protected String getToday() {
+		String tasksForToday = getTask(today);
+		return tasksForToday;
 	}
 
-	public ArrayList<Task> getUpcoming() {
-		return upcoming;
+	protected String getUpcoming() {
+		String upcomingTasks = getTask(upcoming);
+		return upcomingTasks;
 	}
 
-	public ArrayList<Task> getSomeday() {
-		return someday;
+	protected String getSomeday() {
+		String tasksForSomeday = getTask(someday);
+		return tasksForSomeday;
+
+	}
+
+	protected String getTask(ArrayList<Task> taskArray) {
+		String tasks = "";
+		int i = 0;
+		
+		for (Task task : taskArray) {
+			i++;
+			tasks += i + "." + task.toString() + "\n";
+		}
+		return tasks;
+	}
+	
+	public void show() throws BadLocationException {
+		// TODO Auto-generated method stub
+		UserInterface ui = UserInterface.getInstanceOfDisplay();
+		JTextPane showToUser = ui.getShowToUser();
+		
+		StyledDocument doc = showToUser.getStyledDocument();
+		Style style = showToUser.addStyle("Style", null);
+		StyleConstants.setForeground(style, Color.BLUE.brighter());
+		doc.insertString(doc.getLength(), " Today: \n", style);
+
+		StyleConstants.setForeground(style, Color.BLACK);
+		doc.insertString(doc.getLength(), getToday(), style);
+
+		StyleConstants.setForeground(style, Color.BLUE.brighter());
+		doc.insertString(doc.getLength(), "\n Upcoming: \n", style);
+		StyleConstants.setForeground(style, Color.BLACK);
+		doc.insertString(doc.getLength(), getUpcoming(), style);
+
+		StyleConstants.setForeground(style, Color.BLUE.brighter());
+		doc.insertString(doc.getLength(), "\n Someday: \n", style);
+		StyleConstants.setForeground(style, Color.BLACK);
+		doc.insertString(doc.getLength(), getSomeday(), style);
+
 	}
 	
 	public Task getTask(int numbering){

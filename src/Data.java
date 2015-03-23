@@ -31,7 +31,40 @@ public class Data extends Observable{
 	public ArrayList<Task> getData(){
 		return data;
 	}
-			
+		
+	public ArrayList<Task> getToday(){
+		ArrayList<Task> todayList = new ArrayList<Task>();
+		
+		for(Task task : data){
+			if(task.isTodayTask()){
+				todayList.add(task);
+			}
+		}
+		return todayList;
+	}
+	
+	public ArrayList<Task> getUpcoming(){
+		ArrayList<Task> upcomingList = new ArrayList<Task>();
+		
+		for(Task task : data){
+			if(task.isTodayTask()){
+				upcomingList.add(task);
+			}
+		}
+		return upcomingList;
+	}
+	
+	public ArrayList<Task> getSomeday(){
+		ArrayList<Task> somedayList = new ArrayList<Task>();
+		
+		for(Task task : data){
+			if(task.isTodayTask()){
+				somedayList.add(task);
+			}
+		}
+		return somedayList;
+	}
+	
 	//setter
 	public boolean add(Task input){
 		boolean isAdded = data.add(input);
