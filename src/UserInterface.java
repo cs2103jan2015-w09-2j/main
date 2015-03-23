@@ -19,7 +19,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-
 public class UserInterface {
 
 	private JFrame frame;
@@ -28,22 +27,37 @@ public class UserInterface {
 	private Display display = Display.getInstanceOfDisplay();
 	private Controller control;
 	private JPanel panel;
+	private DefaultStyledDocument doc = new DefaultStyledDocument();
+
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) throws BadLocationException {
+	private static UserInterface UI = new UserInterface();
+
+	public static UserInterface getInstanceOfDisplay() {
+		if (UI == null) {
+			UI = new UserInterface();
+		}
+		return UI;
+
+	}
+
+	public static void main(String[] args) {
 		UserInterface window = new UserInterface();
 		window.frame.setVisible(true);
 	}
+
 	/**
 	 * Create the application.
-	 * @throws BadLocationException 
+	 * 
+	 * @throws BadLocationException
 	 */
-	public UserInterface() throws BadLocationException {
+	public UserInterface() {
 		initialize();
 		control = new Controller();
-		control.executeCommand("display 1");
-		displayHomeView();
+		// control.executeCommand("display 1");
+		HomeView hm = new HomeView();
+
 	}
 
 	/**
@@ -61,52 +75,7 @@ public class UserInterface {
 		panel.setBounds(0, 0, 612, 425);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(30,
 				144, 255), new Color(0, 0, 0)));
-		
-		//-----------------------------------------needs editing--------------------------------
-        StyleContext cont = StyleContext.getDefaultStyleContext();
-        AttributeSet attr = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.RED);
-        AttributeSet attrBlack = cont.addAttribute(cont.getEmptySet(), StyleConstants.Foreground, Color.BLACK);
-        DefaultStyledDocument doc = new DefaultStyledDocument() {
-            public void insertString (int offset, String str, AttributeSet a) throws BadLocationException {
-                super.insertString(offset, str, a);
-
-                String text = getText(0, getLength());
-                int before = findLastNonWordChar(text, offset);
-                if (before < 0) before = 0;
-                int after = findFirstNonWordChar(text, offset + str.length());
-                int wordL = before;
-                int wordR = before;
-
-                while (wordR <= after) {
-                    if (wordR == after || String.valueOf(text.charAt(wordR)).matches("\\W")) {
-                        if (text.substring(wordL, wordR).toLowerCase().matches("(\\W)*(add|delete|edit|search|from|to|by)"))
-                            setCharacterAttributes(wordL, wordR - wordL, attr, false);
-                        else
-                            setCharacterAttributes(wordL, wordR - wordL, attrBlack, false);
-                        wordL = wordR;
-                    }
-                    wordR++;
-                }
-            }
-
-            public void remove (int offs, int len) throws BadLocationException {
-                super.remove(offs, len);
-
-                String text = getText(0, getLength());
-                int before = findLastNonWordChar(text, offs);
-                if (before < 0) before = 0;
-                int after = findFirstNonWordChar(text, offs);
-
-                if (text.substring(before, after).toLowerCase().matches("(\\W)*(add|delete|edit|search|from|to|by)")) {
-                    setCharacterAttributes(before, after - before, attr, false);
-                } else {
-                    setCharacterAttributes(before, after - before, attrBlack, false);
-                }
-            }
-
-        };
-        
-
+		colourCommand();
 		commandFromUser = new JTextPane(doc);
 		panel.add(commandFromUser, BorderLayout.SOUTH);
 		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -115,24 +84,7 @@ public class UserInterface {
 		commandFromUser.setForeground(new Color(0, 0, 0));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				new Color(30, 144, 255), new Color(0, 0, 0)));
-		commandFromUser.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(java.awt.event.KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					String command = commandFromUser.getText();
-					control.executeCommand(command);
-
-					try {
-						displayHomeView();
-					} catch (BadLocationException badlocation) {
-						JOptionPane.showMessageDialog(null, "Error Message!");
-					}
-					commandFromUser.setText("");
-				}
-			}
-		});
-
-	    showToUser = new JTextPane();
+		showToUser = new JTextPane();
 		panel.add(showToUser, BorderLayout.CENTER);
 		showToUser.setFont(new Font("Calibri", Font.PLAIN, 20));
 		showToUser.setBackground(new Color(255, 255, 255));
@@ -140,31 +92,62 @@ public class UserInterface {
 		showToUser.setForeground(new Color(0, 0, 128));
 		showToUser.setBorder(null);
 		showToUser.setBounds(20, 10, 573, 350);
-
+		getCommand();
 	}
 
+	private void getCommand() {
+		commandFromUser.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(java.awt.event.KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String command = commandFromUser.getText();
+					//control.executeCommand(command);
+					try {
+						processCommand(command);
+					} catch (BadLocationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					e.consume();
+					commandFromUser.setText("");
+				}
+			}
+		});
+	}
+	
+	private void processCommand(String command) throws BadLocationException{
+		String[] getCommand = command.split(" ");
+		switch (getCommand[0].toLowerCase()) {
+		case "home":
+			ViewHome();
+			break;
 
-    private int findLastNonWordChar (String text, int index) {
-        while (--index >= 0) {
-            if (String.valueOf(text.charAt(index)).matches("\\W")) {
-                break;
-            }
-        }
-        return index;
-    }
+		case "today":
+			ViewToday();
+			break;
 
-    private int findFirstNonWordChar (String text, int index) {
-        while (index < text.length()) {
-            if (String.valueOf(text.charAt(index)).matches("\\W")) {
-                break;
-            }
-            index++;
-        }
-        return index;
-    }
-	private void displayHomeView() throws BadLocationException {
-		// Colouring and styling of text
-		showToUser.setText("");
+		case "upcoming":
+		//	ViewUpcoming();
+			break;
+			
+		case "someday":
+		//	ViewSomeday();
+			break;
+
+		case "search":
+			//ViewSearch();
+			break;
+
+		case "exit":
+			//exitProgram();
+
+		default:
+			JOptionPane.showMessageDialog (null, "Please enter a valid command!", "Error message", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void ViewHome() throws BadLocationException {
+		// TODO Auto-generated method stub
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
@@ -184,4 +167,95 @@ public class UserInterface {
 		doc.insertString(doc.getLength(), display.getSomeday(), style);
 
 	}
+
+	private void ViewToday() throws BadLocationException {
+		// TODO Auto-generated method stub
+		StyledDocument doc = showToUser.getStyledDocument();
+		Style style = showToUser.addStyle("Style", null);
+		StyleConstants.setForeground(style, Color.BLUE.brighter());
+		doc.insertString(doc.getLength(), " Today: \n", style);
+
+		StyleConstants.setForeground(style, Color.BLACK);
+		//doc.insertString(doc.getLength(), display.getToday(), style);
+		
+	}
+
+	private void colourCommand() {
+		StyleContext cont = StyleContext.getDefaultStyleContext();
+		AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
+				StyleConstants.Foreground, Color.RED);
+		AttributeSet attrBlack = cont.addAttribute(cont.getEmptySet(),
+				StyleConstants.Foreground, Color.BLACK);
+		doc = new DefaultStyledDocument() {
+			public void insertString(int offset, String str, AttributeSet a)
+					throws BadLocationException {
+				super.insertString(offset, str, a);
+
+				String text = getText(0, getLength());
+				int before = findLastNonWordChar(text, offset);
+				if (before < 0)
+					before = 0;
+				int after = findFirstNonWordChar(text, offset + str.length());
+				int wordL = before;
+				int wordR = before;
+
+				while (wordR <= after) {
+					if (wordR == after
+							|| String.valueOf(text.charAt(wordR))
+									.matches("\\W")) {
+						if (text.substring(wordL, wordR)
+								.toLowerCase()
+								.matches(
+										"(\\W)*(add|delete|edit|search|from|to|by)"))
+							setCharacterAttributes(wordL, wordR - wordL, attr,
+									false);
+						else
+							setCharacterAttributes(wordL, wordR - wordL,
+									attrBlack, false);
+						wordL = wordR;
+					}
+					wordR++;
+				}
+			}
+
+			public void remove(int offs, int len) throws BadLocationException {
+				super.remove(offs, len);
+
+				String text = getText(0, getLength());
+				int before = findLastNonWordChar(text, offs);
+				if (before < 0)
+					before = 0;
+				int after = findFirstNonWordChar(text, offs);
+
+				if (text.substring(before, after).toLowerCase()
+						.matches("(\\W)*(add|delete|edit|search|from|to|by)")) {
+					setCharacterAttributes(before, after - before, attr, false);
+				} else {
+					setCharacterAttributes(before, after - before, attrBlack,
+							false);
+				}
+			}
+
+		};
+	}
+
+	private int findLastNonWordChar(String text, int index) {
+		while (--index >= 0) {
+			if (String.valueOf(text.charAt(index)).matches("\\W")) {
+				break;
+			}
+		}
+		return index;
+	}
+
+	private int findFirstNonWordChar(String text, int index) {
+		while (index < text.length()) {
+			if (String.valueOf(text.charAt(index)).matches("\\W")) {
+				break;
+			}
+			index++;
+		}
+		return index;
+	}
+
 }
