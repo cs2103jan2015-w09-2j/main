@@ -65,7 +65,7 @@ public class DateView extends View{
 		return tasks;
 	}
 	
-	private void show() throws BadLocationException {
+	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
 		UserInterface ui = UserInterface.getInstanceOfDisplay();
 		JTextPane showToUser = ui.getShowToUser();
