@@ -5,7 +5,7 @@ public abstract class View {
 	
 	public static View getInstance(){
 		if(theOne == null){
-			theOne = new DateView();
+			theOne = DateView.getInstance();
 		}
 		return theOne;
 	}
