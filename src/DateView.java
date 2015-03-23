@@ -10,7 +10,8 @@ import javax.swing.text.StyledDocument;
 
 public class DateView extends View{
 	
-	private static DateView dateView = null;
+	private static DateView dateView;
+	
 	private ArrayList<Task> today;
 	private ArrayList<Task> upcoming;
 	private ArrayList<Task> someday;
@@ -21,11 +22,6 @@ public class DateView extends View{
 		this.someday = new ArrayList<Task>();
 	}
 	
-	private DateView(ArrayList<Task> today, ArrayList<Task> upcoming, ArrayList<Task> someday) {
-		this.today = today;
-		this.upcoming = upcoming;
-		this.someday = someday;
-	}
 	
 	public static DateView getInstance(){
 		if(dateView == null){
@@ -34,8 +30,10 @@ public class DateView extends View{
 		return dateView;
 	}
 	
-	public static void setInstance(ArrayList<Task> today, ArrayList<Task> upcoming, ArrayList<Task> someday){
-		dateView = new DateView(today, upcoming, someday);
+	public void set(ArrayList<Task> today, ArrayList<Task> upcoming, ArrayList<Task> someday){
+		this.today = today;
+		this.upcoming = upcoming;
+		this.someday = someday;
 	}
 	
 	protected String getToday() {
@@ -67,8 +65,8 @@ public class DateView extends View{
 	
 	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
-		UserInterface ui = UserInterface.getInstanceOfDisplay();
-		JTextPane showToUser = ui.getShowToUser();
+		UserInterface UI = UserInterface.getInstance();
+		JTextPane showToUser = UI.getShowToUser();
 		
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
