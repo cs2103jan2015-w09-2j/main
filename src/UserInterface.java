@@ -23,7 +23,7 @@ public class UserInterface {
 
 	private JFrame frame;
 	private JTextPane commandFromUser;
-	private JTextPane showToUser;
+	private static JTextPane showToUser;
 	private static Controller control;
 	private JPanel panel;
 	private DefaultStyledDocument doc = new DefaultStyledDocument();
@@ -48,28 +48,20 @@ public class UserInterface {
 		control = new Controller();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
+		control.executeCommand("Home");
 		try {
-			DateView.getInstance().show();
+		    //DateView d = new DateView();
+			//d.show();
+			showToUser.setText("");
+			Display.getInstance().getView().show();
 		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		window.frame.setVisible(true);
 	}
 
-	/**
-	 * Create the application.
-	 * 
-	 * @throws BadLocationException
-	 */
-	public UserInterface() {
-
-		//control.executeCommand("view");
-		/*try {
-			DateView.getInstance().show();
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}*/
-	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -86,7 +78,7 @@ public class UserInterface {
 		panel.setBounds(0, 0, 612, 425);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(30,
 				144, 255), new Color(0, 0, 0)));
-		//colourCommand();
+		colourCommand();
 		commandFromUser = new JTextPane(doc);
 		panel.add(commandFromUser, BorderLayout.SOUTH);
 		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -113,11 +105,15 @@ public class UserInterface {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					String command = commandFromUser.getText();
 					control.executeCommand(command);
+					showToUser.setText("");
+
 					try {
-						DateView.getInstance().show();
+						Display.getInstance().getView().show();
 					} catch (BadLocationException e1) {
-						System.out.println("Error");
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
+
 					e.consume();
 					commandFromUser.setText("");
 				}
@@ -127,9 +123,9 @@ public class UserInterface {
 
 	private void colourCommand() {
 		StyleContext cont = StyleContext.getDefaultStyleContext();
-		AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
+		final AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
 				StyleConstants.Foreground, Color.RED);
-		AttributeSet attrBlack = cont.addAttribute(cont.getEmptySet(),
+		final AttributeSet attrBlack = cont.addAttribute(cont.getEmptySet(),
 				StyleConstants.Foreground, Color.BLACK);
 		doc = new DefaultStyledDocument() {
 			public void insertString(int offset, String str, AttributeSet a)
