@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -9,19 +10,22 @@ import javax.swing.text.StyledDocument;
 
 public class UpcomingView implements View{
 
+	ArrayList<Task> upcoming;
+	
 	public UpcomingView(){
+		update();
 	}
 	
 	@Override
 	public Task getTask(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return upcoming.get(index);
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		Data data = Data.getInstance();
 		
+		upcoming = data.getUpcoming();
 	}
 
 	@Override
