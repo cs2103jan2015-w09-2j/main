@@ -56,7 +56,8 @@ public class OneTagParser {
 		case ADD:
 			return new AddCmd(parseMsg(message));
 		case EDIT:
-			return null;
+			String[] content = message.split(" ");
+			return new EditCmd(Integer.parseInt(content[0]),new Task(content[1]));
 		case DELETE: 	
 			return new DeleteCmd(parseNum(message));
 		case DONE : 
