@@ -49,7 +49,7 @@ public class UserInterface {
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
 		try {
-			Display.getInstance().getView().show();
+			DateView.getInstance().show();
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
@@ -114,7 +114,7 @@ public class UserInterface {
 					String command = commandFromUser.getText();
 					control.executeCommand(command);
 					try {
-						Display.getInstance().getView().show();
+						DateView.getInstance().show();
 					} catch (BadLocationException e1) {
 						System.out.println("Error");
 					}
