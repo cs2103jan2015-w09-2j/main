@@ -25,13 +25,14 @@ public class UserInterface {
 	private JTextPane commandFromUser;
 	private static JTextPane showToUser;
 	private static Controller control;
-	private JPanel panel;
+	private static JPanel panel;
 	private DefaultStyledDocument doc = new DefaultStyledDocument();
 
 	/**
 	 * Launch the application.
 	 */
 	private static UserInterface UI = null;
+	private static JTextPane feedback;
 
 	public static UserInterface getInstance() {
 		if (UI == null) {
@@ -49,6 +50,12 @@ public class UserInterface {
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
 		showToUser.setText("");
+		
+		feedback = new JTextPane();
+		feedback.setForeground(new Color(255, 0, 0));
+		feedback.setFont(new Font("Calibri", Font.BOLD, 16));
+		feedback.setEditable(false);
+		panel.add(feedback, BorderLayout.NORTH);
 		try {
 			
 			Display.getInstance().getView().show();
@@ -102,6 +109,8 @@ public class UserInterface {
 					String command = commandFromUser.getText();
 					control.executeCommand(command);
 					showToUser.setText("");
+					feedback.setText(Display.getInstance().getMessage()+"\n");
+					feedback.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.red, Color.black));
 					try {
 						Display.getInstance().getView().show();
 					} catch (BadLocationException e1) {
