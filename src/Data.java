@@ -1,8 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Observable;
 
-public class Data extends Observable{
+public class Data{
 
 	private static Data data;
 	private ArrayList<Task> myList;
@@ -76,67 +75,20 @@ public class Data extends Observable{
 	
 	//setter
 	public boolean add(Task input){
-		boolean isAdded = myList.add(input);
-		sort();
-		
-	    setChanged();
-	    notifyObservers();
-	      
-		return isAdded;
+		return myList.add(input);
+
 	}
 		
 	public boolean remove(Task task){		
-		boolean isRemoved = myList.remove(task);
-		
-	    setChanged();
-	    notifyObservers();
-	    
-		return isRemoved;
+		return myList.remove(task);
 	}
 	
 	public void update(Task currTask, Boolean isCompleted){
 		currTask.setIsCompleted(isCompleted);
-		sort();
-		
-	    setChanged();
-	    notifyObservers();
 	}
 	
 	public void update(Task currTask, Task updateElement){
 		currTask.update(updateElement);
-		sort();
-		
-	    setChanged();
-	    notifyObservers();
 	}
-		
-	//others
-	public void sort(){
-		//Collections.sort(myList, new DataComparator());
-	}
-		
-	public boolean isEmpty(){
-		return myList.size() <= 0;
-	}
-	
-	/*public View toDateView(){
-		Collections.sort(data, new DataComparator());
-		
-		ArrayList<Task> today = new ArrayList<Task>();
-		ArrayList<Task> upcoming = new ArrayList<Task>();
-		ArrayList<Task> someday = new ArrayList<Task>();
-		
-		for(Task element : data){
-			if(element.isNormalTask()){
-				today.add(element);
-			}
-			else{
-				upcoming.add(element);
-			}
-		}
-		
-		view = new DateView(today, upcoming, someday);
-		return view;
-	}*/
-		
+			
 }
