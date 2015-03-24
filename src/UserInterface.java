@@ -45,14 +45,9 @@ public class UserInterface {
 	}
 
 	public static void main(String[] args) {
-		control = new Controller();
+		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
-		try {
-			DateView.getInstance().show();
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}
 		window.frame.setVisible(true);
 	}
 
@@ -103,6 +98,11 @@ public class UserInterface {
 		showToUser.setForeground(new Color(0, 0, 128));
 		showToUser.setBorder(null);
 		showToUser.setBounds(20, 10, 573, 350);
+		try {
+			Display.getInstance().getView().show();
+		} catch (BadLocationException e1) {
+			System.out.println("Error");
+		}
 		getCommand();
 	}
 
@@ -114,7 +114,7 @@ public class UserInterface {
 					String command = commandFromUser.getText();
 					control.executeCommand(command);
 					try {
-						DateView.getInstance().show();
+						Display.getInstance().getView().show();
 					} catch (BadLocationException e1) {
 						System.out.println("Error");
 					}
