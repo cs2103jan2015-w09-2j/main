@@ -49,7 +49,7 @@ public class DateView implements View{
 		
 		for (Task task : taskArray) {
 			i++;
-			tasks += i + "." + task.toString() + "\n";
+			tasks += "  "+i + "." + task.toString() + "\n";
 		}
 		return tasks;
 	}
@@ -60,19 +60,19 @@ public class DateView implements View{
 		
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
+		
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), " Today: \n", style);
-
+		doc.insertString(doc.getLength(), "  Today: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), getToday(), style);
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\n Upcoming: \n", style);
+		doc.insertString(doc.getLength(), "\n  Upcoming: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), getUpcoming(), style);
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\n Someday: \n", style);
+		doc.insertString(doc.getLength(), "\n  Someday: \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), getSomeday(), style);
 
