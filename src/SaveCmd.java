@@ -8,8 +8,9 @@ public class SaveCmd extends Cmd {
 
 	@Override
 	public boolean execute() {
-		// TODO Auto-generated method stub
-		return false;
+		Storage storage = new Storage();
+		storage.setPath(storageLocation);
+		return true;
 	}
 
 }

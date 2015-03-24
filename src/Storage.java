@@ -99,7 +99,10 @@ public class Storage {
 			} catch (IOException e) {
 				logger.log(Level.WARNING, String.format(MESSAGE_ERROR_FILE_NOT_FOUND, NAME_CONFIG_FILE),e.getMessage());
 			}
+		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
 		writeStringToFile(filePath,NAME_CONFIG_FILE);
+		
+		
 		
 		return String.format(MESSAGE_NEW_USER_DIRECTORY, userSpecifiedDirectory);
 	}
@@ -114,6 +117,7 @@ public class Storage {
 		} catch (IOException e1) {
 			logger.log(Level.WARNING, String.format(MESSAGE_ERROR_FILE_NOT_FOUND, fileName));
 		}
+		oldLocationFile.delete();
 	}
 	
 	
@@ -165,7 +169,6 @@ public class Storage {
 	public ArrayList<Task> getData(){
 		String jsonString = new String("");		
 		BufferedReader br = null;
-		
 		try{
 			String line;
 			br = new BufferedReader(new FileReader(filePath));
@@ -202,10 +205,9 @@ public class Storage {
 
 		File file = new File(filePath);
 		File configFile = new File(NAME_CONFIG_FILE);
-		
 		if (configFile.exists()){
 			try {
-				filePath = new Scanner(new File(NAME_CONFIG_FILE)).useDelimiter("\\Z").next();
+				this.filePath = new Scanner(new File(NAME_CONFIG_FILE)).useDelimiter("\\Z").next();
 			} catch (FileNotFoundException e) {
 				logger.log(Level.WARNING, String.format(MESSAGE_ERROR_FILE_NOT_FOUND, fileName));
 			}
