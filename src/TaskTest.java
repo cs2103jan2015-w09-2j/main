@@ -12,7 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 
-public class TestTask {
+public class TaskTest {
 	
 	private static final String MESSAGE_TEST_COMPLETED_TASK = "test completed task";
 	private static final String MESSAGE_TEST_TOMORROW_TASK = "test tomorrow task";
