@@ -9,27 +9,15 @@ import javax.swing.text.StyledDocument;
 
 
 public class DateView implements View{
-	
-	private static DateView dateView;
-	
+
 	private ArrayList<Task> today;
 	private ArrayList<Task> upcoming;
 	private ArrayList<Task> someday;
 	
-	private DateView(){
-		this.today = new ArrayList<Task>();
-		this.upcoming = new ArrayList<Task>();
-		this.someday = new ArrayList<Task>();
+	public DateView(){
+		update();
 	}
-	
-	
-	public static DateView getInstance(){
-		if(dateView == null){
-			dateView = new DateView();
-		}
-		return dateView;
-	}
-	
+		
 	public void update(){
 		Data data = Data.getInstance();
 		

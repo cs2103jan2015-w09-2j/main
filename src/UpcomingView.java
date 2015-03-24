@@ -1,14 +1,9 @@
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.swing.text.BadLocationException;
+
 
 public class UpcomingView implements View{
 
-	Data data = null;
-	
-	public UpcomingView(Data data){
-		this.data = data;
+	public UpcomingView(){
 	}
 	
 	@Override
