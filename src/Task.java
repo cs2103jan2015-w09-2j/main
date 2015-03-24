@@ -2,7 +2,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class Task implements Comparable<Task>{
+public class Task{
 
 	private static final String EMPTY_STRING = "";
 	private static final String DEADLINE_TASK = "[%1$s] " + "%2$s";
@@ -303,7 +303,7 @@ public class Task implements Comparable<Task>{
 	}
 	
 	//@author A0111867A
-	@Override
+	/*@Override
 	public int compareTo(Task task) {
 		
 		int completed, floating;
@@ -353,6 +353,6 @@ public class Task implements Comparable<Task>{
 		else{
 			return 0;
 		}
-	}
+	}*/
 
 }

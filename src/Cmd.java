@@ -13,7 +13,7 @@ public abstract class Cmd {
 	protected static final String MESSAGE_NO_VALUE = "please indicate word to %1$s";
 	protected static final String MESSAGE_NO_FILE = "file not available";
 	
-	public abstract Display execute();
+	public abstract boolean execute();
 	
 	protected void writeToFile(){
 		Data myList = Data.getInstance();

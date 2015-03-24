@@ -5,12 +5,13 @@ public class ViewCmd extends Cmd{
 	
 	public ViewCmd(String view) {
 		this.view = view;
-		// TODO Auto-generated constructor stub
 	}
 
-	public Display execute(){
-		Data myList = Data.getInstance();
+	public boolean execute(){
+		Display display = Display.getInstance();
 		
-	     return new Display(View.getInstance(), "");
+		display.set(null);
+		
+	     return true;
 	}
 }

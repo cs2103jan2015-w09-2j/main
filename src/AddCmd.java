@@ -7,17 +7,18 @@ public class AddCmd extends Cmd{
 		this.task = task;
 	}
 	
-	public Display execute(){
-		Data myList = Data.getInstance();
+	public boolean execute(){
+		Data data = Data.getInstance();
+		DateView dateView = DateView.getInstance();
+		Display display = Display.getInstance();
 		
-		myList.add(task);
+		data.add(task);
 		writeToFile();
 	       
-		DateView dateView = DateView.getInstance();
-		Data data = Data.getInstance();
-		
 		dateView.set(data.getToday(), data.getUpcoming(), data.getSomeday());
+	    display.set(dateView, MESSAGE_ADD);
 	    
-		return new Display(dateView, MESSAGE_ADD);
+		return true;
 	}
+	
 }

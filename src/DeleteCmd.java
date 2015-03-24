@@ -7,14 +7,17 @@ public class DeleteCmd extends Cmd{
 		this.index = index;
 	}
 	
-	public Display execute(){
-		Data myList = Data.getInstance();
-		View myView = View.getInstance();
+	public boolean execute(){
+		Data data = Data.getInstance();
+		View view = View.getInstance();
+		Display display = Display.getInstance();
 		
-		Task thisTask = myView.getTask(index);
-		myList.remove(thisTask);
+		Task thisTask = view.getTask(index);
+		data.remove(thisTask);
 		writeToFile();
-	        
-	    return new Display(myView, MESSAGE_DELETE);
+	     
+		display.set(view, MESSAGE_DELETE);
+		
+	    return true;
 	}
 }

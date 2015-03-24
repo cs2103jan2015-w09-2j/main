@@ -22,7 +22,7 @@ public class Controller {
 		return controller;
 	}
 	
-	public Display executeCommand(String input) {
+	public boolean executeCommand(String input) {
 		Cmd cmd = OneTagParser.toCmd(input);
 		return cmd.execute();
 	}

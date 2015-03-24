@@ -3,10 +3,10 @@
 public class Display {
 
 	private static Display display = null;
-	private static View view;
-	private static String message;
+	private View view;
+	private String message;
 
-	public Display(){
+	private Display(){
 		view = null;
 		message = "";
 	}
@@ -18,20 +18,22 @@ public class Display {
 		return display;
 	}
 	
-	public static View getView() {
+	public View getView() {
 		return view;
 	}
 
-	public static void setView(View view) {
-		Display.view = view;
-	}
-
-	public static String getMessage() {
+	public String getMessage() {
 		return message;
 	}
 
-	public static void setMessage(String message) {
-		Display.message = message;
+	public void set(View view) {
+		this.view = view;
+		this.message = "";
+	}
+	
+	public void set(View view, String message) {
+		this.view = view;
+		this.message = message;
 	}
 
 }

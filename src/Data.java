@@ -99,7 +99,7 @@ public class Data extends Observable{
 		
 	//others
 	public void sort(){
-		Collections.sort(myList, new DataComparator());
+		//Collections.sort(myList, new DataComparator());
 	}
 		
 	public boolean isEmpty(){

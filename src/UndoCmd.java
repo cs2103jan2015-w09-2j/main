@@ -2,9 +2,9 @@
 public class UndoCmd extends Cmd {
 
 	@Override
-	public Display execute() {
+	public boolean execute() {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 }

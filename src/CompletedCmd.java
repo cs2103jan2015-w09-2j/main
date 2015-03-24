@@ -7,18 +7,18 @@ public class CompletedCmd extends Cmd{
 		this.index = index;
 	}
 	
-	public Display execute(){
-		Data myList = Data.getInstance();
-		View myView = View.getInstance();
+	public boolean execute(){
+		Data data = Data.getInstance();
+		View view = View.getInstance();
+		Display display = Display.getInstance();
 		
-		if(myList.isEmpty()){
-			return new Display(myView, MESSAGE_EMPTY);
-		}
-		else{
-			Task thisTask = myView.getTask(index);
-			myList.update(thisTask, true);
-			writeToFile();
-			return new Display(myView, MESSAGE_EDIT);
-		}
+		Task thisTask = view.getTask(index);
+		data.update(thisTask, true);
+		
+		writeToFile();
+		
+		display.set(view, MESSAGE_EDIT);
+		
+		return true;
 	}
 }
