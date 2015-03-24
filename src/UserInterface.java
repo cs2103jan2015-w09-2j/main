@@ -125,9 +125,9 @@ public class UserInterface {
 
 	private void colourCommand() {
 		StyleContext cont = StyleContext.getDefaultStyleContext();
-		AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
+		final AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
 				StyleConstants.Foreground, Color.RED);
-		AttributeSet attrBlack = cont.addAttribute(cont.getEmptySet(),
+		final AttributeSet attrBlack = cont.addAttribute(cont.getEmptySet(),
 				StyleConstants.Foreground, Color.BLACK);
 		doc = new DefaultStyledDocument() {
 			public void insertString(int offset, String str, AttributeSet a)
