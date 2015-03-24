@@ -32,10 +32,11 @@ public class Data extends Observable{
 		ArrayList<Task> todayList = new ArrayList<Task>();
 		
 		for(Task task : myList){
-			if(task.isTodayTask()){
+			if(task.isTodayTask() && !task.getIsCompleted()){
 				todayList.add(task);
 			}
 		}
+		Collections.sort(todayList, new EndTimeComparator());
 		return todayList;
 	}
 	
@@ -43,10 +44,11 @@ public class Data extends Observable{
 		ArrayList<Task> upcomingList = new ArrayList<Task>();
 		
 		for(Task task : myList){
-			if(task.isUpcomingTask()){
+			if(task.isUpcomingTask() && !task.getIsCompleted()){
 				upcomingList.add(task);
 			}
 		}
+		Collections.sort(upcomingList, new EndTimeComparator());
 		return upcomingList;
 	}
 	
@@ -54,11 +56,22 @@ public class Data extends Observable{
 		ArrayList<Task> somedayList = new ArrayList<Task>();
 		
 		for(Task task : myList){
-			if(task.isSomedayTask()){
+			if(task.isSomedayTask() && !task.getIsCompleted()){
 				somedayList.add(task);
 			}
 		}
 		return somedayList;
+	}
+	
+	public ArrayList<Task> getCompleted(){
+		ArrayList<Task> completedList = new ArrayList<Task>();
+		
+		for(Task task : myList){
+			if(task.getIsCompleted()){
+				completedList.add(task);
+			}
+		}
+		return completedList;
 	}
 	
 	//setter
