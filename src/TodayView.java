@@ -18,6 +18,7 @@ public class TodayView implements View{
 
 	@Override
 	public Task getTask(int index) {
+		index--;
 		return today.get(index);
 	}
 
@@ -28,11 +29,21 @@ public class TodayView implements View{
 		this.today = data.getToday();
 		
 	}
+	
+	
+	protected String getTask() {
+		String tasks = "";
+		int i =0;
+		for (Task task : today) {
+			i++;
+			tasks += "  "+i + ". " + task.toString() + "\n";
+		}
+		return tasks;
+	}
 
 	@Override
 	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
-		DateView today = new DateView();
 		UserInterface UI = UserInterface.getInstance();
 		JTextPane showToUser = UI.getShowToUser();
 		
@@ -42,7 +53,7 @@ public class TodayView implements View{
 		doc.insertString(doc.getLength(), " Today: \n", style);
 		
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), today.getToday(), style);
+		doc.insertString(doc.getLength(), getTask(), style);
 	}
 
 }
