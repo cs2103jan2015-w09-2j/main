@@ -27,14 +27,18 @@ public class Display {
 	}
 
 	public void setView(View view) {
+		view.update();
 		this.view = view;
+		this.message = null;
 	}
 	
 	public void setMessage(String message) {
+		view.update();
 		this.message = message;
 	}
 	
 	public void set(View view, String message) {
+		view.update();
 		this.view = view;
 		this.message = message;
 	}

@@ -7,11 +7,11 @@ public class Controller {
 	public Controller(){
 		file = new Storage();
 		Data data = Data.getInstance();
-		DateView dateView = DateView.getInstance();
+		Display display = Display.getInstance();
 		
 		data.set(file.getData());	
 				
-		dateView.update();
+		display.setView(new DateView());
 	}
 		
 	public static Controller getInstance(){

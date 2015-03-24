@@ -1,14 +1,9 @@
-import java.util.Observable;
-import java.util.Observer;
-
 import javax.swing.text.BadLocationException;
+
 
 public class SomedayView implements View{
 
-	Data data = null;
-	
-	public SomedayView(Data data){
-		this.data = data;
+	public SomedayView(){
 	}
 	
 	@Override
