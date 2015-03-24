@@ -13,6 +13,7 @@ public class DateView implements View{
 	private ArrayList<Task> today;
 	private ArrayList<Task> upcoming;
 	private ArrayList<Task> someday;
+	private int i = 0;
 	
 	public DateView(){
 		update();
@@ -27,6 +28,7 @@ public class DateView implements View{
 	}
 	
 	protected String getToday() {
+		i=0;
 		String tasksForToday = getTask(today);
 		return tasksForToday;
 	}
@@ -44,7 +46,6 @@ public class DateView implements View{
 
 	protected String getTask(ArrayList<Task> taskArray) {
 		String tasks = "";
-		int i = 0;
 		
 		for (Task task : taskArray) {
 			i++;
@@ -54,7 +55,6 @@ public class DateView implements View{
 	}
 	
 	public void show() throws BadLocationException {
-		// TODO Auto-generated method stub
 		UserInterface UI = UserInterface.getInstance();
 		JTextPane showToUser = UI.getShowToUser();
 		
