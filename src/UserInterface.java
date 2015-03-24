@@ -23,7 +23,7 @@ public class UserInterface {
 
 	private JFrame frame;
 	private JTextPane commandFromUser;
-	private JTextPane showToUser;
+	private static JTextPane showToUser;
 	private static Controller control;
 	private JPanel panel;
 	private DefaultStyledDocument doc = new DefaultStyledDocument();
@@ -48,28 +48,16 @@ public class UserInterface {
 		control = new Controller();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
+		showToUser.setText("");
 		try {
-			DateView.getInstance().show();
+			
+			Display.getInstance().getView().show();
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
 		window.frame.setVisible(true);
 	}
 
-	/**
-	 * Create the application.
-	 * 
-	 * @throws BadLocationException
-	 */
-	public UserInterface() {
-
-		//control.executeCommand("view");
-		/*try {
-			DateView.getInstance().show();
-		} catch (BadLocationException e) {
-			e.printStackTrace();
-		}*/
-	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -86,7 +74,7 @@ public class UserInterface {
 		panel.setBounds(0, 0, 612, 425);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(30,
 				144, 255), new Color(0, 0, 0)));
-		//colourCommand();
+		colourCommand();
 		commandFromUser = new JTextPane(doc);
 		panel.add(commandFromUser, BorderLayout.SOUTH);
 		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -113,8 +101,9 @@ public class UserInterface {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					String command = commandFromUser.getText();
 					control.executeCommand(command);
+					showToUser.setText("");
 					try {
-						DateView.getInstance().show();
+						Display.getInstance().getView().show();
 					} catch (BadLocationException e1) {
 						System.out.println("Error");
 					}
