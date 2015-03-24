@@ -1,4 +1,3 @@
-
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -154,7 +153,7 @@ public class OneTagParser {
 				{
 					if(printOnce != 0)
 					{
-						System.out.println("Task Type : Timed Task");
+						//System.out.println("Task Type : Timed Task");
 						printOnce = 0;
 					}
 					isTimedTask = true; 
@@ -208,15 +207,15 @@ public class OneTagParser {
 	//					System.out.println("Task description : "+taskDescription);
 						System.out.println("return Task("+startDateAndTime[0]+","+startDateAndTime[1]+","+startDateAndTime[2]+","+startDateAndTime[3]+","+startDateAndTime[4]+","+endDateAndTime[0]+","+endDateAndTime[1]+","+endDateAndTime[2]+","+endDateAndTime[3]+","+endDateAndTime[4]+","+taskDescription+")");
 						
-				//		return Task(startDateAndTime[0], startDateAndTime[1], startDateAndTime[2], startDateAndTime[3], startDateAndTime[4], 
-				//				endDateAndTime[0],endDateAndTime[1],endDateAndTime[2],endDateAndTime[3],endDateAndTime[4], taskDescription);
+						return new Task(startDateAndTime[0], startDateAndTime[1], startDateAndTime[2], startDateAndTime[3], startDateAndTime[4], 
+								endDateAndTime[0],endDateAndTime[1],endDateAndTime[2],endDateAndTime[3],endDateAndTime[4], taskDescription);
 					}
 				}
 				else if(testWord.equals("by"))
 				{
 					if(printOnce != 0)
 					{
-						System.out.println("Task Entered : Deadline Task");
+					//	System.out.println("Task Entered : Deadline Task");
 						printOnce = 0 ;
 					}
 					isDeadlineTask = true;
@@ -247,9 +246,9 @@ public class OneTagParser {
 					}
 					int[] deadlineDateAndTime = findTime(testDate);
 				//	testPrintDateAndTimeInformation(deadlineDateAndTime);
-					 System.out.println("return Task("+deadlineDateAndTime[0]+","+deadlineDateAndTime[1]+","+deadlineDateAndTime[2]+","+deadlineDateAndTime[3]+","+deadlineDateAndTime[4]+","+taskDescription+")");				
-				//	return Task(deadlineDateAndTime[0], deadlineDateAndTime[1], deadlineDateAndTime[2], deadlineDateAndTime[3],deadlineDateAndTime[4],
-				//		taskDescription);	
+				//	 System.out.println("return Task("+deadlineDateAndTime[0]+","+deadlineDateAndTime[1]+","+deadlineDateAndTime[2]+","+deadlineDateAndTime[3]+","+deadlineDateAndTime[4]+","+taskDescription+")");				
+					return new Task(deadlineDateAndTime[0], deadlineDateAndTime[1], deadlineDateAndTime[2], deadlineDateAndTime[3],deadlineDateAndTime[4],
+						taskDescription);	
 				}
 			}	
 				if(isDeadlineTask == false && isTimedTask == false)
@@ -260,8 +259,8 @@ public class OneTagParser {
 					{
 						taskDescription += content[i] +" ";
 					}
-					System.out.println("return task("+taskDescription+")");
-					return null;
+				//	System.out.println("return task("+taskDescription+")");
+					return new Task(taskDescription);
 				}
 				return null;
 	}
