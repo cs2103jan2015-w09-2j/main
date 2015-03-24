@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -9,19 +10,22 @@ import javax.swing.text.StyledDocument;
 
 public class TodayView implements View{
 
-	DateView today = new DateView();
+	ArrayList<Task> today;
+	
 	public TodayView(){
+		update();
 	}
 
 	@Override
 	public Task getTask(int index) {
-		// TODO Auto-generated method stub
-		return null;
+		return today.get(index);
 	}
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
+		Data data = Data.getInstance();
+		
+		this.today = data.getToday();
 		
 	}
 
