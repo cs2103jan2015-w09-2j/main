@@ -1,5 +1,6 @@
 
 
+//@author A0111217
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -95,6 +96,7 @@ public class TaskTest {
 
 	@Test
 	public void testGetDescription() {
+		//Equivalence partition of 3 different types of task
 		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getDescription(), TASK_BUY_ORANGE);
 		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.getDescription(), TASK_GO_RUNNING);
 		assertEquals(MESSAGE_TEST_TIMED_TASK, lateTimedTask.getDescription(), TASK_GO_HOME);
@@ -104,6 +106,7 @@ public class TaskTest {
 
 	@Test
 	public void testGetStart() {
+		//Equivalence partition of 3 different types of task
 		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getStart(), null);
 		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.getStart().toString(), DATE_START_EARLY_TIMED_TASK);
 		assertEquals(MESSAGE_TEST_TIMED_TASK, lateTimedTask.getStart().toString(), DATE_START_LATE_TIMED_TASK);
@@ -205,7 +208,7 @@ public class TaskTest {
 		assertTrue(MESSAGE_TEST_TIMED_TASK, dupLateTimedTask.equals(lateTimedTask));
 		assertTrue(MESSAGE_TEST_DEADLINE_TASK, dupLateDeadlineTask.equals(lateDeadlineTask));
 		assertTrue(MESSAGE_TEST_FLOATING_TASK, dupFloatingTask.equals(floatingTask));
-		
+		//Additional completed task because a completed task is not equals to a non completed task with the same description and time
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedEarlyDeadlineTask.equals(earlyDeadlineTask));
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.equals(todayTask));
 		assertTrue(MESSAGE_TEST_COMPLETED_TASK, dupCompletedEarlyDeadlineTask.equals(completedEarlyDeadlineTask));
