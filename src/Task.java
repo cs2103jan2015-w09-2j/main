@@ -131,10 +131,15 @@ public class Task{
 		LocalDateTime otherStart = otherTask.getStart();
 		LocalDateTime otherEnd = otherTask.getEnd();
 		boolean isCompletedOther = otherTask.getIsCompleted();
-
+		if (otherDescription != null){
 		setDescription(otherDescription);
+		}
+		if (otherStart!=null){
 		setStart(otherStart);
+		}
+		if (otherEnd != null){
 		setEnd(otherEnd);
+		}
 		setIsCompleted(isCompletedOther);
 	}
 	

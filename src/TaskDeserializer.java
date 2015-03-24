@@ -30,7 +30,9 @@ public class TaskDeserializer implements JsonDeserializer<Task> {
 		String end = jsonObject.get(STRING_END).getAsString();
 		boolean completed = jsonObject.get(STRING_COMPLETED).getAsBoolean();
 		final Task task = new Task();
+		if (!description.equals(EMPTY_STRING)){
 		task.setDescription(description);
+		}
 		if (!start.equals(EMPTY_STRING)) {
 			task.setStart(LocalDateTime.parse(start, formatter));
 		}

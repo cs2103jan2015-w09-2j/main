@@ -1,4 +1,4 @@
-//@author A0111217
+
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -10,9 +10,8 @@ import org.junit.Test;
 public class StorageTest {
 	
 	private static final String FILE_NAME_NEW = "threeTag.json";
-	private static final String MESSAGE_FILE_NAME_SET = "File name has been set to " + FILE_NAME_NEW;
 	private static final String TEST_SET_PATH = "test setPath";
-	private static final String MESSAGE_DIRECTORY_SET = "Directory has been set to D:\\School\\JavaProg\\CS2103\\Storage\\twoTag.json";
+	private static final String MESSAGE_DIRECTORY_SET = "Directory has been set to D:\\School\\JavaProg\\CS2103\\Storage\\oneTag.json";
 	private static final String MESSAGE_TEST_WRITING_DATA = "test writing data";
 	private static final String MESSAGE_TEST_GETTING_DATA = "test getting data";
 	private static final String TASK_BUY_ORANGE = "Buy orange";
@@ -58,10 +57,7 @@ public class StorageTest {
 		assertEquals(TEST_SET_PATH, storage.setPath(filePath), MESSAGE_DIRECTORY_SET);
 	}
 
-	@Test
-	public void testSetFileName() {
-		assertEquals("test setFileName", storage.setFileName(FILE_NAME_NEW), MESSAGE_FILE_NAME_SET);
-	}
+
 
 	@Test
 	public void testWriteToFile() {
