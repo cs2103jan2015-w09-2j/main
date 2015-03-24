@@ -4,7 +4,7 @@ public class Controller {
 	private static Controller controller = null;
 	private Storage file;
 	
-	private Controller(){
+	public Controller(){
 		file = new Storage();
 		Data data = Data.getInstance();
 		Display display = Display.getInstance();
