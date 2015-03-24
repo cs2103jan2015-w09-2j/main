@@ -1,19 +1,12 @@
+import javax.swing.text.BadLocationException;
 
-public abstract class View {
 
-	private static View theOne;
+public interface View {
+		
+	void update();
 	
-	public static View getInstance(){
-		if(theOne == null){
-			theOne = DateView.getInstance();
-		}
-		return theOne;
-	}
+	void show() throws BadLocationException;
 	
-	public static void setInstance(View view){
-		theOne = view;
-	}
+	Task getTask(int index);
 	
-	abstract Task getTask(int index);
-
 }

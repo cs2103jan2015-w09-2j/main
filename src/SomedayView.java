@@ -1,7 +1,9 @@
 import java.util.Observable;
 import java.util.Observer;
 
-public class SomedayView extends View implements Observer{
+import javax.swing.text.BadLocationException;
+
+public class SomedayView implements View{
 
 	Data data = null;
 	
@@ -10,15 +12,21 @@ public class SomedayView extends View implements Observer{
 	}
 	
 	@Override
-	public void update(Observable o, Object arg) {
+	public Task getTask(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void update() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Task getTask(int index) {
+	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 }

@@ -26,9 +26,12 @@ public class Display {
 		return message;
 	}
 
-	public void set(View view) {
+	public void setView(View view) {
 		this.view = view;
-		this.message = "";
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	public void set(View view, String message) {

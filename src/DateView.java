@@ -8,7 +8,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 
-public class DateView extends View{
+public class DateView implements View{
 	
 	private static DateView dateView;
 	
@@ -30,10 +30,12 @@ public class DateView extends View{
 		return dateView;
 	}
 	
-	public void set(ArrayList<Task> today, ArrayList<Task> upcoming, ArrayList<Task> someday){
-		this.today = today;
-		this.upcoming = upcoming;
-		this.someday = someday;
+	public void update(){
+		Data data = Data.getInstance();
+		
+		this.today = data.getToday();
+		this.upcoming = data.getUpcoming();
+		this.someday = data.getSomeday();
 	}
 	
 	protected String getToday() {

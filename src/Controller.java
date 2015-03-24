@@ -11,8 +11,7 @@ public class Controller {
 		
 		data.set(file.getData());	
 				
-		System.out.println(data.getSomeday());
-		dateView.set(data.getToday(), data.getUpcoming(), data.getSomeday());
+		dateView.update();
 	}
 		
 	public static Controller getInstance(){

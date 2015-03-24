@@ -15,8 +15,8 @@ public class AddCmd extends Cmd{
 		data.add(task);
 		writeToFile();
 	       
-		dateView.set(data.getToday(), data.getUpcoming(), data.getSomeday());
-	    display.set(dateView, MESSAGE_ADD);
+		dateView.update();
+	    display.setMessage(MESSAGE_ADD);
 	    
 		return true;
 	}

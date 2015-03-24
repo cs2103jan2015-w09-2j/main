@@ -9,9 +9,7 @@ public class ViewCmd extends Cmd{
 
 	public boolean execute(){
 		Display display = Display.getInstance();
-		
-		display.set(null);
-		
+				
 	     return true;
 	}
 }

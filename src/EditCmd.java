@@ -11,14 +11,15 @@ public class EditCmd extends Cmd{
 	
 	public boolean execute(){
 		Data data = Data.getInstance();
-		View view = View.getInstance();
 		Display display = Display.getInstance();
+		View view = display.getView();
 		
 		Task thisTask = view.getTask(index);
 		data.update(thisTask, task);
 		writeToFile();
 		
-		display.set(view, MESSAGE_EDIT);
+		view.update();
+		display.setMessage(MESSAGE_EDIT);
 		
 		return true;
 	}
