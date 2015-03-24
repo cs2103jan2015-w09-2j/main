@@ -10,7 +10,8 @@ public class Controller {
 		DateView dateView = DateView.getInstance();
 		
 		data.set(file.getData());	
-		
+				
+		System.out.println(data.getSomeday());
 		dateView.set(data.getToday(), data.getUpcoming(), data.getSomeday());
 	}
 		

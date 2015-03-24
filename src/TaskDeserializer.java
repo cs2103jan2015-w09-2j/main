@@ -10,7 +10,7 @@ import com.google.gson.JsonObject;
 public class TaskDeserializer implements JsonDeserializer<Task> {
 
 	private static final String STRING_COMPLETED = "Completed";
-	private static final String STRING_END = "end";
+	private static final String STRING_END = "End";
 	private static final String STRING_START = "Start";
 	private static final String STRING_DESCRIPTION = "Description";
 	private static final String EMPTY_STRING = "";
@@ -29,7 +29,6 @@ public class TaskDeserializer implements JsonDeserializer<Task> {
 		String start = jsonObject.get(STRING_START).getAsString();
 		String end = jsonObject.get(STRING_END).getAsString();
 		boolean completed = jsonObject.get(STRING_COMPLETED).getAsBoolean();
-
 		final Task task = new Task();
 		task.setDescription(description);
 		if (!start.equals(EMPTY_STRING)) {

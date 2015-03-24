@@ -27,7 +27,7 @@ public class Storage {
 	
 	private static final String NAME_CONFIG_FILE = "config.json";
 	private static final String USER_DIRECTORY = "user.dir";
-	private static final String CHARACTER_BACKSLASH = "//";
+	private static final String CHARACTER_BACKSLASH = "/";
 	private static final String MESSAGE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
 	private static final String MESSAGE_NEW_FILE_NAME = "File name has been set to %1$s";
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
@@ -39,6 +39,7 @@ public class Storage {
 	private ArrayList<Task> allTasks;
 	private String currentRelativePath = System.getProperty(USER_DIRECTORY);
 	private String filePath = currentRelativePath + CHARACTER_BACKSLASH + fileName;
+	
 	
 	public Storage(){
 		allTasks = new ArrayList<Task>();
@@ -81,7 +82,7 @@ public class Storage {
 		SimpleFormatter formatter = new SimpleFormatter();
 		fh.setFormatter(formatter);
 		logger.addHandler(fh);
-		logger.setLevel(Level.ALL);
+		logger.setLevel(Level.OFF);
 	}
 	
 	/**
@@ -162,14 +163,12 @@ public class Storage {
 	 * @return ArrayList<Task>
 	 */
 	public ArrayList<Task> getData(){
-		
 		String jsonString = new String("");		
 		BufferedReader br = null;
 		
 		try{
 			String line;
 			br = new BufferedReader(new FileReader(filePath));
-			br.close();
 			while((line = br.readLine()) != null){
 				jsonString += line;
 			}
@@ -182,7 +181,6 @@ public class Storage {
 				logger.log(Level.WARNING, e.getMessage());
 			}
 		}
-		
 		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, new TaskDeserializer()).create();
 		Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
 		allTasks = gson.fromJson(jsonString, listType);

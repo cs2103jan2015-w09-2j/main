@@ -306,7 +306,15 @@ public class Task implements Comparable<Task>{
 	@Override
 	public int compareTo(Task task) {
 		
-		return compareCompleted(task) + compareFloating(task) + compareTimed(task);
+		int completed, floating;
+		
+		if((completed = compareCompleted(task)) != 0){
+			return completed;
+		}
+		else if((floating = compareFloating(task)) != 0){
+			return floating;
+		}
+		return compareTimed(task);
 		
 	}
 

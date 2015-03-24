@@ -86,7 +86,7 @@ public class UserInterface {
 		panel.setBounds(0, 0, 612, 425);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(30,
 				144, 255), new Color(0, 0, 0)));
-		colourCommand();
+		//colourCommand();
 		commandFromUser = new JTextPane(doc);
 		panel.add(commandFromUser, BorderLayout.SOUTH);
 		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));

@@ -43,7 +43,7 @@ public class Data extends Observable{
 		ArrayList<Task> upcomingList = new ArrayList<Task>();
 		
 		for(Task task : myList){
-			if(task.isTodayTask()){
+			if(task.isUpcomingTask()){
 				upcomingList.add(task);
 			}
 		}
@@ -54,7 +54,7 @@ public class Data extends Observable{
 		ArrayList<Task> somedayList = new ArrayList<Task>();
 		
 		for(Task task : myList){
-			if(task.isTodayTask()){
+			if(task.isSomedayTask()){
 				somedayList.add(task);
 			}
 		}

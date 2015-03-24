@@ -12,7 +12,12 @@ public class AddCmd extends Cmd{
 		
 		myList.add(task);
 		writeToFile();
-	        
-	    return new Display(View.getInstance(), MESSAGE_ADD);
+	       
+		DateView dateView = DateView.getInstance();
+		Data data = Data.getInstance();
+		
+		dateView.set(data.getToday(), data.getUpcoming(), data.getSomeday());
+	    
+		return new Display(dateView, MESSAGE_ADD);
 	}
 }
