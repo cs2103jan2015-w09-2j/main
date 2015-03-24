@@ -1,64 +1,37 @@
-//@author A0112715R
-import java.util.ArrayList;
+//@author A0111867A
 
 public class Display {
 
-	private static DateView viewsOfDays;
+	private static Display display = null;
+	private static View view;
 	private static String message;
-	private int i;
-	private static Display display = new Display();
 
-	public static Display getInstanceOfDisplay() {
+	public Display(){
+		view = null;
+		message = "";
+	}
+	
+	public static Display getInstance() {
 		if (display == null) {
 			display = new Display();
 		}
 		return display;
-
+	}
+	
+	public static View getView() {
+		return view;
 	}
 
-	protected Display(View dateView, String msg) {
-		viewsOfDays = (DateView) dateView;
-		message = msg;
-
+	public static void setView(View view) {
+		Display.view = view;
 	}
 
-	public Display() {
-		// TODO Auto-generated constructor stub
-	}
-
-	protected String getToday() {
-		String tasksForToday = getTask(viewsOfDays.getToday());
-		return tasksForToday;
-	}
-
-	protected String getUpcoming() {
-		String upcomingTasks = getTask(viewsOfDays.getUpcoming());
-		return upcomingTasks;
-	}
-
-	protected String getSomeday() {
-		String tasksForSomeday = getTask(viewsOfDays.getSomeday());
-		return tasksForSomeday;
-
-	}
-
-	protected String getTask(ArrayList<Task> taskArray) {
-		String tasks = "";
-		for (Task task : taskArray) {
-			i++;
-			tasks += i + "." + task.toString() + "\n";
-		}
-		return tasks;
-	}
-
-	protected String getMessage() {
+	public static String getMessage() {
 		return message;
 	}
 
-	protected String getView(){
-		String view = "home";
-		
-		return view;
+	public static void setMessage(String message) {
+		Display.message = message;
 	}
 
 }
