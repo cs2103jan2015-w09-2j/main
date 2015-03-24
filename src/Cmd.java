@@ -3,15 +3,25 @@ import java.util.ArrayList;
 
 public abstract class Cmd {
 	
-	protected static final String MESSAGE_ADD = "added to %1$s: ì%2$sî";
+	/*protected static final String MESSAGE_ADD = "added to %1$s: ‚Äú%2$s‚Äù";
 	protected static final String MESSAGE_EDIT = "edit";
-	protected static final String MESSAGE_DELETE = "deleted from %1$s: ì%2$sî";
+	protected static final String MESSAGE_DELETE = "deleted from %1$s: ‚Äú%2$s‚Äù";
 	protected static final String MESSAGE_CLEAR = "all content deleted from %1$s";
 	protected static final String MESSAGE_EMPTY = "%1$s is empty";
-	protected static final String MESSAGE_EMPTY_SEARCH = "no text matches ì%1$sî";
+	protected static final String MESSAGE_EMPTY_SEARCH = "no text matches ‚Äú%1$s‚Äù";
 	protected static final String MESSAGE_INVALID = "command is invalid";
 	protected static final String MESSAGE_NO_VALUE = "please indicate word to %1$s";
-	protected static final String MESSAGE_NO_FILE = "file not available";
+	protected static final String MESSAGE_NO_FILE = "file not available";*/
+	
+	protected static final String MESSAGE_ADD = "Task Successfully added";
+	protected static final String MESSAGE_EDIT = "edit";
+	protected static final String MESSAGE_DELETE = "Deleted Task";
+	protected static final String MESSAGE_CLEAR = "all content deleted from %1$s";
+	protected static final String MESSAGE_EMPTY = "No message";
+	protected static final String MESSAGE_EMPTY_SEARCH = "no text matches ‚Äú%1$s‚Äù";
+	protected static final String MESSAGE_INVALID = "Command is invalid";
+	protected static final String MESSAGE_NO_VALUE = "Please indicate word";
+	protected static final String MESSAGE_NO_FILE = "File not available";
 	
 	public abstract boolean execute();
 	
