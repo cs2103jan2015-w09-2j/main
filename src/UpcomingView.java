@@ -18,6 +18,7 @@ public class UpcomingView implements View{
 	
 	@Override
 	public Task getTask(int index) {
+		index--;
 		return upcoming.get(index);
 	}
 
@@ -27,10 +28,19 @@ public class UpcomingView implements View{
 		
 		upcoming = data.getUpcoming();
 	}
+	
+	protected String getTask() {
+		String tasks = "";
+		int i =0;
+		for (Task task : upcoming) {
+			i++;
+			tasks += "  "+i + ". " + task.toString() + "\n";
+		}
+		return tasks;
+	}
 
 	@Override
 	public void show() throws BadLocationException {
-		DateView upcoming = new DateView();
 		UserInterface UI = UserInterface.getInstance();
 		JTextPane showToUser = UI.getShowToUser();
 		
@@ -40,7 +50,7 @@ public class UpcomingView implements View{
 		doc.insertString(doc.getLength(), " Upcoming: \n", style);
 		
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), upcoming.getUpcoming(), style);
+		doc.insertString(doc.getLength(), getTask(), style);
 		
 	}
 
