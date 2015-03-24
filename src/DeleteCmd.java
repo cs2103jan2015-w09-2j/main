@@ -17,7 +17,7 @@ public class DeleteCmd extends Cmd{
 		writeToFile();
 	     
 		
-		display.set(view, MESSAGE_DELETE);
+		display.setMessage(MESSAGE_DELETE);
 		
 	    return true;
 	}
