@@ -4,7 +4,7 @@ public class ViewCmd extends Cmd{
 	String view;
 	
 	public ViewCmd(String view) {
-		this.view = view;
+		this.view = view.toLowerCase();
 	}
 
 	public boolean execute(){
