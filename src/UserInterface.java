@@ -32,7 +32,8 @@ public class UserInterface {
 	 * Launch the application.
 	 */
 	private static UserInterface UI = null;
-	private static JTextPane feedback;
+	private JPanel panel_1;
+	private JTextPane feedback;
 
 	public static UserInterface getInstance() {
 		if (UI == null) {
@@ -49,13 +50,6 @@ public class UserInterface {
 		control = new Controller();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
-		showToUser.setText("");
-		
-		feedback = new JTextPane();
-		feedback.setForeground(new Color(255, 0, 0));
-		feedback.setFont(new Font("Calibri", Font.BOLD, 16));
-		feedback.setEditable(false);
-		panel.add(feedback, BorderLayout.NORTH);
 		try {
 			
 			Display.getInstance().getView().show();
@@ -90,14 +84,22 @@ public class UserInterface {
 		commandFromUser.setForeground(new Color(0, 0, 0));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				new Color(30, 144, 255), new Color(0, 0, 0)));
+		
+		panel_1 = new JPanel();
+		panel.add(panel_1, BorderLayout.CENTER);
+		panel_1.setLayout(new BorderLayout(0, 0));
 		showToUser = new JTextPane();
-		panel.add(showToUser, BorderLayout.CENTER);
+		panel_1.add(showToUser, BorderLayout.CENTER);
 		showToUser.setFont(new Font("Calibri", Font.PLAIN, 20));
 		showToUser.setBackground(new Color(255, 255, 255));
 		showToUser.setEditable(false);
 		showToUser.setForeground(new Color(0, 0, 128));
 		showToUser.setBorder(null);
 		showToUser.setBounds(20, 10, 573, 350);
+		
+		feedback = new JTextPane();
+		feedback.setEditable(false);
+		panel_1.add(feedback, BorderLayout.SOUTH);
 		getCommand();
 	}
 
@@ -110,7 +112,6 @@ public class UserInterface {
 					control.executeCommand(command);
 					showToUser.setText("");
 					feedback.setText(Display.getInstance().getMessage()+"\n");
-					feedback.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.red, Color.black));
 					try {
 						Display.getInstance().getView().show();
 					} catch (BadLocationException e1) {
