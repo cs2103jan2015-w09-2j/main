@@ -29,7 +29,6 @@ public class Storage {
 	private static final String USER_DIRECTORY = "user.dir";
 	private static final String CHARACTER_BACKSLASH = "/";
 	private static final String MESSAGE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
-	private static final String MESSAGE_NEW_FILE_NAME = "File name has been set to %1$s";
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
 	private static Logger logger = Logger.getLogger("Storage");
@@ -119,19 +118,6 @@ public class Storage {
 		}
 		oldLocationFile.delete();
 	}
-	
-	
-	/**
-	 * Changes the file name to name
-	 * @param name
-	 * @return String
-	 */
-	public String setFileName(String name){
-		fileName = name;
-		
-		return String.format(MESSAGE_NEW_FILE_NAME, name);
-	}
-	
 	
 	/**
 	 * Writes the ArrayList<Task> to file
