@@ -73,6 +73,17 @@ public class Data{
 		return completedList;
 	}
 	
+	public ArrayList<Task> getSearched(String text){
+		ArrayList<Task> searchedList = new ArrayList<Task>();
+		
+		for(Task task : myList){
+			if(task.getDescription().contains(text)){
+				searchedList.add(task);
+			}
+		}
+		return searchedList;	
+	}
+	
 	//setter
 	public boolean add(Task input){
 		return myList.add(input);
