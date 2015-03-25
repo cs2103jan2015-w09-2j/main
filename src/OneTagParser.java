@@ -16,7 +16,7 @@ public class OneTagParser {
 	private static final int INPUT_SPLIT_SECOND = 1;
 	private static final String STRING_FROM = "from";
 	private static final String STRING_TO = "to";
-	//Test any changes.;
+	
 	public static void main(String args[])
 	{
 		Scanner sc = new Scanner(System.in);
