@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.JFrame;
@@ -6,6 +8,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -19,21 +23,30 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import java.awt.Button;
+
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.UIManager;
+
 public class UserInterface {
 
 	private JFrame frame;
 	private JTextPane commandFromUser;
 	private static JTextPane showToUser;
 	private static Controller control;
-	private static JPanel panel;
+	private static JPanel outerPanel;
 	private DefaultStyledDocument doc = new DefaultStyledDocument();
 
 	/**
 	 * Launch the application.
 	 */
 	private static UserInterface UI = null;
-	private JPanel panel_1;
+	private JPanel feedbackPanel;
+	private JPanel closePanel;
 	private JTextPane feedback;
+	private JButton closeButton;
 
 	public static UserInterface getInstance() {
 		if (UI == null) {
@@ -51,55 +64,77 @@ public class UserInterface {
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
 		try {
-			
+
 			Display.getInstance().getView().show();
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+
+		window.frame.setUndecorated(true);
+		window.frame.setOpacity(0.99f);
 		window.frame.setVisible(true);
 	}
-
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600, 500);
-		panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.CENTER);
-		panel.setLayout(new BorderLayout(0, 0));
-		panel.setBackground(Color.WHITE);
-		panel.setBounds(0, 0, 612, 425);
-		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(30,
+		frame.setSize(600, 400);
+		outerPanel = new JPanel();
+		frame.getContentPane().add(outerPanel, BorderLayout.CENTER);
+		outerPanel.setLayout(new BorderLayout(0, 0));
+		outerPanel.setBackground(Color.WHITE);
+		outerPanel.setBounds(0, 0, 612, 425);
+		outerPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(30,
 				144, 255), new Color(0, 0, 0)));
 		colourCommand();
 		commandFromUser = new JTextPane(doc);
-		panel.add(commandFromUser, BorderLayout.SOUTH);
+		outerPanel.add(commandFromUser, BorderLayout.SOUTH);
 		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
 		commandFromUser.setBackground(new Color(255, 255, 255));
 		commandFromUser.setBounds(20, 371, 573, 43);
 		commandFromUser.setForeground(new Color(0, 0, 0));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				new Color(30, 144, 255), new Color(0, 0, 0)));
-		
-		panel_1 = new JPanel();
-		panel.add(panel_1, BorderLayout.CENTER);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		closePanel = new JPanel();
+		closePanel.setBorder(null);
+		closePanel.setBackground(Color.WHITE);
+		outerPanel.add(closePanel, BorderLayout.NORTH);
+		closePanel.setLayout(new BorderLayout(0, 0));
+
+		feedbackPanel = new JPanel();
+		outerPanel.add(feedbackPanel, BorderLayout.CENTER);
+		feedbackPanel.setLayout(new BorderLayout(0, 0));
 		showToUser = new JTextPane();
-		panel_1.add(showToUser, BorderLayout.CENTER);
-		showToUser.setFont(new Font("Calibri", Font.PLAIN, 20));
+		feedbackPanel.add(showToUser, BorderLayout.CENTER);
+		showToUser.setFont(new Font("Calibri", Font.PLAIN, 18));
 		showToUser.setBackground(new Color(255, 255, 255));
 		showToUser.setEditable(false);
 		showToUser.setForeground(new Color(0, 0, 128));
 		showToUser.setBorder(null);
 		showToUser.setBounds(20, 10, 573, 350);
-		
+
 		feedback = new JTextPane();
 		feedback.setEditable(false);
-		panel_1.add(feedback, BorderLayout.SOUTH);
+		feedbackPanel.add(feedback, BorderLayout.SOUTH);
+
+		closeButton = new JButton("X");
+		closeButton.setFont(new Font("Calibri", Font.BOLD, 15));
+		closeButton.setBorder(UIManager.getBorder("Button.border"));
+		closeButton.setBackground(new Color(255, 255, 255));
+		closeButton.setForeground(new Color(0, 0, 128));
+		closeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				System.exit(0);
+			}
+		});
+
+		closePanel.add(closeButton, BorderLayout.EAST);
 		getCommand();
 	}
 
@@ -111,7 +146,8 @@ public class UserInterface {
 					String command = commandFromUser.getText();
 					control.executeCommand(command);
 					showToUser.setText("");
-					feedback.setText(Display.getInstance().getMessage()+"\n");
+					feedback.setText(Display.getInstance().getMessage() + "\n");
+
 					try {
 						Display.getInstance().getView().show();
 					} catch (BadLocationException e1) {
