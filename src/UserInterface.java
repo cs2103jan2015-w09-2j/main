@@ -6,6 +6,7 @@ import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -26,9 +27,12 @@ import javax.swing.text.StyledDocument;
 import java.awt.Button;
 
 import javax.swing.JButton;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.UIManager;
+import javax.swing.JLabel;
 
 public class UserInterface {
 
@@ -44,9 +48,12 @@ public class UserInterface {
 	 */
 	private static UserInterface UI = null;
 	private JPanel feedbackPanel;
-	private JPanel closePanel;
+	private JPanel topPanel;
 	private JTextPane feedback;
 	private JButton closeButton;
+	private JButton minimiseButton;
+	private JPanel buttonPanel;
+	private JLabel welcomeLabel;
 
 	public static UserInterface getInstance() {
 		if (UI == null) {
@@ -83,15 +90,15 @@ public class UserInterface {
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(600, 400);
+		frame.setSize(550, 500);
 		outerPanel = new JPanel();
 		frame.getContentPane().add(outerPanel, BorderLayout.CENTER);
 		outerPanel.setLayout(new BorderLayout(0, 0));
 		outerPanel.setBackground(Color.WHITE);
 		outerPanel.setBounds(0, 0, 612, 425);
-		outerPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(30,
-				144, 255), new Color(0, 0, 0)));
-		colourCommand();
+		outerPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(
+				30, 144, 255), new Color(0, 0, 0)));
+		colourRestrictedWords();
 		commandFromUser = new JTextPane(doc);
 		outerPanel.add(commandFromUser, BorderLayout.SOUTH);
 		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
@@ -100,11 +107,12 @@ public class UserInterface {
 		commandFromUser.setForeground(new Color(0, 0, 0));
 		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				new Color(30, 144, 255), new Color(0, 0, 0)));
-		closePanel = new JPanel();
-		closePanel.setBorder(null);
-		closePanel.setBackground(Color.WHITE);
-		outerPanel.add(closePanel, BorderLayout.NORTH);
-		closePanel.setLayout(new BorderLayout(0, 0));
+		topPanel = new JPanel();
+		topPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
+				new Color(30, 144, 255), new Color(0, 0, 0)));
+		topPanel.setBackground(new Color(255, 255, 255));
+		outerPanel.add(topPanel, BorderLayout.NORTH);
+		topPanel.setLayout(new BorderLayout(0, 0));
 
 		feedbackPanel = new JPanel();
 		outerPanel.add(feedbackPanel, BorderLayout.CENTER);
@@ -121,20 +129,36 @@ public class UserInterface {
 		feedback = new JTextPane();
 		feedback.setEditable(false);
 		feedbackPanel.add(feedback, BorderLayout.SOUTH);
-
-		closeButton = new JButton("X");
-		closeButton.setFont(new Font("Calibri", Font.BOLD, 15));
-		closeButton.setBorder(UIManager.getBorder("Button.border"));
-		closeButton.setBackground(new Color(255, 255, 255));
-		closeButton.setForeground(new Color(0, 0, 128));
-		closeButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				System.exit(0);
-			}
-		});
-
-		closePanel.add(closeButton, BorderLayout.EAST);
+		
+				
+				buttonPanel = new JPanel();
+				topPanel.add(buttonPanel, BorderLayout.EAST);
+				buttonPanel.setLayout(new BorderLayout(0, 0));
+				
+				closeButton = new JButton("X");
+				buttonPanel.add(closeButton, BorderLayout.EAST);
+				closeButton.setFont(new Font("Calibri", Font.BOLD, 15));
+				closeButton.setBorder(UIManager.getBorder("Button.border"));
+				closeButton.setBackground(new Color(255, 255, 255));
+				closeButton.setForeground(new Color(0, 0, 128));
+				
+				minimiseButton = new JButton("-");
+				buttonPanel.add(minimiseButton, BorderLayout.WEST);
+				buttonPanel.setBorder(UIManager.getBorder("TextArea.border"));
+				minimiseButton.setFont(new Font("Calibri", Font.BOLD, 17));
+				minimiseButton.setBackground(new Color(255, 255, 255));
+				minimiseButton.setForeground(new Color(0, 0, 128));
+				
+				welcomeLabel = new JLabel("   ~OneTag~",SwingConstants.CENTER);
+				welcomeLabel.setFont(new Font("Script MT Bold", Font.BOLD, 22));
+				welcomeLabel.setForeground(new Color(0, 0, 128));
+				topPanel.add(welcomeLabel, BorderLayout.CENTER);
+				closeButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						System.exit(0);
+					}
+				});
 		getCommand();
 	}
 
@@ -160,7 +184,7 @@ public class UserInterface {
 		});
 	}
 
-	private void colourCommand() {
+	private void colourRestrictedWords() {
 		StyleContext cont = StyleContext.getDefaultStyleContext();
 		final AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
 				StyleConstants.Foreground, Color.RED);
