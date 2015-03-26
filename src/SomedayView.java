@@ -35,7 +35,7 @@ public class SomedayView implements View{
 		int i =0;
 		for (Task task : someday) {
 			i++;
-			tasks += "  "+i + ". " + task.toString() + "\n";
+			tasks += "  		      "+i + ".     " + task.toString() + "\n";
 		}
 		return tasks;
 	}
@@ -49,7 +49,8 @@ public class SomedayView implements View{
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), " Someday: \n", style);
+		doc.insertString(doc.getLength(), "\n  			   Someday: \n", style);
+		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
 		
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), getSomedayTask(), style);
