@@ -52,7 +52,9 @@ public class DateView implements View{
 		
 		for (Task task : taskArray) {
 			i++;
-			tasks += "  		      "+i + ".     " + task.toString() + "\n";
+			//String t = task.toString().replaceAll("-", "to");
+			String t =	task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
+			tasks += "  		      "+i + ".     " + t + "\n";
 		}
 		return tasks;
 	}
