@@ -90,7 +90,7 @@ public class UserInterface {
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(550, 500);
+		frame.setSize(550, 540);
 		outerPanel = new JPanel();
 		frame.getContentPane().add(outerPanel, BorderLayout.CENTER);
 		outerPanel.setLayout(new BorderLayout(0, 0));
@@ -100,6 +100,8 @@ public class UserInterface {
 				30, 144, 255), new Color(0, 0, 0)));
 		colourRestrictedWords();
 		commandFromUser = new JTextPane(doc);
+
+		commandFromUser.setToolTipText("Enter command here");;
 		outerPanel.add(commandFromUser, BorderLayout.SOUTH);
 		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
 		commandFromUser.setBackground(new Color(255, 255, 255));
@@ -119,7 +121,7 @@ public class UserInterface {
 		feedbackPanel.setLayout(new BorderLayout(0, 0));
 		showToUser = new JTextPane();
 		feedbackPanel.add(showToUser, BorderLayout.CENTER);
-		showToUser.setFont(new Font("Calibri", Font.PLAIN, 18));
+		showToUser.setFont(new Font("Kristen ITC", Font.PLAIN, 16));
 		showToUser.setBackground(new Color(255, 255, 255));
 		showToUser.setEditable(false);
 		showToUser.setForeground(new Color(0, 0, 128));
@@ -149,8 +151,8 @@ public class UserInterface {
 				minimiseButton.setBackground(new Color(255, 255, 255));
 				minimiseButton.setForeground(new Color(0, 0, 128));
 				
-				welcomeLabel = new JLabel("   ~OneTag~",SwingConstants.CENTER);
-				welcomeLabel.setFont(new Font("Script MT Bold", Font.BOLD, 22));
+				welcomeLabel = new JLabel("      ~OneTag~",SwingConstants.CENTER);
+				welcomeLabel.setFont(new Font("Segoe Print", Font.BOLD, 20));
 				welcomeLabel.setForeground(new Color(0, 0, 128));
 				topPanel.add(welcomeLabel, BorderLayout.CENTER);
 				closeButton.addMouseListener(new MouseAdapter() {

@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.swing.JTextPane;
@@ -15,6 +16,7 @@ public class DateView implements View{
 	private ArrayList<Task> upcoming;
 	private ArrayList<Task> someday;
 	private int i = 0;
+	private Task task = new Task();
 	
 	public DateView(){
 		update();
@@ -50,9 +52,26 @@ public class DateView implements View{
 		
 		for (Task task : taskArray) {
 			i++;
-			tasks += "  "+i + ". " + task.toString() + "\n";
+			tasks += "  		      "+i + ".     " + task.toString() + "\n";
 		}
 		return tasks;
+	}
+	
+	public LocalDateTime getStartDate(){
+		LocalDateTime startDate = task.getStart();
+		return startDate;
+		
+	}
+	
+	public LocalDateTime getEndDate(){
+		LocalDateTime endDate = task.getEnd();
+		return endDate;
+		
+	}
+	
+	public String getTask(){
+		String taskDesc = task.getDescription();
+		return taskDesc;
 	}
 	
 	public void show() throws BadLocationException {
@@ -60,33 +79,28 @@ public class DateView implements View{
 		JTextPane showToUser = UI.getShowToUser();
 		
 		StyledDocument doc = showToUser.getStyledDocument();
-		SimpleAttributeSet center = new SimpleAttributeSet();
-		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		Style style = showToUser.addStyle("Style", null);
 		
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-
-		doc.insertString(doc.getLength(), "  Today:\n", style);
-		doc.insertString(doc.getLength(), " --------------------------------------------------------------------------------------------- \n", style);
-		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), getToday(), style);
+		doc.insertString(doc.getLength(), "\n  			   Today:\n", style);
+		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
+			StyleConstants.setForeground(style, Color.BLACK);
+		doc.insertString(doc.getLength(), getToday()+"\n", style);
 		
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\nUpcoming: \n", style);	
-		doc.insertString(doc.getLength(), " --------------------------------------------------------------------------------------------- \n", style);
+		doc.insertString(doc.getLength(), "  			   Upcoming: \n", style);	
+		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
 		
-	
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), getUpcoming(), style);		
+		doc.insertString(doc.getLength(), getUpcoming()+"\n", style);		
 
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\nSomeday: \n", style);
-		doc.insertString(doc.getLength(), " --------------------------------------------------------------------------------------------- \n", style);
-		
+		doc.insertString(doc.getLength(), "  			   Someday: \n", style);
+		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
+			
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), getSomeday(), style);
+		doc.insertString(doc.getLength(), getSomeday()+"\n", style);
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
 			
 	}
