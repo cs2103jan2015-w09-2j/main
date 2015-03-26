@@ -34,8 +34,9 @@ public class UpcomingView implements View{
 		int i =0;
 		for (Task task : upcoming) {
 			i++;
-			tasks += "  "+i + ". " + task.toString() + "\n";
-		}
+			String t =	task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
+			tasks += "  		      "+i + ".     " + t + "\n";
+			}
 		return tasks;
 	}
 
@@ -47,7 +48,8 @@ public class UpcomingView implements View{
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), " Upcoming: \n", style);
+		doc.insertString(doc.getLength(), "\n  			   Upcoming:\n", style);
+		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
 		
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), getTask(), style);
