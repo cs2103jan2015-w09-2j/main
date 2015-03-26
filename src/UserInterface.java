@@ -2,6 +2,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -112,7 +116,8 @@ public class UserInterface {
 		topPanel = new JPanel();
 		topPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				new Color(30, 144, 255), new Color(0, 0, 0)));
-		topPanel.setBackground(new Color(255, 255, 255));
+		topPanel.setBackground(new Color(0, 0, 255));
+
 		outerPanel.add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new BorderLayout(0, 0));
 
@@ -145,6 +150,12 @@ public class UserInterface {
 				closeButton.setForeground(new Color(0, 0, 128));
 				
 				minimiseButton = new JButton("-");
+				minimiseButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+					//	minimizeApplication();
+					}
+				});
 				buttonPanel.add(minimiseButton, BorderLayout.WEST);
 				buttonPanel.setBorder(UIManager.getBorder("TextArea.border"));
 				minimiseButton.setFont(new Font("Calibri", Font.BOLD, 17));
@@ -153,7 +164,7 @@ public class UserInterface {
 				
 				welcomeLabel = new JLabel("      ~OneTag~",SwingConstants.CENTER);
 				welcomeLabel.setFont(new Font("Segoe Print", Font.BOLD, 20));
-				welcomeLabel.setForeground(new Color(0, 0, 128));
+				welcomeLabel.setForeground(new Color(255, 255, 255));
 				topPanel.add(welcomeLabel, BorderLayout.CENTER);
 				closeButton.addMouseListener(new MouseAdapter() {
 					@Override
@@ -163,6 +174,25 @@ public class UserInterface {
 				});
 		getCommand();
 	}
+
+	//minimize app to SystemTray
+//	protected void minimizeApplication() {
+//		// TODO Auto-generated method stub
+//		 TrayIcon trayIcon = null;
+//	     if (SystemTray.isSupported()) {
+//	         // get the SystemTray instance
+//	         SystemTray tray = SystemTray.getSystemTray();
+//	         // load an image
+//	         Image image = Toolkit.getDefaultToolkit().getImage("");
+//	         // create a action listener to listen for default action executed on the tray icon
+//	         ActionListener listener = new ActionListener() {
+//	             public void actionPerformed(ActionEvent e) {
+//	                 // execute default action of the application
+//	                 // ...
+//	             }
+//	         };
+//		
+//	}
 
 	private void getCommand() {
 		commandFromUser.addKeyListener(new KeyAdapter() {
