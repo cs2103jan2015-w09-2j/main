@@ -54,7 +54,7 @@ public class DateView implements View{
 			i++;
 			//String t = task.toString().replaceAll("-", "to");
 			String t =	task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
-			tasks += "  		      "+i + ".     " + t + "\n";
+			tasks += "  		   "+i + ".  " + t + "\n";
 		}
 		return tasks;
 	}
@@ -83,25 +83,29 @@ public class DateView implements View{
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
 		
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\n  			   Today:\n", style);
-		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
-			StyleConstants.setForeground(style, Color.BLACK);
+		StyleConstants.setForeground(style, Color.WHITE);
+		StyleConstants.setBackground(style, new Color(84, 121, 163));
+		doc.insertString(doc.getLength(), "\n  			   Today  			        \n", style);
+		StyleConstants.setForeground(style, Color.BLACK);
+		StyleConstants.setBackground(style, Color.WHITE);
 		doc.insertString(doc.getLength(), getToday()+"\n", style);
 		
 
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "  			   Upcoming: \n", style);	
-		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
+		StyleConstants.setForeground(style, Color.WHITE);
+		StyleConstants.setBackground(style, new Color(84, 121, 163));
+		doc.insertString(doc.getLength(), "  			   Upcoming    			        \n", style);	
 		
 		StyleConstants.setForeground(style, Color.BLACK);
+		StyleConstants.setBackground(style, Color.WHITE);
 		doc.insertString(doc.getLength(), getUpcoming()+"\n", style);		
 
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "  			   Someday: \n", style);
-		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
+		StyleConstants.setForeground(style, Color.WHITE);
+		StyleConstants.setBackground(style, new Color(84, 121, 163));
+		doc.insertString(doc.getLength(), "  			   Someday   			        \n", style);
+		
 			
 		StyleConstants.setForeground(style, Color.BLACK);
+		StyleConstants.setBackground(style, Color.WHITE);
 		doc.insertString(doc.getLength(), getSomeday()+"\n", style);
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
 			

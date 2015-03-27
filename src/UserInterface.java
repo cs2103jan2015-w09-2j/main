@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.Toolkit;
@@ -116,7 +117,7 @@ public class UserInterface {
 		topPanel = new JPanel();
 		topPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
 				new Color(30, 144, 255), new Color(0, 0, 0)));
-		topPanel.setBackground(new Color(0, 0, 255));
+		topPanel.setBackground(new Color(34, 77, 124));
 
 		outerPanel.add(topPanel, BorderLayout.NORTH);
 		topPanel.setLayout(new BorderLayout(0, 0));
@@ -126,7 +127,7 @@ public class UserInterface {
 		feedbackPanel.setLayout(new BorderLayout(0, 0));
 		showToUser = new JTextPane();
 		feedbackPanel.add(showToUser, BorderLayout.CENTER);
-		showToUser.setFont(new Font("Kristen ITC", Font.PLAIN, 16));
+		showToUser.setFont(new Font("Lucida Fax", Font.PLAIN, 16));
 		showToUser.setBackground(new Color(255, 255, 255));
 		showToUser.setEditable(false);
 		showToUser.setForeground(new Color(0, 0, 128));
@@ -162,8 +163,8 @@ public class UserInterface {
 				minimiseButton.setBackground(new Color(255, 255, 255));
 				minimiseButton.setForeground(new Color(0, 0, 128));
 				
-				welcomeLabel = new JLabel("      ~OneTag~",SwingConstants.CENTER);
-				welcomeLabel.setFont(new Font("Segoe Print", Font.BOLD, 20));
+				welcomeLabel = new JLabel(" OneTag",SwingConstants.LEFT);
+				welcomeLabel.setFont(new Font("Elephant", Font.PLAIN , 16));
 				welcomeLabel.setForeground(new Color(255, 255, 255));
 				topPanel.add(welcomeLabel, BorderLayout.CENTER);
 				closeButton.addMouseListener(new MouseAdapter() {

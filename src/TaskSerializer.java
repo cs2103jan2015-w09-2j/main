@@ -20,7 +20,7 @@ public class TaskSerializer implements JsonSerializer<Task> {
 
 	public JsonElement serialize(final Task task, final Type type,
 			final JsonSerializationContext context) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 		
 		JsonObject result = new JsonObject();
 		result.add(STRING_DESCRIPTION, new JsonPrimitive(task.getDescription()));

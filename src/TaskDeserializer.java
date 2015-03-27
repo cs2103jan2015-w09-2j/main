@@ -19,7 +19,7 @@ public class TaskDeserializer implements JsonDeserializer<Task> {
 	public Task deserialize(final JsonElement json, final Type typeOfT,
 			final JsonDeserializationContext context) {
 		DateTimeFormatter formatter = DateTimeFormatter
-				.ofPattern("yyyy-MM-dd HH:mm");
+				.ofPattern("dd-MM-yyyy HH:mm");
 		if (json == null) {
 			return null;
 		}
