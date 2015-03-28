@@ -22,8 +22,16 @@ public class Controller {
 	}
 	
 	public boolean executeCommand(String input) {
+		History history = History.getInstance();
+		
 		Cmd cmd = OneTagParser.toCmd(input);
-		return cmd.execute();
+		cmd.execute();
+		
+		if(cmd instanceof ModifiableCmd){
+			history.add((ModifiableCmd)cmd);
+		}
+		
+		return true;
 	}
 
 }

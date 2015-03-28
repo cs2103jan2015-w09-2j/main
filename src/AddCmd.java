@@ -1,5 +1,5 @@
 
-public class AddCmd extends Cmd{
+public class AddCmd extends ModifiableCmd{
 
 	Task task;
 	
@@ -8,9 +8,6 @@ public class AddCmd extends Cmd{
 	}
 	
 	public boolean execute(){
-		Data data = Data.getInstance();
-		Display display = Display.getInstance();
-		
 		data.add(task);
 		writeToFile();
 	       
@@ -19,4 +16,10 @@ public class AddCmd extends Cmd{
 		return true;
 	}
 	
+	public void undo(){
+		data.remove(task);
+		writeToFile();
+		
+	    display.setMessage(MESSAGE_UNDO_ADD);
+	}
 }
