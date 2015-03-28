@@ -74,8 +74,14 @@ public class DateView implements View{
 		 for (Task task : upcoming) {
 		 i++;
 		 getTaskInfo(task);
-		 String t = startDate.format(formatter)+" "+ taskDes;
+		 String t = "";
+		 if(task.isDeadlineTask()){
+		 t = taskDes +" (by " + endDate.format(formatter)+")";
+		 }
+		 else{
+		 t = taskDes +"(starts on " +startDate.format(formatter)+")";
 		 t = t.replaceAll("\\[", "").replaceAll("\\]"," -");
+		 }
 		 tasks += "  "+i + ".  " + t + "\n";
 		 }
 		 return tasks;
