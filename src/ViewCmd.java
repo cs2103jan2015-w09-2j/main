@@ -26,7 +26,10 @@ public class ViewCmd extends Cmd{
 			case "done" :
 				display.setView(new CompletedView());
 				break;
+			case "help" :
+				break;
 			default :
+				display.setView(new DateView());
 				break;
 		}
 		
