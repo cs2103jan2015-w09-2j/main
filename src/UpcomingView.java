@@ -1,5 +1,8 @@
 import java.awt.Color;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -8,43 +11,52 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 
-public class UpcomingView implements View{
-
-	ArrayList<Task> upcoming;
+public class UpcomingView extends SingleView implements View{
+	private String taskDes;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private boolean isOverdue;
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 	
-	public UpcomingView(){
-		update();
-	}
-	
-	@Override
-	public Task getTask(int index) {
-		index--;
-		int size = upcoming.size();
-		
-		if(index > -1 && index < size){
-			return upcoming.get(index);
-		}
-		else{
-			return null;
-		}
-	}
-
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
 		
-		upcoming = data.getUpcoming();
+		setList(data.getUpcoming());
 	}
 	
-	protected String getTask() {
-		String tasks = "";
-		int i =0;
-		for (Task task : upcoming) {
-			i++;
-			String t =	task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
-			tasks += "  		      "+i + ".     " + t + "\n";
-			}
-		return tasks;
+	protected void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if(!task.isFloatingTask()){
+		if(!task.isDeadlineTask()){
+		startDate = task.getStart().toLocalDate();
+		startTime = task.getStart().toLocalTime();
+		}
+		endDate = task.getEnd().toLocalDate();
+		endTime = task.getEnd().toLocalTime();
+		}
+	}
+	
+	protected String getUpcoming() {
+		 String tasks = "";
+		 int i=0;
+		 for (Task task : getList()) {
+		 i++;
+		 getTaskInfo(task);
+		 String t = "";
+		 if(task.isDeadlineTask()){
+		 t = taskDes +" (by " + endDate.format(formatter)+")";
+		 }
+
+		 else{
+		 t = taskDes +"(starts on " +startDate.format(formatter)+")";
+		 t = t.replaceAll("\\[", "").replaceAll("\\]"," -");
+		 }
+		 tasks += "  "+i + ".  " + t + "\n";
+		 }
+		 return tasks;
 	}
 
 	@Override
@@ -54,12 +66,13 @@ public class UpcomingView implements View{
 		
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\n  			   Upcoming:\n", style);
-		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
+		StyleConstants.setForeground(style, Color.WHITE);
+		StyleConstants.setBackground(style, new Color(84, 121, 163));
+		doc.insertString(doc.getLength(), "  			   Upcoming    			        \n", style);	
 		
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), getTask(), style);
+		StyleConstants.setBackground(style, Color.WHITE);
+		doc.insertString(doc.getLength(), "\n"+getUpcoming()+"\n", style);		
 		
 	}
 

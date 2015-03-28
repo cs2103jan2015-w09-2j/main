@@ -1,5 +1,5 @@
 
-public class CompletedCmd extends Cmd{
+public class CompletedCmd extends ModifiableCmd{
 	
 	private Task task;
 	
@@ -22,5 +22,12 @@ public class CompletedCmd extends Cmd{
 		}
 		
 		return true;
+	}
+	
+	public void undo(){
+		data.update(task, false);
+		writeToFile();
+		
+		display.setMessage(MESSAGE_UNDO_COMPLETED);
 	}
 }

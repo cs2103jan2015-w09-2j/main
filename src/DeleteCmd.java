@@ -1,5 +1,5 @@
 
-public class DeleteCmd extends Cmd{
+public class DeleteCmd extends ModifiableCmd{
 
 	private Task task;
 	
@@ -20,5 +20,12 @@ public class DeleteCmd extends Cmd{
 			display.setMessage(MESSAGE_DELETE);
 		}
 	    return true;
+	}
+	
+	public void undo(){
+		data.add(task);
+		writeToFile();
+		
+		display.setMessage(MESSAGE_UNDO_DELETE);
 	}
 }

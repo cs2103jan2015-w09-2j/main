@@ -35,7 +35,7 @@ public class TestView {
 	@Test
 	public void testTodayView() {
 		TodayView today = new TodayView();
-		String todayTasks  = today.getTask();
+		String todayTasks  = today.getToday();
 		ArrayList<String> testTodayTasks = new ArrayList<String>();
 		testTodayTasks.add("[09:00 - 10:00] Software engineering tutorial ");
 		testTodayTasks.add("[11:00 - 12:00] Stats Tutorial ");
@@ -49,7 +49,7 @@ public class TestView {
 	@Test
 	public void testSomedayView() {
 		SomedayView someday = new SomedayView();
-		String somedayTasks  = someday.getSomedayTask();
+		String somedayTasks  = someday.getSomeday();
 		ArrayList<String> testSomedayTasks = new ArrayList<String>();
 		testSomedayTasks.add("ReadLast Phone Call From Heaven ");
 		testSomedayTasks.add("Goskydiving one day ");
@@ -62,7 +62,7 @@ public class TestView {
 	@Test
 	public void testUpcomingView() {
 		UpcomingView upcoming = new UpcomingView();
-		String upcomingTasks  = upcoming.getTask();
+		String upcomingTasks  = upcoming.getUpcoming();
 		LocalDateTime today = LocalDateTime.now();
 		String todayhr  = "0"+String.valueOf(today.getHour())+":";
 		String todayMin = String.valueOf(today.getMinute());

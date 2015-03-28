@@ -32,4 +32,5 @@ public class ViewCmd extends Cmd{
 		
 	     return true;
 	}
+
 }

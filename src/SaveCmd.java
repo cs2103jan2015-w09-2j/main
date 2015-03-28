@@ -1,5 +1,5 @@
 
-public class SaveCmd extends Cmd {
+public class SaveCmd extends ModifiableCmd {
 	String storageLocation;
 	public SaveCmd(String storageLocation) {
 		this.storageLocation = storageLocation;
@@ -11,6 +11,12 @@ public class SaveCmd extends Cmd {
 		Storage storage = new Storage();
 		storage.setPath(storageLocation);
 		return true;
+	}
+
+	@Override
+	public void undo() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
