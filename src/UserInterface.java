@@ -24,6 +24,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
@@ -135,6 +136,8 @@ public class UserInterface {
 		showToUser.setBounds(20, 10, 573, 350);
 
 		feedback = new JTextPane();
+		feedback.setForeground(new Color(153, 0, 153));
+		feedback.setFont(new Font("Lucida Fax", Font.BOLD | Font.ITALIC, 15));
 		feedback.setEditable(false);
 		feedbackPanel.add(feedback, BorderLayout.SOUTH);
 		
@@ -201,10 +204,22 @@ public class UserInterface {
 			public void keyPressed(java.awt.event.KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					String command = commandFromUser.getText();
+					String message ="";
 					control.executeCommand(command);
 					showToUser.setText("");
-					feedback.setText(Display.getInstance().getMessage() + "\n");
-
+					StyledDocument doc = feedback.getStyledDocument();
+					SimpleAttributeSet center = new SimpleAttributeSet();
+					StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+					doc.setParagraphAttributes(0, doc.getLength(), center, false);
+					message = Display.getInstance().getMessage();
+					try{
+					if(!message.isEmpty()){
+					feedback.setText((message) + "\n");
+					}
+					}
+					catch(NullPointerException nullException){
+						feedback.setText("") ;
+					}
 					try {
 						Display.getInstance().getView().show();
 					} catch (BadLocationException e1) {
