@@ -59,14 +59,6 @@ public class Storage {
 		initializeLogger();
 	}
 	
-	public Storage(String directory, String fileName, ArrayList<Task> task ){
-		this.fileName = fileName;
-		filePath = directory + CHARACTER_BACKSLASH + fileName;
-		allTasks = task;
-		checkFileExist(this.filePath);
-		initializeLogger();
-	}
-	
 	private void initializeLogger(){
 		Handler fh;
 		try {
@@ -218,6 +210,7 @@ public class Storage {
 
 		File file = new File(filePath);
 		File configFile = new File(NAME_CONFIG_FILE);
+		
 		if (configFile.exists()){
 			try {
 				this.filePath = new Scanner(new File(NAME_CONFIG_FILE)).useDelimiter("\\Z").next();
