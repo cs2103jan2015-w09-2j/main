@@ -32,7 +32,7 @@ public class Storage {
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
 	private static Logger logger = Logger.getLogger("Storage");
-	private static final String DIRECTORY_LOGGER = "storage.log";
+	private static final String DIRECTORY_LOGGER = "StorageLog";
 	
 	private String fileName = "oneTag.json";  //default name is oneTag.json
 	private ArrayList<Task> allTasks;
@@ -70,7 +70,7 @@ public class Storage {
 	private void initializeLogger(){
 		Handler fh;
 		try {
-			fh = new FileHandler(DIRECTORY_LOGGER);
+			fh = new FileHandler(DIRECTORY_LOGGER, true);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 			return;
@@ -101,7 +101,7 @@ public class Storage {
 		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
 		writeStringToFile(filePath,NAME_CONFIG_FILE);
 		
-		
+		closeFileHandler();
 		
 		return String.format(MESSAGE_NEW_USER_DIRECTORY, userSpecifiedDirectory);
 	}
@@ -111,12 +111,21 @@ public class Storage {
 		File oldLocationFile = new File(oldFilePath);
 		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
 		File updatedLocationFile = new File(filePath);
+		
 		try {
 			Files.copy(oldLocationFile.toPath(), updatedLocationFile.toPath());
 		} catch (IOException e1) {
 			logger.log(Level.WARNING, String.format(MESSAGE_ERROR_FILE_NOT_FOUND, fileName));
 		}
+		
 		oldLocationFile.delete();
+	}
+	
+	private void closeFileHandler(){
+		for(Handler h:logger.getHandlers())
+		{
+		    h.close();
+		}
 	}
 	
 	/**
@@ -125,14 +134,18 @@ public class Storage {
 	 */
 	public void writeToFile(ArrayList<Task> tasks){
 		
+		String json = convertTaskToString(tasks);
+		writeStringToFile(json, filePath);
+		closeFileHandler();
+		
+	}
+
+	private String convertTaskToString(ArrayList<Task> tasks) {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.setPrettyPrinting().registerTypeAdapter(Task.class, new TaskSerializer());
 		Gson gson = gsonBuilder.create();
 		String json = gson.toJson(tasks);
-		
-		writeStringToFile(json, filePath);
-		
-		
+		return json;
 	}
 
 	private void writeStringToFile(String json, String filePath) {
@@ -153,8 +166,31 @@ public class Storage {
 	 * @return ArrayList<Task>
 	 */
 	public ArrayList<Task> getData(){
-		String jsonString = new String("");		
+		String jsonString = new String(CHARACTER_EMPTY_STRING);		
+		jsonString = readStringFromFile(jsonString);
+		
+		convertStringToTask(jsonString);
+		
+		if (allTasks == null){
+			allTasks = new ArrayList<Task>();
+		}
+		
+		closeFileHandler();
+		
+		return allTasks;
+		
+	}
+
+	private void convertStringToTask(String jsonString) {
+		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, new TaskDeserializer()).create();
+		Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
+		allTasks = gson.fromJson(jsonString, listType);
+	}
+
+	private String readStringFromFile(String jsonString) {
+		
 		BufferedReader br = null;
+		
 		try{
 			String line;
 			br = new BufferedReader(new FileReader(filePath));
@@ -170,22 +206,13 @@ public class Storage {
 				logger.log(Level.WARNING, e.getMessage());
 			}
 		}
-		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class, new TaskDeserializer()).create();
-		Type listType = new TypeToken<ArrayList<Task>>() {}.getType();
-		allTasks = gson.fromJson(jsonString, listType);
-		
-		if (allTasks == null){
-			allTasks = new ArrayList<Task>();
-		}
-		
-		return allTasks;
-		
+		return jsonString;
 	}
 	
 	/**
 	 * 
 	 * @param filePath
-	 * @return String
+	 * @return boolean
 	 */
 	private boolean checkFileExist(String filePath){
 
@@ -214,21 +241,6 @@ public class Storage {
 		}
 		
 		return false;
-		
-		/*
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				return String.format(MESSAGE_ERROR_FILE_NOT_FOUND,
-						fileName);
-			}
-		}
-		*/
-	}
-	
-	public static void main(String args[]){
-		Storage storage = new Storage();
 	}
 	
 }
