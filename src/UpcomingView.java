@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.util.ArrayList;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -8,38 +7,19 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 
-public class UpcomingView implements View{
-
-	ArrayList<Task> upcoming;
-	
-	public UpcomingView(){
-		update();
-	}
-	
-	@Override
-	public Task getTask(int index) {
-		index--;
-		int size = upcoming.size();
-		
-		if(index > -1 && index < size){
-			return upcoming.get(index);
-		}
-		else{
-			return null;
-		}
-	}
+public class UpcomingView extends SingleView implements View{
 
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
 		
-		upcoming = data.getUpcoming();
+		setList(data.getUpcoming());
 	}
 	
 	protected String getTask() {
 		String tasks = "";
 		int i =0;
-		for (Task task : upcoming) {
+		for (Task task : getList()) {
 			i++;
 			String t =	task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
 			tasks += "  		      "+i + ".     " + t + "\n";

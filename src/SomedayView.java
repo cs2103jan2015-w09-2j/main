@@ -8,39 +8,20 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 
-public class SomedayView implements View{
-
-	ArrayList<Task> someday;
-	
-	public SomedayView(){
-		update();
-	}
-
-	@Override
-	public Task getTask(int index) {
-		index--;
-		int size = someday.size();
-		
-		if(index > -1 && index < size){
-			return someday.get(index);
-		}
-		else{
-			return null;
-		}
-	}
+public class SomedayView extends SingleView implements View{
 
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
 		
-		this.someday = data.getSomeday();
+		setList(data.getSomeday());
 		
 	}
 	
 	protected String getSomedayTask() {
 		String tasks = "";
 		int i =0;
-		for (Task task : someday) {
+		for (Task task : getList()) {
 			i++;
 			tasks += "  		      "+i + ".     " + task.toString() + "\n";
 		}

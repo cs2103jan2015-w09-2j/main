@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.util.ArrayList;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -8,26 +7,23 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 
-public class SearchView implements View{
+public class SearchView extends SingleView implements View{
 
-	ArrayList<Task> searchedList;
-	
-	public SearchView(String searchedText){
-		Data data = Data.getInstance();
-		
-		searchedList = data.getSearched(searchedText);
+	public SearchView(String searchedText){		
+		setList(data.getSearched(searchedText));
 	}
 	
+
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
 		
 	}
-
+		
 	protected String getTask() {
 		String tasks = "";
 		int i =0;
-		for (Task task : searchedList) {
+		for (Task task : getList()) {
 			i++;
 			tasks += "  "+i + ". " + task.toString() + "\n";
 		}
@@ -47,19 +43,6 @@ public class SearchView implements View{
 		StyleConstants.setForeground(style, Color.BLACK);
 		doc.insertString(doc.getLength(), getTask(), style);
 		
-	}
-
-	@Override
-	public Task getTask(int index) {
-		index--;
-		int size = searchedList.size();
-		
-		if(index > -1 && index < size){
-			return searchedList.get(index);
-		}
-		else{
-			return null;
-		}
 	}
 
 }
