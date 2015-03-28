@@ -18,14 +18,17 @@ public class SomedayView extends SingleView implements View{
 		
 	}
 	
-	protected String getSomedayTask() {
-		String tasks = "";
-		int i =0;
-		for (Task task : getList()) {
-			i++;
-			tasks += "  		      "+i + ".     " + task.toString() + "\n";
-		}
-		return tasks;
+	protected String getSomeday() {
+		 String tasks = "";
+		 int i =0;
+		 for (Task task : getList()) {
+		 i++;
+		 String t = task.toString().replaceAll("-", "to");
+		 t = task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
+		 tasks += "  "+i + ".  " + t + "\n";
+		 }
+		 return tasks;
+
 	}
 
 	@Override
@@ -36,12 +39,16 @@ public class SomedayView extends SingleView implements View{
 		
 		StyledDocument doc = showToUser.getStyledDocument();
 		Style style = showToUser.addStyle("Style", null);
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
-		doc.insertString(doc.getLength(), "\n  			   Someday: \n", style);
-		doc.insertString(doc.getLength(), " ----------------------------------------------------------------------------------------------------------- \n", style);
+
+		StyleConstants.setForeground(style, Color.WHITE);
+		StyleConstants.setBackground(style, new Color(84, 121, 163));
+		doc.insertString(doc.getLength(), "  			   Someday   			        \n", style);
 		
+			
 		StyleConstants.setForeground(style, Color.BLACK);
-		doc.insertString(doc.getLength(), getSomedayTask(), style);
+		StyleConstants.setBackground(style, Color.WHITE);
+		doc.insertString(doc.getLength(), "\n"+getSomeday()+"\n", style);
+		StyleConstants.setForeground(style, Color.BLUE.brighter());
 	}
 
 }

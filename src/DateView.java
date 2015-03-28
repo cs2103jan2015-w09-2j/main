@@ -60,8 +60,6 @@ public class DateView implements View{
 		 for (Task task : today) {
 		 i++;
 		 getTaskInfo(task);
-		 //show start time
-		 //show end time for deadline task - i.e. by 3.40
 		 String t="";
 		 if(task.isDeadlineTask()){
 			 t = taskDes +" (by " + endTime.format(formatTime).replace("AM", "am").replace("PM", "pm")+")";
@@ -107,8 +105,6 @@ public class DateView implements View{
 		 return tasks;
 
 	}
-
-
 
 	protected boolean isTaskOverdue(Task task) {
 		isOverdue = false;
