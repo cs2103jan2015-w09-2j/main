@@ -1,3 +1,4 @@
+import java.util.EmptyStackException;
 import java.util.Stack;
 
 
@@ -22,7 +23,7 @@ public class History {
 		list.push(cmd);
 	}
 	
-	public ModifiableCmd remove(){
+	public ModifiableCmd remove() throws EmptyStackException{
 		return list.pop();
 	}
 }

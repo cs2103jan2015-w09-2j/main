@@ -6,9 +6,7 @@ public class EditCmd extends ModifiableCmd{
 	private int index;
 	
 	public EditCmd(int index, Task editContent){
-		View view = display.getView();
-		
-		this.task = view.getTask(index);
+		this.index = index;
 		this.editContent = editContent;
 	}
 	

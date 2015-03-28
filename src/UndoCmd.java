@@ -1,3 +1,5 @@
+import java.util.EmptyStackException;
+
 
 public class UndoCmd extends Cmd {
 
@@ -8,8 +10,13 @@ public class UndoCmd extends Cmd {
 	public boolean execute() {
 		History history = History.getInstance();
 		
-		ModifiableCmd cmd = history.remove();
-		cmd.undo();
+		try{
+			ModifiableCmd cmd = history.remove();
+			cmd.undo();
+		}
+		catch(EmptyStackException ex){
+			display.setMessage(MESSAGE_UNDO_EMPTY);
+		}
 		return true;
 	}
 
