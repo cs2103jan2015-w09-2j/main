@@ -15,11 +15,18 @@ public class TodayView implements View{
 	public TodayView(){
 		update();
 	}
-
+	
 	@Override
 	public Task getTask(int index) {
 		index--;
-		return today.get(index);
+		int size = today.size();
+		
+		if(index > -1 && index < size){
+			return today.get(index);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override

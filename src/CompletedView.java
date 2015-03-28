@@ -19,7 +19,14 @@ public class CompletedView implements View{
 	@Override
 	public Task getTask(int index) {
 		index--;
-		return completed.get(index);
+		int size = completed.size();
+		
+		if(index > -1 && index < size){
+			return completed.get(index);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override

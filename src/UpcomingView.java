@@ -19,7 +19,14 @@ public class UpcomingView implements View{
 	@Override
 	public Task getTask(int index) {
 		index--;
-		return upcoming.get(index);
+		int size = upcoming.size();
+		
+		if(index > -1 && index < size){
+			return upcoming.get(index);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override
