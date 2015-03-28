@@ -1,10 +1,16 @@
 
 public class UndoCmd extends Cmd {
 
+	public UndoCmd(){
+	}
+	
 	@Override
 	public boolean execute() {
-		// TODO Auto-generated method stub
-		return false;
+		History history = History.getInstance();
+		
+		ModifiableCmd cmd = history.remove();
+		cmd.undo();
+		return true;
 	}
 
 }

@@ -1,5 +1,5 @@
 
-public class EditCmd extends Cmd{
+public class EditCmd extends ModifiableCmd{
 	
 	private Task task;
 	private Task editContent;
@@ -22,5 +22,10 @@ public class EditCmd extends Cmd{
 			display.setMessage(MESSAGE_EDIT);
 		}
 		return true;
+	}
+	
+	public void undo(){
+		System.out.println(task);
+		System.out.println(editContent);
 	}
 }
