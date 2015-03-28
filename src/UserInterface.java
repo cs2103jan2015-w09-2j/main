@@ -72,7 +72,7 @@ public class UserInterface {
 	}
 
 	public static void main(String[] args) {
-		control = new Controller();
+		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
 		try {
