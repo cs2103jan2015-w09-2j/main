@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -26,7 +27,7 @@ public class DateView implements View{
 	private LocalTime endTime;
 	private boolean isOverdue;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-	
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h:mm a", Locale.US);
 	
 	public DateView(){
 		update();
@@ -61,7 +62,13 @@ public class DateView implements View{
 		 getTaskInfo(task);
 		 //show start time
 		 //show end time for deadline task - i.e. by 3.40
-		 String t = endTime.toString() +" " + taskDes;
+		 String t="";
+		 if(task.isDeadlineTask()){
+			 t = taskDes +" (by " + endTime.format(formatTime).replace("AM", "am").replace("PM", "pm")+")";
+		 }
+		 else{
+		 t = startTime.format(formatTime).replace("AM", "am").replace("PM", "pm")+" to "+endTime.format(formatTime).replace("AM", "am").replace("PM", "pm") +": " + taskDes;
+		 }
 		 t = t.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
 		 tasks += "  "+i + ".  " + t + "\n";
 		 }
@@ -78,6 +85,7 @@ public class DateView implements View{
 		 if(task.isDeadlineTask()){
 		 t = taskDes +" (by " + endDate.format(formatter)+")";
 		 }
+
 		 else{
 		 t = taskDes +"(starts on " +startDate.format(formatter)+")";
 		 t = t.replaceAll("\\[", "").replaceAll("\\]"," -");
@@ -124,7 +132,7 @@ public class DateView implements View{
 		doc.insertString(doc.getLength(), "\n  			   Today  			        \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		StyleConstants.setBackground(style, Color.WHITE);
-		doc.insertString(doc.getLength(), getToday()+"\n", style);
+		doc.insertString(doc.getLength(), "\n"+getToday()+"\n", style);
 		
 
 		StyleConstants.setForeground(style, Color.WHITE);
@@ -133,7 +141,7 @@ public class DateView implements View{
 		
 		StyleConstants.setForeground(style, Color.BLACK);
 		StyleConstants.setBackground(style, Color.WHITE);
-		doc.insertString(doc.getLength(), getUpcoming()+"\n", style);		
+		doc.insertString(doc.getLength(), "\n"+getUpcoming()+"\n", style);		
 
 		StyleConstants.setForeground(style, Color.WHITE);
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
@@ -142,7 +150,7 @@ public class DateView implements View{
 			
 		StyleConstants.setForeground(style, Color.BLACK);
 		StyleConstants.setBackground(style, Color.WHITE);
-		doc.insertString(doc.getLength(), getSomeday()+"\n", style);
+		doc.insertString(doc.getLength(), "\n"+getSomeday()+"\n", style);
 		StyleConstants.setForeground(style, Color.BLUE.brighter());
 			
 	}
