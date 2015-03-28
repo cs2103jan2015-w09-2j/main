@@ -1,5 +1,8 @@
 import java.awt.Color;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import javax.swing.JTextPane;
@@ -16,7 +19,14 @@ public class DateView implements View{
 	private ArrayList<Task> upcoming;
 	private ArrayList<Task> someday;
 	private int i = 0;
-	private Task task = new Task();
+	private String taskDes;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private boolean isOverdue;
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	
 	
 	public DateView(){
 		update();
@@ -30,50 +40,70 @@ public class DateView implements View{
 		this.someday = data.getSomeday();
 	}
 	
+	protected void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if(!task.isFloatingTask()){
+		if(!task.isDeadlineTask()){
+		startDate = task.getStart().toLocalDate();
+		startTime = task.getStart().toLocalTime();
+		}
+		endDate = task.getEnd().toLocalDate();
+		endTime = task.getEnd().toLocalTime();
+		}
+	}
+
 	protected String getToday() {
-		i=0;
-		String tasksForToday = getTask(today);
-		return tasksForToday;
+		i = 0;
+		 String tasks = "";
+			
+		 for (Task task : today) {
+		 i++;
+		 getTaskInfo(task);
+		 //show start time
+		 //show end time for deadline task - i.e. by 3.40
+		 String t = endTime.toString() +" " + taskDes;
+		 t = t.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
+		 tasks += "  "+i + ".  " + t + "\n";
+		 }
+		 return tasks;
 	}
 
 	protected String getUpcoming() {
-		String upcomingTasks = getTask(upcoming);
-		return upcomingTasks;
+		 String tasks = "";
+		
+		 for (Task task : upcoming) {
+		 i++;
+		 getTaskInfo(task);
+		 String t = startDate.format(formatter)+" "+ taskDes;
+		 t = t.replaceAll("\\[", "").replaceAll("\\]"," -");
+		 tasks += "  "+i + ".  " + t + "\n";
+		 }
+		 return tasks;
 	}
 
 	protected String getSomeday() {
-		String tasksForSomeday = getTask(someday);
-		return tasksForSomeday;
+		 String tasks = "";
+			
+		 for (Task task : someday) {
+		 i++;
+		 String t = task.toString().replaceAll("-", "to");
+		 t = task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
+		 tasks += "  "+i + ".  " + t + "\n";
+		 }
+		 return tasks;
 
 	}
 
-	protected String getTask(ArrayList<Task> taskArray) {
-		String tasks = "";
-		
-		for (Task task : taskArray) {
-			i++;
-			//String t = task.toString().replaceAll("-", "to");
-			String t =	task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
-			tasks += "  		   "+i + ".  " + t + "\n";
+
+
+	protected boolean isTaskOverdue(Task task) {
+		isOverdue = false;
+		LocalDate now = LocalDate.now();
+
+		if (endDate.isBefore(now)) {
+			isOverdue = true;
 		}
-		return tasks;
-	}
-	
-	public LocalDateTime getStartDate(){
-		LocalDateTime startDate = task.getStart();
-		return startDate;
-		
-	}
-	
-	public LocalDateTime getEndDate(){
-		LocalDateTime endDate = task.getEnd();
-		return endDate;
-		
-	}
-	
-	public String getTask(){
-		String taskDesc = task.getDescription();
-		return taskDesc;
+		return isOverdue;
 	}
 	
 	public void show() throws BadLocationException {
