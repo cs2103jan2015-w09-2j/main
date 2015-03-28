@@ -2,25 +2,20 @@
 public class CompletedCmd extends ModifiableCmd{
 	
 	private Task task;
+	private int index;
 	
-	public CompletedCmd(int index){
-		View view = display.getView();
-		
-		this.task = view.getTask(index);
+	public CompletedCmd(int index){		
+		this.index = index;
 	}
 	
-	public boolean execute(){		
-		if(task == null){
-			display.setMessage(MESSAGE_INVALID_INDEX);
-		}
-		else{
-			data.update(task, true);
-			
-			writeToFile();
-			
-			display.setMessage(MESSAGE_COMPLETED);
-		}
+	public boolean execute() throws IndexOutOfBoundsException{	
+		task = getViewTask(index);
 		
+		data.update(task, true);
+		writeToFile();
+		
+		display.setMessage(MESSAGE_COMPLETED);
+
 		return true;
 	}
 	

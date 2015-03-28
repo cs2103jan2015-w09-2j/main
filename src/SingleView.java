@@ -18,16 +18,10 @@ public abstract class SingleView{
 		this.list = list;
 	}
 	
-	public Task getTask(int index) {
+	public Task getTask(int index) throws IndexOutOfBoundsException{
 		index--;
-		int size = list.size();
 		
-		if(index > -1 && index < size){
-			return list.get(index);
-		}
-		else{
-			return null;
-		}
+		return list.get(index);
 	}
 
 	abstract void update();

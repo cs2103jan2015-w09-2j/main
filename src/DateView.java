@@ -151,16 +151,13 @@ public class DateView implements View{
 			
 	}
 	
-	public Task getTask(int numbering){
+	public Task getTask(int numbering) throws IndexOutOfBoundsException{
 		int index = numbering - 1;
 		
 		int todaySize = today.size();
 		int dateSize = todaySize + upcoming.size();
 		int allSize = dateSize + someday.size();
 		
-		if(index < 0 || index >= allSize){
-			return null;
-		}
 		if(index > -1 && index < todaySize){
 			return today.get(index);
 		}

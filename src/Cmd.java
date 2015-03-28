@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 
 public abstract class Cmd {
@@ -15,7 +14,6 @@ public abstract class Cmd {
 //	protected static final String MESSAGE_EMPTY = "%1$s is empty";
 	protected static final String MESSAGE_EMPTY_SEARCH = "Keyword “%1$s” is not found";
 	protected static final String MESSAGE_INVALID = "Command is invalid.Please enter a valid command!";
-	protected static final String MESSAGE_INVALID_INDEX = "The number you enter is invalid";
 //	protected static final String MESSAGE_NO_VALUE = "Please indicate a task to %1$s";
 	protected static final String MESSAGE_NO_FILE = "File not available";
 
@@ -23,5 +21,11 @@ public abstract class Cmd {
 	protected Display display = Display.getInstance();
 	
 	public abstract boolean execute();
+	
+	protected Task getViewTask(int index) throws IndexOutOfBoundsException{
+		View view = display.getView();
+		
+		return view.getTask(index);
+	}
 
 }

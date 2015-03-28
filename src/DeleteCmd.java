@@ -2,23 +2,20 @@
 public class DeleteCmd extends ModifiableCmd{
 
 	private Task task;
+	private int index;
 	
 	public DeleteCmd(int index){
-		View view = display.getView();
-		
-		this.task = view.getTask(index);
+		this.index = index;
 	}
 	
 	public boolean execute(){
-		if(task == null){
-			display.setMessage(MESSAGE_INVALID_INDEX);
-		}
-		else{
-			data.remove(task);
-			writeToFile();
-		     
-			display.setMessage(MESSAGE_DELETE);
-		}
+		task = getViewTask(index);
+		
+		data.remove(task);
+		writeToFile();
+	     
+		display.setMessage(MESSAGE_DELETE);
+
 	    return true;
 	}
 	

@@ -7,6 +7,6 @@ public interface View {
 	
 	void show() throws BadLocationException;
 	
-	Task getTask(int index);
+	Task getTask(int index) throws IndexOutOfBoundsException;
 	
 }
