@@ -10,7 +10,7 @@ import org.junit.Test;
 
 public class TestView {
 	
-	private Controller control = new Controller();
+	private Controller control = Controller.getInstance();
 	
 	@Test
 	public void addTasksForToday(){
