@@ -9,7 +9,12 @@ import javax.swing.text.StyledDocument;
 
 
 public class SomedayView extends SingleView implements View{
-
+	private UserInterface UI = UserInterface.getInstance();
+	private JTextPane showToUser = UI.getShowToUser();
+	private StyledDocument doc = showToUser.getStyledDocument();
+	private Style style = showToUser.addStyle("Style", null);
+	private String taskDes;
+	
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
@@ -18,37 +23,35 @@ public class SomedayView extends SingleView implements View{
 		
 	}
 	
-	protected String getSomeday() {
-		 String tasks = "";
+	protected void getSomeday() throws BadLocationException {
 		 int i =0;
 		 for (Task task : getList()) {
+			 String tasks = "";
 		 i++;
+		 String numbering = "  "+i+".  ";
+		 appendTasks(Color.GRAY.brighter(), numbering);
 		 String t = task.toString().replaceAll("-", "to");
 		 t = task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
-		 tasks += "  "+i + ".  " + t + "\n";
+		 tasks =t + "\n";
+		 appendTasks(Color.BLUE.darker(),tasks);
 		 }
-		 return tasks;
 
 	}
 
+	public void appendTasks(Color c, String s) throws BadLocationException {
+		StyleConstants.setBold(style, false);
+		StyleConstants.setFontSize(style, 16);
+		StyleConstants.setBackground(style, Color.white);
+		StyleConstants.setForeground(style, c);
+		doc.insertString(doc.getLength(), s, style);
+	}
 	@Override
 	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
-		UserInterface UI = UserInterface.getInstance();
-		JTextPane showToUser = UI.getShowToUser();
-		
-		StyledDocument doc = showToUser.getStyledDocument();
-		Style style = showToUser.addStyle("Style", null);
-
 		StyleConstants.setForeground(style, Color.WHITE);
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(), "  			   Someday   			        \n", style);
-		
-			
-		StyleConstants.setForeground(style, Color.BLACK);
-		StyleConstants.setBackground(style, Color.WHITE);
-		doc.insertString(doc.getLength(), "\n"+getSomeday()+"\n", style);
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
+		doc.insertString(doc.getLength(), "\n  			   Someday   			        \n", style);
+		getSomeday();
 	}
 
 }
