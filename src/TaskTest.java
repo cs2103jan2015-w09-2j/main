@@ -1,6 +1,10 @@
 
 
 //@author A0111217
+/**
+ * Assumption: time and date validity are handled by OneTagParser class
+ */
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -15,14 +19,12 @@ import org.junit.Test;
 
 public class TaskTest {
 	
+	private static final String EMPTY_STRING = "";
 	private static final String MESSAGE_TEST_COMPLETED_TASK = "test completed task";
 	private static final String MESSAGE_TEST_TOMORROW_TASK = "test tomorrow task";
 	private static final String MESSAGE_TEST_TODAY_TASK = "test today task";
 	private static final String DATE_END_EARLY_TIMED_TASK = "2015-03-10T19:30";
-	private static final String DATE_END_LATE_TIMED_TASK = "2015-03-10T20:30";
 	private static final String DATE_END_EARLY_DEADLINE_TASK = "2015-03-10T21:30";
-	private static final String DATE_END_LATE_DEADLINE_TASK = "2015-03-10T22:30";
-	private static final String DATE_START_LATE_TIMED_TASK = "2015-03-10T20:00";
 	private static final String DATE_START_EARLY_TIMED_TASK = "2015-03-10T19:00";
 	private static final String MESSAGE_TEST_DEADLINE_TASK = "test deadline task";
 	private static final String MESSAGE_TEST_TIMED_TASK = "test timed task";
@@ -30,6 +32,8 @@ public class TaskTest {
 	private static final String MESSAGE_TEST_FLOATING_TIMED_TASK = "test floating task with timed task";
 	private static final String MESSAGE_TEST_TIMED_DEADLINE_TASK = "test timed task with deadline task";
 	private static final String MESSAGE_TEST_DEADLINE_FLOATING_TASK = "test deadline task with floating task";
+	private static final String MESSAGE_TEST_EMPTY_TASK = "test task with empty description";
+	private static final String MESSAGE_TEST_NULL_TASK = "test null task";
 	private static final String TASK_GO_HIKING = "Go Hiking";
 	private static final String TASK_BUY_APPLE = "Buy apple";
 	private static final String TASK_BUY_ORANGE = "Buy orange";
@@ -40,6 +44,7 @@ public class TaskTest {
 	private static final String STRING_EARLY_DEADLINE_TASK = "[21:30] " + TASK_GO_RT;
 	private static final String TASK_MOP_FLOOR = "Mop floor";
 	private static final int oneDay = 1;
+	private static final String EMPTY_SPACE_STRING = "　　" ;
 	
 	private Task floatingTask;
 	private Task dupFloatingTask;
@@ -57,6 +62,13 @@ public class TaskTest {
 	private Task completedTodayTask;
 	private Task completedTomorrowTask;
 	private Task dupCompletedEarlyDeadlineTask;
+	private Task nullTask;
+	private Task emptyStringFloatingTask;
+	private LocalDateTime today;
+	private LocalDateTime tomorrow;
+	private Task nullReferenceTask = null;
+	private Task undefinedTask;
+	private Integer integer;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -68,8 +80,8 @@ public class TaskTest {
 
 	@Before
 	public void setUp() throws Exception {
-		LocalDateTime today = LocalDateTime.now();
-		LocalDateTime tomorrow = LocalDateTime.now().plusDays(oneDay);
+		today = LocalDateTime.now();
+		tomorrow = LocalDateTime.now().plusDays(oneDay);
 		todayTask = new Task(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), TASK_GO_HIKING);
 		tomorrowTask = new Task(tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth(), tomorrow.getHour(), tomorrow.getMinute(), TASK_BUY_APPLE);
 		floatingTask = new Task(TASK_BUY_ORANGE);
@@ -92,84 +104,144 @@ public class TaskTest {
 		completedTomorrowTask.setIsCompleted(true);
 		dupCompletedEarlyDeadlineTask = new Task(2015, 3, 10, 21, 30, TASK_GO_RT);
 		dupCompletedEarlyDeadlineTask.setIsCompleted(true);
+		nullTask = new Task();
+		emptyStringFloatingTask = new Task(EMPTY_SPACE_STRING);
+		undefinedTask = new Task();
+		undefinedTask.setStart(today);
+		undefinedTask.setDescription(TASK_GO_RT);
+		integer = new Integer(1);
 	}
 
 	@Test
 	public void testGetDescription() {
-		//Equivalence partition of 3 different types of task
+		//test successful getting description
 		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getDescription(), TASK_BUY_ORANGE);
-		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.getDescription(), TASK_GO_RUNNING);
-		assertEquals(MESSAGE_TEST_TIMED_TASK, lateTimedTask.getDescription(), TASK_GO_HOME);
-		assertEquals(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.getDescription(), TASK_GO_RT);
-		assertEquals(MESSAGE_TEST_DEADLINE_TASK, lateDeadlineTask.getDescription(), TASK_MOP_FLOOR);
+		//test getting null description
+		assertEquals(MESSAGE_TEST_NULL_TASK, nullTask.getDescription(), null);
+		//test getting empty string description
+		assertEquals(MESSAGE_TEST_EMPTY_TASK, emptyStringFloatingTask.getDescription(), EMPTY_SPACE_STRING);
+	}
+	
+	@Test
+	public void testSetDescription(){
+		//test getting description after setting any normal string
+		floatingTask.setDescription(TASK_GO_HOME);
+		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getDescription(), TASK_GO_HOME);
+		
+		//test getting description after setting null string
+		floatingTask.setDescription(null);
+		assertEquals(MESSAGE_TEST_NULL_TASK, floatingTask.getDescription(), null);
+		
+		//test getting description after setting empty string
+		floatingTask.setDescription(EMPTY_SPACE_STRING);
+		assertEquals(MESSAGE_TEST_EMPTY_TASK, floatingTask.getDescription(), EMPTY_SPACE_STRING);
+		
 	}
 
 	@Test
 	public void testGetStart() {
-		//Equivalence partition of 3 different types of task
+		// Equivalence partition of the 3 supported types of tasks
 		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getStart(), null);
 		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.getStart().toString(), DATE_START_EARLY_TIMED_TASK);
-		assertEquals(MESSAGE_TEST_TIMED_TASK, lateTimedTask.getStart().toString(), DATE_START_LATE_TIMED_TASK);
 		assertEquals(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.getStart(), null);
-		assertEquals(MESSAGE_TEST_DEADLINE_TASK, lateDeadlineTask.getStart(), null);
 	}
-
+	
+	@Test
+	public void testSetStart() {
+		//test successful setting of normal date time
+		nullTask.setStart(today);
+		assertEquals(nullTask.getStart(), today);
+		
+		//test setting of null for start date time
+		nullTask.setStart(null);
+		assertEquals(nullTask.getStart(), null);
+	}
+	
+	@Test
+	public void testSetEnd(){
+		//test successful setting normal date time
+		nullTask.setEnd(tomorrow);
+		assertEquals(nullTask.getEnd() , tomorrow);
+		
+		//test setting of null for end date time
+		nullTask.setEnd(null);
+		assertEquals(nullTask.getEnd(), null);
+		
+	}
+	
 	@Test
 	public void testGetEnd() {
+		// Equivalence partition of the 3 supported types of tasks
 		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getEnd(), null);
 		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.getEnd().toString(), DATE_END_EARLY_TIMED_TASK);
-		assertEquals(MESSAGE_TEST_TIMED_TASK, lateTimedTask.getEnd().toString(), DATE_END_LATE_TIMED_TASK);	
 		assertEquals(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.getEnd().toString(),DATE_END_EARLY_DEADLINE_TASK);
-		assertEquals(MESSAGE_TEST_DEADLINE_TASK, lateDeadlineTask.getEnd().toString(), DATE_END_LATE_DEADLINE_TASK);
 	}
 	
 	@Test
 	public void testGetIsCompleted(){
+		// Equivalence partition of completed and incomplete tasks
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, floatingTask.getIsCompleted());
-		assertFalse(MESSAGE_TEST_COMPLETED_TASK, earlyTimedTask.getIsCompleted());
-		assertFalse(MESSAGE_TEST_COMPLETED_TASK, earlyDeadlineTask.getIsCompleted());
-		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedFloatingTask.getIsCompleted());
-		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedEarlyTimedTask.getIsCompleted());
 		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedEarlyDeadlineTask.getIsCompleted());
 	}
 	
 	@Test
 	public void testIsFloatingTask() {
+		// Equivalence partition of 3 diferent types of tasks
 		assertTrue(MESSAGE_TEST_FLOATING_TASK, floatingTask.isFloatingTask());
 		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isFloatingTask());
 		assertFalse(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isFloatingTask());
+		// Check if completed task affects return result
 		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedFloatingTask.isFloatingTask());
 
 	}
 
 	@Test
 	public void testIsDeadlineTask() {
+		// Equivalence partition of 3 diferent types of tasks
 		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isDeadlineTask());
 		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isDeadlineTask());
 		assertTrue(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isDeadlineTask());
+		// Check if completed task affects return result
 		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedEarlyDeadlineTask.isDeadlineTask());
 	}
 
 	@Test
 	public void testIsNormalTask() {
+		// Equivalence partition of 3 diferent types of tasks
 		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isNormalTask());
 		assertTrue(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isNormalTask());
 		assertFalse(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isNormalTask());
+		// Check if completed task affects return result
 		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedEarlyTimedTask.isNormalTask());
 	}
 	
 	@Test
 	public void testIsTodayTask(){
+		// Equivalence partition of 3 different types of task for today
 		assertTrue(MESSAGE_TEST_TODAY_TASK, todayTask.isTodayTask());
+		earlyDeadlineTask.setEnd(today);
+		assertTrue(MESSAGE_TEST_TODAY_TASK, earlyDeadlineTask.isTodayTask());
+		
+		// Check if tasks of any other time will fail
 		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isTodayTask());
+		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_TOMORROW_TASK, tomorrowTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTomorrowTask.isTodayTask());
+		
+		// check against null task
+		assertFalse(MESSAGE_TEST_NULL_TASK, nullTask.isTodayTask());
+		
+		// check against undefined task
+		assertFalse(undefinedTask.isTodayTask());
 	}
 	
 	@Test
 	public void testIsSomedayTask(){
+		//Equivalence partition of someday task and not someday task
 		assertTrue(MESSAGE_TEST_FLOATING_TASK, floatingTask.isSomedayTask());
+		
+		//Check if tasks of any other type will return the false
 		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isSomedayTask());
 		assertFalse(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isSomedayTask());
 		assertFalse(MESSAGE_TEST_TODAY_TASK, todayTask.isSomedayTask());
@@ -190,9 +262,13 @@ public class TaskTest {
 	
 	@Test
 	public void testToString() {
+		// Different format for the 3 different types of task
 		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.toString(), TASK_BUY_ORANGE);
 		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.toString(), STRING_EARLY_TIMED_TASK);
 		assertEquals(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.toString(), STRING_EARLY_DEADLINE_TASK);
+		
+		// Task with only start time - not used in our system
+		assertEquals(undefinedTask.toString(), EMPTY_STRING);
 	}
 
 	@Test
@@ -212,8 +288,28 @@ public class TaskTest {
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedEarlyDeadlineTask.equals(earlyDeadlineTask));
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.equals(todayTask));
 		assertTrue(MESSAGE_TEST_COMPLETED_TASK, dupCompletedEarlyDeadlineTask.equals(completedEarlyDeadlineTask));
+		
+		//test something equals null reference Task
+		assertFalse(floatingTask.equals(nullReferenceTask));
+		
+		//test whether other class equals Task class
+		assertFalse(floatingTask.equals(integer));
 	}
-
+	
+		
+	@Test
+	public void testUpdate(){
+		//Timed task updating
+		earlyTimedTask.update(lateTimedTask);
+		assertTrue(earlyTimedTask.equals(lateTimedTask));
+		
+		//null task updating does not do anything
+		floatingTask.update(nullTask);
+		assertTrue(floatingTask.equals(floatingTask));
+		
+		
+		
+	}
 	
 
 }
