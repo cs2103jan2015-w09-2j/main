@@ -1,23 +1,25 @@
 
 public class CompletedCmd extends Cmd{
 	
-	int index;
+	private Task task;
 	
 	public CompletedCmd(int index){
-		this.index = index;
-	}
-	
-	public boolean execute(){
-		Data data = Data.getInstance();
-		Display display = Display.getInstance();
 		View view = display.getView();
 		
-		Task thisTask = view.getTask(index);
-		data.update(thisTask, true);
-		
-		writeToFile();
-		
-		display.set(new CompletedView(), MESSAGE_EDIT);
+		this.task = view.getTask(index);
+	}
+	
+	public boolean execute(){		
+		if(task == null){
+			display.setMessage(MESSAGE_INVALID_INDEX);
+		}
+		else{
+			data.update(task, true);
+			
+			writeToFile();
+			
+			display.setMessage(MESSAGE_COMPLETED);
+		}
 		
 		return true;
 	}

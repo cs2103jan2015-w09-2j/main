@@ -60,6 +60,10 @@ public class DataTest {
 	private Task completedTodayTask;
 	private Task completedTomorrowTask;
 	private Task dupCompletedEarlyDeadlineTask;
+	
+	private ArrayList<Task> emptyList;
+	private ArrayList<Task> oneItemList;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -96,6 +100,34 @@ public class DataTest {
 		completedTomorrowTask.setIsCompleted(true);
 		dupCompletedEarlyDeadlineTask = new Task(2015, 3, 10, 21, 30, TASK_GO_RT);
 		dupCompletedEarlyDeadlineTask.setIsCompleted(true);
+		
+		emptyList = new ArrayList<Task>();
+		oneItemList = new ArrayList<Task>();
+		oneItemList.add(floatingTask);
+	}
+	
+	@Test
+	public void testSet() {
+		data.set(emptyList);
+		assertEquals("set empty list", data.getData().toString(), "[]");
+		 
+		data.set(oneItemList);
+		assertEquals("set one item list", data.getData().toString(), "[" + floatingTask.toString() + "]");
+	}
+
+	@Test
+	public void testAdd() {
+		data.set(emptyList);
+
+		assertEquals("add one item", data.add(floatingTask), true);
+	}
+	
+	@Test
+	public void testRemove() {
+		data.set(emptyList);
+		data.add(floatingTask);
+		
+		assertEquals("remove one item", data.remove(floatingTask), true);
 	}
 
 	@Test
@@ -116,7 +148,6 @@ public class DataTest {
 	@Test
 	public void testGetUpcoming() {
 		data.set(new ArrayList<Task>());
-		assertEquals("empty list", data.getUpcoming().toString(), "[]");
 		
 		data.add(todayTask);
 		assertEquals("added today task", data.getUpcoming().toString(), "[]");
@@ -131,7 +162,6 @@ public class DataTest {
 	@Test
 	public void testGetSomeday() {
 		data.set(new ArrayList<Task>());
-		assertEquals("empty list", data.getSomeday().toString(), "[]");
 		
 		data.add(todayTask);
 		assertEquals("added today task", data.getSomeday().toString(), "[]");

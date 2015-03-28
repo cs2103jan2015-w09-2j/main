@@ -51,7 +51,15 @@ public class SearchView implements View{
 
 	@Override
 	public Task getTask(int index) {
-		return searchedList.get(index);
+		index--;
+		int size = searchedList.size();
+		
+		if(index > -1 && index < size){
+			return searchedList.get(index);
+		}
+		else{
+			return null;
+		}
 	}
 
 }

@@ -1,26 +1,26 @@
 
 public class EditCmd extends Cmd{
 	
-	int index;
-	Task task;
+	private Task task;
+	private Task editContent;
 	
-	public EditCmd(int index, Task task){
-		this.index = index;
-		this.task = task;
+	public EditCmd(int index, Task editContent){
+		View view = display.getView();
+		
+		this.task = view.getTask(index);
+		this.editContent = editContent;
 	}
 	
 	public boolean execute(){
-		Data data = Data.getInstance();
-		Display display = Display.getInstance();
-		View view = display.getView();
-		
-		Task thisTask = view.getTask(index);
-		data.update(thisTask, task);
-		writeToFile();
-		
-		view.update();
-		display.setMessage(MESSAGE_EDIT);
-		
+		if(task == null){
+			display.setMessage(MESSAGE_INVALID_INDEX);
+		}
+		else{
+			data.update(task, editContent);
+			writeToFile();
+			
+			display.setMessage(MESSAGE_EDIT);
+		}
 		return true;
 	}
 }

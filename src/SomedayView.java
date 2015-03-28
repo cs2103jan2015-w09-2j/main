@@ -19,7 +19,14 @@ public class SomedayView implements View{
 	@Override
 	public Task getTask(int index) {
 		index--;
-		return someday.get(index);
+		int size = someday.size();
+		
+		if(index > -1 && index < size){
+			return someday.get(index);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override

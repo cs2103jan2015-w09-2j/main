@@ -118,6 +118,9 @@ public class DateView implements View{
 		int dateSize = todaySize + upcoming.size();
 		int allSize = dateSize + someday.size();
 		
+		if(index < 0 || index >= allSize){
+			return null;
+		}
 		if(index > -1 && index < todaySize){
 			return today.get(index);
 		}
@@ -125,12 +128,9 @@ public class DateView implements View{
 			int upcomingIndex = index - todaySize;
 			return upcoming.get(upcomingIndex);
 		}
-		else if(index < allSize){
+		else{ //index < allSize
 			int somedayIndex = index - dateSize;
 			return someday.get(somedayIndex);
-		}
-		else{
-			return new Task();
 		}
 	}
 	
