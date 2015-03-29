@@ -1,6 +1,8 @@
 
 public class SaveCmd extends ModifiableCmd {
 	String storageLocation;
+	Storage storage;
+	
 	public SaveCmd(String storageLocation) {
 		this.storageLocation = storageLocation;
 		// TODO Auto-generated constructor stub
@@ -8,15 +10,14 @@ public class SaveCmd extends ModifiableCmd {
 
 	@Override
 	public boolean execute() {
-		Storage storage = new Storage();
+		storage = new Storage();
 		storage.setPath(storageLocation);
 		return true;
 	}
 
 	@Override
 	public void undo() {
-		// TODO Auto-generated method stub
-		
+		storage.setPath(storageLocation);
 	}
 
 }
