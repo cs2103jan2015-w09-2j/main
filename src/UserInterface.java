@@ -49,7 +49,7 @@ public class UserInterface {
 		return showToUser;
 	}
 
-	public static void main(String[] args) {
+	public void run(){
 		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
@@ -64,7 +64,6 @@ public class UserInterface {
 		window.frame.setOpacity(0.99f);
 		window.frame.setVisible(true);
 	}
-
 	/**
 	 * Initialize the contents of the frame.
 	 */
