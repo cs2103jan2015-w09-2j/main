@@ -13,7 +13,6 @@ public class SomedayView extends SingleView implements View{
 	private JTextPane showToUser = UI.getShowToUser();
 	private StyledDocument doc = showToUser.getStyledDocument();
 	private Style style = showToUser.addStyle("Style", null);
-	private String taskDes;
 	
 	@Override
 	public void update() {

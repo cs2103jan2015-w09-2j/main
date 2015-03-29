@@ -57,7 +57,7 @@ public class DateView implements View{
 	}
 
 	protected void getToday() throws BadLocationException {
-		int i = 0;
+		i = 0;
 		for (Task task : today) {
 			i++;
 			getTaskInfo(task);
@@ -71,9 +71,9 @@ public class DateView implements View{
 								.replace("PM", "pm") + ")";
 				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
 				if(isOverdue){
-					appendTasks(Color.GRAY,Color.YELLOW, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.YELLOW, t+"\n");
+					appendTasks(Color.GRAY,Color.WHITE, numbering);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
 				}
 				else{
 				appendTasks(Color.GRAY,Color.white, numbering);
@@ -92,8 +92,8 @@ public class DateView implements View{
 				
 				if(isOverdue){
 					appendTasks(Color.GRAY, Color.white, numbering);
-					appendTasks(Color.CYAN.darker(), Color.YELLOW, t);
-					appendTasks(Color.BLUE.darker(), Color.YELLOW, tasks+"\n");
+					appendTasks(Color.CYAN.darker(), Color.WHITE, t);
+					appendTasks(Color.BLUE.darker(), Color.WHITE, tasks+"\n");
 				}
 				else{
 					appendTasks(Color.GRAY, Color.white, numbering);
@@ -107,7 +107,7 @@ public class DateView implements View{
 	}
 
 	protected void getUpcoming() throws BadLocationException {
-		int i = 0;
+
 		for (Task task : upcoming) {
 			i++;
 			getTaskInfo(task);
@@ -119,9 +119,9 @@ public class DateView implements View{
 				t = " (by " + endDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
 				if(isOverdue){
-					appendTasks(Color.GRAY,Color.YELLOW, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.YELLOW, t+"\n");
+					appendTasks(Color.GRAY,Color.WHITE, numbering);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
 				}
 				else{
 				appendTasks(Color.GRAY,Color.white, numbering);
@@ -136,9 +136,9 @@ public class DateView implements View{
 				t = "  (starts on " + startDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
 				if(isOverdue){
-					appendTasks(Color.GRAY,Color.YELLOW, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, tasks);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, t+"\n");
+					appendTasks(Color.GRAY,Color.WHITE, numbering);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, t+"\n");
 				}
 				else{
 				appendTasks(Color.GRAY,Color.white, numbering);

@@ -69,9 +69,9 @@ public class UpcomingView extends SingleView implements View {
 				t = " (by " + endDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
 				if(isOverdue){
-					appendTasks(Color.GRAY,Color.YELLOW, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.YELLOW, t+"\n");
+					appendTasks(Color.GRAY,Color.WHITE, numbering);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
 				}
 				else{
 				appendTasks(Color.GRAY,Color.white, numbering);
@@ -86,9 +86,9 @@ public class UpcomingView extends SingleView implements View {
 				t = "  (starts on " + startDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
 				if(isOverdue){
-					appendTasks(Color.GRAY,Color.YELLOW, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, tasks);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, t+"\n");
+					appendTasks(Color.GRAY,Color.WHITE, numbering);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, t+"\n");
 				}
 				else{
 				appendTasks(Color.GRAY,Color.white, numbering);

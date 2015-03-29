@@ -76,9 +76,9 @@ public class TodayView extends SingleView implements View {
 								.replace("PM", "pm") + ")";
 				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
 				if(isOverdue){
-					appendTasks(Color.GRAY,Color.YELLOW, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.YELLOW, tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.YELLOW, t+"\n");
+					appendTasks(Color.GRAY,Color.WHITE, numbering);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
 				}
 				else{
 				appendTasks(Color.GRAY,Color.white, numbering);
@@ -97,8 +97,8 @@ public class TodayView extends SingleView implements View {
 				
 				if(isOverdue){
 					appendTasks(Color.GRAY, Color.white, numbering);
-					appendTasks(Color.CYAN.darker(), Color.YELLOW, t);
-					appendTasks(Color.BLUE.darker(), Color.YELLOW, tasks+"\n");
+					appendTasks(Color.CYAN.darker(), Color.WHITE, t);
+					appendTasks(Color.BLUE.darker(), Color.WHITE, tasks+"\n");
 				}
 				else{
 					appendTasks(Color.GRAY, Color.white, numbering);
