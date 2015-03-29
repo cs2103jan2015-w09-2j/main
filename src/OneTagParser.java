@@ -145,7 +145,6 @@ public class OneTagParser {
 			
 		case EDIT:
 			return new EditCmd(parseEditNUM(message),parseEditDate(message));
-			return null;
 		case DELETE: 	
 			return new DeleteCmd(parseNum(message));
 		case DONE : 
