@@ -11,10 +11,14 @@ public class EditCmd extends ModifiableCmd{
 	}
 	
 	public boolean execute() throws IndexOutOfBoundsException{
+		Task tempTask;
+		
 		task = getViewTask(index);
+		tempTask = clone(task);
 		
 		data.update(task, editContent);
 		writeToFile();
+		editContent = tempTask;
 		
 		display.setMessage(MESSAGE_EDIT);
 		
@@ -22,7 +26,16 @@ public class EditCmd extends ModifiableCmd{
 	}
 	
 	public void undo(){
-		System.out.println(task);
-		System.out.println(editContent);
+		data.update(task, editContent);
+	}
+	
+	private Task clone(Task task){
+		Task clonedTask = new Task();
+		clonedTask.setDescription(task.getDescription());
+		clonedTask.setStart(task.getStart());
+		clonedTask.setEnd(task.getEnd());
+		clonedTask.setIsCompleted(task.getIsCompleted());
+		
+		return clonedTask;
 	}
 }
