@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,10 +12,12 @@ import org.junit.Test;
 public class StorageTest {
 	
 	private static final String MESSAGE_TEST_SET_PATH = "test setPath";
-	private static final String MESSAGE_DIRECTORY_SET = "Directory has been set to D:\\";
+	private static final String MESSAGE_NEW_DIRECTORY_SET = "Directory has been set to D:\\";
+	private static final String MESSAGE_OLD_DIRECTORY_SET = "Directory has been set to " + System.getProperty("user.dir");
 	private static final String DIRECTORY_NEW = "D:\\";
 	private static final String MESSAGE_TEST_WRITING_AND_GETTING_DATA = "test writing and getting data";
 	private static final String MESSAGE_TEST_FILE_EXIST = "check if file is at new location";
+	private static final String MESSAGE_TEST_GET_PATH = "test getting the file path";
 	private static final String TASK_BUY_ORANGE = "Buy orange";
 	private static final String TASK_GO_RUNNING = "Go running";
 	private static final String TASK_GO_HOME = "Go Home";
@@ -39,7 +42,7 @@ public class StorageTest {
 	private Storage storage;
 
 	@Before
-	public void setUp() throws Exception {
+	public void oneTimeSetUp() throws Exception {
 		floatingTask = new Task(TASK_BUY_ORANGE);
 		earlyTimedTask = new Task(2015, 3, 10, 19, 0, 2015, 3, 10, 19, 30, TASK_GO_RUNNING);
 		lateTimedTask = new Task(2015, 3, 10, 20, 0, 2015, 3, 10, 20, 30, TASK_GO_HOME);
@@ -58,29 +61,48 @@ public class StorageTest {
 		storage = new Storage(filePath, toDo);
 		
 	}
-
+	
+	@After
+	public void tearDown() throws Exception{
+		File storageFile = new File(filePath);
+		if (storageFile.exists()){
+			storageFile.delete();
+		}
+		if (config.exists()){
+			config.delete();
+		}
+	}
+	@Test
+	public void testGetFilePath(){
+		//Only one partition because file path is always initialized
+		assertEquals(MESSAGE_TEST_GET_PATH, storage.getFilePath(), currentRelativePath + CHARACTER_BACKSLASH);
+	}
+	
 	@Test
 	public void testWriteToFileAndGetFromFile() {
 		
+		// Writes file with null arraylist
+		storage.writeToFile(null);
+		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, storage.getData(), emptyList);
 		//Writes file with empty arraylist
 		storage.writeToFile(emptyList);
 		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, storage.getData(), emptyList);
 		// Writes file with ArrayList<Task>
 		storage.writeToFile(toDo);
 		assertTrue(MESSAGE_TEST_WRITING_AND_GETTING_DATA, storage.getData().equals(toDo));
-		// Writes file with null arraylist
-		storage.writeToFile(null);
-		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, storage.getData(), emptyList);
+
 	}
 	
 	@Test
 	public void testSetPath() {
-		//Partition for location changed successfully
-		assertEquals(MESSAGE_TEST_SET_PATH, storage.setPath(DIRECTORY_NEW), MESSAGE_DIRECTORY_SET);
+		//Partition for location ending with "/" changed successfully
+		assertEquals(MESSAGE_TEST_SET_PATH, storage.setPath(DIRECTORY_NEW), MESSAGE_NEW_DIRECTORY_SET);
 		filePath = DIRECTORY_NEW + "oneTag.json";
 		File changedLocation = new File(filePath);
 		assertTrue(MESSAGE_TEST_FILE_EXIST, changedLocation.exists());
-		
+		//Partition for location not ending with "/" changed successfully
+		filePath = currentRelativePath;
+		assertEquals(MESSAGE_TEST_SET_PATH, storage.setPath(filePath), MESSAGE_OLD_DIRECTORY_SET);
 		
 	}
 

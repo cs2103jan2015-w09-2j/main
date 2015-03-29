@@ -25,6 +25,7 @@ public class Storage {
 	private static final String NAME_CONFIG_FILE = "config.json";
 	private static final String USER_DIRECTORY = "user.dir";
 	private static final String CHARACTER_BACKSLASH = "\\";
+	private static final String CHARACTER_REVERSE_BACKSLASH = "/";
 	private static final String MESSAGE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
@@ -73,7 +74,18 @@ public class Storage {
 		logger.addHandler(fh);
 		logger.setLevel(Level.OFF);
 	}
-
+	
+	/**
+	 * Gets the file path
+	 * @return String
+	 */
+	public String getFilePath(){
+		String pathToReturn = new String(filePath);
+		
+		pathToReturn = pathToReturn.replaceFirst(fileName, CHARACTER_EMPTY_STRING);
+		return pathToReturn;
+	}
+	
 	/**
 	 * Changes the directory to specified directory
 	 */
@@ -101,7 +113,7 @@ public class Storage {
 		String oldFilePath = filePath;
 		File oldLocationFile = new File(oldFilePath);
 		
-		if (userSpecifiedDirectory.endsWith(CHARACTER_BACKSLASH)){
+		if (userSpecifiedDirectory.endsWith(CHARACTER_BACKSLASH) | userSpecifiedDirectory.endsWith(CHARACTER_REVERSE_BACKSLASH)){
 			filePath = userSpecifiedDirectory + fileName;
 		}
 		else{
