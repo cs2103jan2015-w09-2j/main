@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -45,26 +46,46 @@ public class TodayView extends SingleView implements View {
 		}
 	}
 
+	
 	protected void getTodayDate() {
 		todayDate = LocalDate.now().format(formatter);
 	}
 
+	protected void isTaskOverdue(Task task) {
+		isOverdue = false;
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime endDateTime = task.getEnd();
+		
+		if (endDateTime.isBefore(now)) {
+			isOverdue = true;
+		}
+	}
+	
 	protected void getToday() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
 			i++;
 			getTaskInfo(task);
+			isTaskOverdue(task);
 			String t = "";
-			String numbering = " "+i+".  ";
-			append(Color.GRAY, numbering);
+			String numbering = "  "+i+".  ";
 			if (task.isDeadlineTask()) {
 				String tasks = taskDes;
-				append(Color.BLUE, tasks);
 				t =  " (by "
 						+ endTime.format(formatTime).replace("AM", "am")
-								.replace("PM", "pm") + ")\n";
-				append(Color.CYAN.darker(), t);
+								.replace("PM", "pm") + ")";
 				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
+				if(isOverdue){
+					appendTasks(Color.GRAY,Color.WHITE, numbering);
+					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
+				}
+				else{
+				appendTasks(Color.GRAY,Color.white, numbering);
+				appendTasks(Color.BLUE.darker(),Color.white, tasks);
+				appendTasks(Color.CYAN.darker(),Color.white, t+"\n");
+				}
+				
 			} else {
 				String tasks = taskDes;
 				t = startTime.format(formatTime).replace("AM", "am")
@@ -73,17 +94,27 @@ public class TodayView extends SingleView implements View {
 						+ endTime.format(formatTime).replace("AM", "am")
 								.replace("PM", "pm") + ": ";
 				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
-				append(Color.CYAN.darker(), t);
-				append(Color.BLUE, tasks+"\n");
+				
+				if(isOverdue){
+					appendTasks(Color.GRAY, Color.white, numbering);
+					appendTasks(Color.CYAN.darker(), Color.WHITE, t);
+					appendTasks(Color.BLUE.darker(), Color.WHITE, tasks+"\n");
+				}
+				else{
+					appendTasks(Color.GRAY, Color.white, numbering);
+					appendTasks(Color.CYAN.darker(), Color.white, t);
+					appendTasks(Color.BLUE.darker(), Color.white, tasks+"\n");
+				}
+
 			}
 
 		}
 	}
 
-	public void append(Color c, String s) throws BadLocationException {
+	public void appendTasks(Color c, Color bg, String s) throws BadLocationException {
 		StyleConstants.setBold(style, false);
 		StyleConstants.setFontSize(style, 16);
-		StyleConstants.setBackground(style, Color.white);
+		StyleConstants.setBackground(style,bg);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
 	}
