@@ -29,9 +29,7 @@ public class SomedayView extends SingleView implements View{
 		 i++;
 		 String numbering = "  "+i+".  ";
 		 appendTasks(Color.GRAY.brighter(), numbering);
-		 String t = task.toString().replaceAll("-", "to");
-		 t = task.toString().replaceAll("\\[", "").replaceAll("\\]"," -");
-		 tasks =t + "\n";
+		 tasks =task.getDescription() + "\n";
 		 appendTasks(Color.BLUE.darker(),tasks);
 		 }
 
