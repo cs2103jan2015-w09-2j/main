@@ -6,6 +6,16 @@ import java.lang.String;
 
 import com.joestelmach.natty.*;
 
+
+
+import java.util.Date;
+import java.util.List;
+//import java.util.Scanner;
+//import java.util.Map;
+import java.lang.String;
+
+import com.joestelmach.natty.*;
+
 public class OneTagParser {
 	private static final String INVALID_EDIT_COMMAND = "INVALID ERROR COMMAND!";
 	//	private static final int DUMMY_VALUE = -1;
@@ -240,9 +250,11 @@ public class OneTagParser {
 	 * @return infoDateTime
 	 */
 	private int[] parseDate(String dateString, Parser dateParser) {
+		System.out.println("dateString in parseDate : "+dateString);
 		int[] infoDateTime;
 		List<DateGroup> listOfDates = dateParser.parse(dateString);
 		dateString = getDateTimeinString(listOfDates);
+		System.out.println("dateString that has been parsed : "+dateString);
 		infoDateTime = getDateAndTime(dateString);
 		return infoDateTime;
 	}
@@ -274,10 +286,15 @@ public class OneTagParser {
 			EDIT_TYPE command = getEditCmd(editType);
 			String taskNum = separateWords[INPUT_SPLIT_SECOND];
 			String dateString = separateWords[INPUT_SPLIT_THIRD];
+			System.out.println("dateString : "+dateString);
 			Parser dateParser = new Parser();
 			switch(command){
 			case DEADLINE:
 				infoDateTime = parseDate(dateString,dateParser);
+				for(int element : infoDateTime){
+					System.out.println("Element : "+element);
+				}
+				System.out.println("infoDateTime = "+infoDateTime);
 				return new Task(-1,-1,-1,-1,-1,infoDateTime[0],infoDateTime[1],infoDateTime[2],infoDateTime[3],infoDateTime[4],null);
 			case STARTTIME:
 				infoDateTime = parseDate(dateString,dateParser);
@@ -298,8 +315,11 @@ public class OneTagParser {
 			}
 		}
 		else{
+		
+			System.out.println("Edit task");
 			String[] editTaskDescription = message.split(SPACE,INPUT_SPLIT_THIRD);
-			String taskDescription = editTaskDescription[POS_TWO];
+			String taskDescription = editTaskDescription[1];
+			System.out.println("Task Description : "+taskDescription);
 			return new Task(taskDescription);
 		}
 	}
@@ -312,11 +332,13 @@ public class OneTagParser {
 	private int parseEditNUM(String message) {
 		if(isEditDateTime(message)){
 			String[] separateWords = message.split(SPACE,INPUT_SPLIT_FOURTH);
+			System.out.println(separateWords[INPUT_SPLIT_SECOND]);
 			return parseNum(separateWords[INPUT_SPLIT_SECOND]);
 		}
 		else{
-			String[] inputArr = message.split(SPACE,INPUT_SPLIT_THIRD);	
-			return parseNum(inputArr[INPUT_SPLIT_FIRST]);
+			String[] separateWords = message.split(SPACE,INPUT_SPLIT_THIRD);
+			System.out.println(separateWords[INPUT_SPLIT_FIRST]);
+			return parseNum(separateWords[INPUT_SPLIT_FIRST]);
 		}
 	}
 
