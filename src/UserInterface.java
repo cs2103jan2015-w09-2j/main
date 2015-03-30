@@ -46,7 +46,7 @@ public class UserInterface {
 	private JButton minimiseButton;
 	private JPanel buttonPanel;
 	private JLabel welcomeLabel;
-	private Point mouseDownCompCoords;
+	private Point mouseDownCoords;
 
 	public static UserInterface getInstance() {
 		if (UI == null) {
@@ -96,13 +96,13 @@ public class UserInterface {
 
 	private void enableFrameMovable() {
 		// TODO Auto-generated method stub
-		mouseDownCompCoords = null;
+		mouseDownCoords = null;
         frame.addMouseListener(new MouseListener(){
             public void mouseReleased(MouseEvent e) {
-                mouseDownCompCoords = null;
+                mouseDownCoords = null;
             }
             public void mousePressed(MouseEvent e) {
-                mouseDownCompCoords = e.getPoint();
+                mouseDownCoords = e.getPoint();
             }
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -128,7 +128,7 @@ public class UserInterface {
 
             public void mouseDragged(MouseEvent e) {
                 Point currCoords = e.getLocationOnScreen();
-                frame.setLocation(currCoords.x - mouseDownCompCoords.x, currCoords.y - mouseDownCompCoords.y);
+                frame.setLocation(currCoords.x - mouseDownCoords.x, currCoords.y - mouseDownCoords.y);
             }
         });
 		
