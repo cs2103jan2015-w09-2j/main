@@ -10,5 +10,9 @@ public enum COMMAND_TYPE {
 	HELP,
 	SEARCH,
 	UNDO,
-	SAVE
+	SAVE,
+	HOME,
+	TODAY,
+	SOMEDAY,
+	UPCOMING
 }
