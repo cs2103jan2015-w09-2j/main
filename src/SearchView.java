@@ -1,5 +1,6 @@
 //@author A0112715
 import java.awt.Color;
+import java.time.LocalDateTime;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -13,6 +14,7 @@ public class SearchView extends SingleView implements View{
 	private JTextPane showToUser = UI.getShowToUser();
 	private StyledDocument doc = showToUser.getStyledDocument();
 	private Style style = showToUser.addStyle("Style", null);
+	private boolean isOverdue;
 	
 	public SearchView(String searchedText){		
 		setList(data.getSearched(searchedText));
@@ -28,21 +30,40 @@ public class SearchView extends SingleView implements View{
 	protected void getSearchResults() throws BadLocationException {
 		 int i =0;
 		 for (Task task : getList()) {
-			 String tasks = "";
+		 String tasks = "";
 		 i++;
-		 String numbering = "  "+i+".  ";
-		 appendTasks(Color.GRAY.brighter(), numbering);
+		 isTaskOverdue(task);
+		 String numbering = "    "+i+". ";
 		 tasks =task.getDescription() + "\n";
-		 appendTasks(Color.BLUE.darker(),tasks);
+		if(isOverdue){
+				appendTasks(Color.GRAY,Color.WHITE, false,numbering);
+				appendTasks(Color.RED, Color.WHITE, true, " ! ");
+				appendTasks(Color.BLUE.darker(),Color.WHITE,false, tasks);
+			}
+			else{
+				appendTasks(Color.GRAY,Color.WHITE, false,numbering);
+				appendTasks(Color.BLUE.darker(),Color.WHITE,false, tasks);
+			}
 		 }
 	}
 	
-	public void appendTasks(Color c, String s) throws BadLocationException {
-		StyleConstants.setBold(style, false);
+	public void appendTasks(Color c, Color bg, boolean isBold, String s)
+			throws BadLocationException {
+		StyleConstants.setBold(style, isBold);
 		StyleConstants.setFontSize(style, 14);
-		StyleConstants.setBackground(style, Color.white);
+		StyleConstants.setBackground(style, bg);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
+	}
+	
+	protected void isTaskOverdue(Task task) {
+		isOverdue = false;
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime endDateTime = task.getEnd();
+		
+		if (endDateTime.isBefore(now)) {
+			isOverdue = true;
+		}
 	}
 
 	@Override
