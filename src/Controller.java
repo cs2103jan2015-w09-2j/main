@@ -26,7 +26,8 @@ public class Controller {
 	public boolean executeCommand(String input) {
 		
 		try{
-			Cmd cmd = OneTagParser.toCmd(input);
+			OneTagParser oneTag = new OneTagParser(input);
+			Cmd cmd = oneTag.toCmd();
 			cmd.execute();
 			
 			if(cmd instanceof ModifiableCmd){
