@@ -1,5 +1,3 @@
-
-
 import java.util.Date;
 import java.util.List;
 //import java.util.Scanner;
@@ -185,7 +183,7 @@ public class OneTagParser {
 	 * @param message
 	 * @return Task object to Logic.
 	 */	
-	private Task parseMsgforAddCmd(String message) {
+	private Task parseMsgforAddCmd(String message){
 		String[] word = message.split(SPACE);
 		String testWord = null , dateString = null,taskDescription = null;	
 		boolean isDeadlineTask = false;
@@ -202,15 +200,22 @@ public class OneTagParser {
 				if(posKeyword == word.length- NUM_ONE){
 					dateString = getDateTimeString(dateString, posKeyword, word,count);
 					endDateTime = parseDate(dateString, dateParser);
+					for(int integer : endDateTime){
+						System.out.println(integer + " ");
+					}
+					
 					posKeyword = count;
 				}else{
 					dateString = getNewDateTimeString(dateString, posKeyword, word,count);
 					startDateTime = parseDate(dateString,dateParser);
+					for(int integer : startDateTime){
+						System.out.println(integer + " ");
+					}
 					posKeyword = count;
 					taskDescription = getTaskDescription(posKeyword, word);
-				}
 				return new Task(startDateTime[POS_ZERO], startDateTime[POS_ONE], startDateTime[POS_TWO], startDateTime[POS_THREE], startDateTime[POS_FOUR], 
-						endDateTime[POS_ZERO],endDateTime[POS_ONE],endDateTime[POS_TWO],endDateTime[POS_THREE],endDateTime[POS_FOUR], taskDescription);
+				endDateTime[POS_ZERO],endDateTime[POS_ONE],endDateTime[POS_TWO],endDateTime[POS_THREE],endDateTime[POS_FOUR], taskDescription);
+			}
 			}
 			else if(isDeadlineTask(testWord)){
 				isDeadlineTask = true;
