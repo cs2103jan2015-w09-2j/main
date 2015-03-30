@@ -1,3 +1,4 @@
+//@author A0112715
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -68,40 +69,47 @@ public class UpcomingView extends SingleView implements View {
 				String tasks = taskDes;
 				t = " (by " + endDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
-				if(isOverdue){
-					appendTasks(Color.GRAY,Color.WHITE, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
-				}
-				else{
-				appendTasks(Color.GRAY,Color.white, numbering);
-				appendTasks(Color.BLUE.darker(),Color.white, tasks);
-				appendTasks(Color.CYAN.darker(),Color.white, t+"\n");
+				if (isOverdue) {
+					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+					appendTasks(Color.RED, Color.WHITE, true, "! ");
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false,
+							tasks);
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false, t
+							+ "\n");
+				} else {
+					appendTasks(Color.GRAY, Color.white, false, numbering);
+					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
+					appendTasks(Color.CYAN.darker(), Color.white, false, t
+							+ "\n");
 				}
 			}
 
 			else {
 				String tasks = taskDes;
-				
+
 				t = "  (starts on " + startDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
-				if(isOverdue){
-					appendTasks(Color.GRAY,Color.WHITE, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
-					appendTasks(Color.MAGENTA.darker(),Color.WHITE, t+"\n");
-				}
-				else{
-				appendTasks(Color.GRAY,Color.white, numbering);
-				appendTasks(Color.BLUE.darker(),Color.white, tasks);
-				appendTasks(Color.CYAN.darker(),Color.white, t+"\n");
+				if (isOverdue) {
+					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+					appendTasks(Color.RED, Color.WHITE, true, "! ");
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false,
+							tasks);
+					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false, t
+							+ "\n");
+				} else {
+					appendTasks(Color.GRAY, Color.white, false, numbering);
+					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
+					appendTasks(Color.CYAN.darker(), Color.white, false, t
+							+ "\n");
 				}
 			}
 		}
 	}
 
-	public void appendTasks(Color c, Color bg, String s) throws BadLocationException {
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 16);
+	public void appendTasks(Color c, Color bg, boolean isBold, String s)
+			throws BadLocationException {
+		StyleConstants.setBold(style, isBold);
+		StyleConstants.setFontSize(style, 14);
 		StyleConstants.setBackground(style, bg);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
@@ -111,9 +119,11 @@ public class UpcomingView extends SingleView implements View {
 	public void show() throws BadLocationException {
 
 		StyleConstants.setForeground(style, Color.WHITE);
+		StyleConstants.setBold(style, true);
+		StyleConstants.setFontSize(style, 15);
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(), "  			   Upcoming    			        \n",
-				style);
+		doc.insertString(doc.getLength(),
+				"\n			 Upcoming 	 	                      \n", style);
 
 		StyleConstants.setForeground(style, Color.BLACK);
 		StyleConstants.setBackground(style, Color.WHITE);
