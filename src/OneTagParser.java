@@ -99,6 +99,12 @@ public class OneTagParser {
 	private static final String AT = "at";
 	private static final String ON = "on";
 	private static final String IN = "in";
+	
+	private String input;
+	
+	public OneTagParser(String input){
+		this.input = input;
+	}
 
 	//@author A0108436H
 	/**Takes input String from Logic and sends it for sorting.
@@ -106,13 +112,13 @@ public class OneTagParser {
 	 * @param input String given by Logic
 	 * @return Cmd after parsing
 	 */
-	public Cmd toCmd(String input) {
+	public Cmd toCmd() {
 		input.trim();
 		String[] inputArr = input.split(SPACE);
 		if(inputArr.length == 1){
-			return parseOneWordCmd(input);
+			return parseOneWordCmd();
 		}else{
-			return parseLongInput(input);
+			return parseLongInput();
 		}
 	}
 
@@ -122,7 +128,7 @@ public class OneTagParser {
 	 * @param input
 	 * @return Cmd 
 	 */
-	private Cmd parseOneWordCmd(String input){
+	private Cmd parseOneWordCmd(){
 		COMMAND_TYPE command = getCommand(input);
 		//This can be re-factored further.
 		switch (command){
@@ -150,7 +156,7 @@ public class OneTagParser {
 	 * @param input
 	 * @return
 	 */
-	private Cmd parseLongInput(String input) {
+	private Cmd parseLongInput() {
 		String[] inputArr = input.split(SPACE,INPUT_SPLIT_THIRD);	
 		String userCommand = inputArr[INPUT_SPLIT_FIRST];
 		COMMAND_TYPE command = getCommand(userCommand);
