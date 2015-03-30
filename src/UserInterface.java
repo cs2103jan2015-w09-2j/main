@@ -1,11 +1,19 @@
+//@author A0112715
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
+
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
 import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.text.AttributeSet;
@@ -16,8 +24,10 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 import javax.swing.JButton;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.UIManager;
 import javax.swing.JLabel;
 
@@ -37,6 +47,7 @@ public class UserInterface {
 	private JButton minimiseButton;
 	private JPanel buttonPanel;
 	private JLabel welcomeLabel;
+	private Point mouseDownCoords;
 
 	public static UserInterface getInstance() {
 		if (UI == null) {
@@ -73,7 +84,9 @@ public class UserInterface {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(550, 540);
-
+		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121, 163).darker()));
+		
+		enableFrameMovable();
 		initializeCmdFromUser();
 		initializeShowToUser();
 		initializeFeedback();
@@ -81,6 +94,46 @@ public class UserInterface {
 		initializeMinimizeButton();
 		initializeWelcomeLabel();
 		getCommand();
+	}
+
+	private void enableFrameMovable() {
+		// TODO Auto-generated method stub
+		mouseDownCoords = null;
+        frame.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+                mouseDownCoords = null;
+            }
+            public void mousePressed(MouseEvent e) {
+                mouseDownCoords = e.getPoint();
+            }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+        });
+
+        frame.addMouseMotionListener(new MouseMotionListener(){
+            public void mouseMoved(MouseEvent e) {
+            }
+
+            public void mouseDragged(MouseEvent e) {
+                Point currCoords = e.getLocationOnScreen();
+                frame.setLocation(currCoords.x - mouseDownCoords.x, currCoords.y - mouseDownCoords.y);
+            }
+        });
+		
 	}
 
 	private void initializeWelcomeLabel() {
