@@ -251,6 +251,7 @@ public class DateView implements View {
 //		doc.insertString(doc.getLength(),
 //				"\n\n\n							                                        ", style);
 		StyleConstants.setFontSize(style, 15);
+		StyleConstants.setBold(style, true);
 		StyleConstants.setForeground(style, Color.WHITE);
 		doc.insertString(doc.getLength(),"\n", style); 
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
