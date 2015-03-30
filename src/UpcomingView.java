@@ -58,13 +58,13 @@ public class UpcomingView extends SingleView implements View {
 	}
 
 	protected void getUpcoming() throws BadLocationException {
-		int i = 0;
+		int i =0;
 		for (Task task : getList()) {
 			i++;
 			getTaskInfo(task);
 			isTaskOverdue(task);
 			String t = "";
-			String numbering = "  " + i + ".  ";
+			String numbering = "     " + i + ".   ";
 			if (task.isDeadlineTask()) {
 				String tasks = taskDes;
 				t = " (by " + endDate.format(formatter) + ")";
@@ -72,9 +72,9 @@ public class UpcomingView extends SingleView implements View {
 				if (isOverdue) {
 					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
 					appendTasks(Color.RED, Color.WHITE, true, "! ");
-					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false,
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
 							tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false, t
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
 							+ "\n");
 				} else {
 					appendTasks(Color.GRAY, Color.white, false, numbering);
@@ -92,9 +92,9 @@ public class UpcomingView extends SingleView implements View {
 				if (isOverdue) {
 					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
 					appendTasks(Color.RED, Color.WHITE, true, "! ");
-					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false,
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
 							tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.WHITE, false, t
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
 							+ "\n");
 				} else {
 					appendTasks(Color.GRAY, Color.white, false, numbering);
@@ -118,15 +118,24 @@ public class UpcomingView extends SingleView implements View {
 	@Override
 	public void show() throws BadLocationException {
 
-		StyleConstants.setForeground(style, Color.WHITE);
 		StyleConstants.setBold(style, true);
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"\n\n\n							                                        ", style);
 		StyleConstants.setFontSize(style, 15);
+		StyleConstants.setForeground(style, Color.WHITE);
+		doc.insertString(doc.getLength(),"\n", style); 
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
 		doc.insertString(doc.getLength(),
-				"\n			 Upcoming 	 	                      \n", style);
-
+					"			   Upcoming                                 	        \n", style); 
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"							                                        \n\n\n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		StyleConstants.setBackground(style, Color.WHITE);
+		doc.insertString(doc.getLength(),"\n", style); 
 		getUpcoming();
 	}
 
