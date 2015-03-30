@@ -26,9 +26,16 @@ public class EditCmd extends ModifiableCmd{
 	}
 	
 	public void undo(){
-		data.update(task, editContent);
+		task.setDescription(editContent.getDescription());
+		task.setStart(editContent.getStart());
+		task.setEnd(editContent.getEnd());
+		task.setIsCompleted(editContent.getIsCompleted());
+		
+		writeToFile();
+		
+		display.setMessage(MESSAGE_UNDO_EDIT);
 	}
-	
+		
 	private Task clone(Task task){
 		Task clonedTask = new Task();
 		clonedTask.setDescription(task.getDescription());
