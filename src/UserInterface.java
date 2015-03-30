@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
@@ -83,7 +84,8 @@ public class UserInterface {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(550, 540);
-
+		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121, 163).darker()));
+		
 		enableFrameMovable();
 		initializeCmdFromUser();
 		initializeShowToUser();
