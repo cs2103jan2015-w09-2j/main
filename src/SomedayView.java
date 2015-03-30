@@ -1,3 +1,4 @@
+//@author A0112715
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -28,26 +29,31 @@ public class SomedayView extends SingleView implements View{
 			 String tasks = "";
 		 i++;
 		 String numbering = "  "+i+".  ";
-		 appendTasks(Color.GRAY.brighter(), numbering);
 		 tasks =task.getDescription() + "\n";
-		 appendTasks(Color.BLUE.darker(),tasks);
+		 appendTasks(Color.GRAY.brighter(),false, numbering);
+		 appendTasks(Color.BLUE.darker(),false,tasks);
 		 }
 
 	}
 
-	public void appendTasks(Color c, String s) throws BadLocationException {
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 16);
-		StyleConstants.setBackground(style, Color.white);
+	public void appendTasks(Color c, boolean isBold, String s)
+			throws BadLocationException {
+		StyleConstants.setBold(style, isBold);
+		StyleConstants.setFontSize(style, 14);
+		StyleConstants.setBackground(style, Color.WHITE);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
 	}
+	
 	@Override
 	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
 		StyleConstants.setForeground(style, Color.WHITE);
+		StyleConstants.setBold(style, true);
+		StyleConstants.setFontSize(style, 15);
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(), "\n  			   Someday   			        \n", style);
+		doc.insertString(doc.getLength(),
+				"\n			  Someday                                                 \n", style); 
 		getSomeday();
 	}
 
