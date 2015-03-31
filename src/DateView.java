@@ -211,10 +211,10 @@ public class DateView implements View {
 //				"\n\n\n							                                        ", style);
 		StyleConstants.setFontSize(style, 15);
 		StyleConstants.setForeground(style, Color.WHITE);
-		
+		StyleConstants.setBold(style, true);
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
 		doc.insertString(doc.getLength(),
-					"\n			   Today                                            	        \n", style); 
+					"\n			    Today                         	                      \n", style); 
 		doc.insertString(doc.getLength(),"\n", style); 
 //
 //		StyleConstants.setFontSize(style, 4);
@@ -235,7 +235,7 @@ public class DateView implements View {
 		doc.insertString(doc.getLength(),"\n", style); 
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
 		doc.insertString(doc.getLength(),
-					"			   Upcoming                                 	        \n", style); 
+					"			 Upcoming                                   	        \n", style); 
 //		StyleConstants.setFontSize(style, 4);
 //		StyleConstants.setBackground(style, new Color(84, 121, 163));
 //		doc.insertString(doc.getLength(),
@@ -256,7 +256,7 @@ public class DateView implements View {
 		doc.insertString(doc.getLength(),"\n", style); 
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
 		doc.insertString(doc.getLength(),
-					"			   Someday                                 	        \n", style); 
+					"			  Someday                                   	        \n", style); 
 //		StyleConstants.setFontSize(style, 4);
 //		StyleConstants.setBackground(style, new Color(84, 121, 163));
 //		doc.insertString(doc.getLength(),

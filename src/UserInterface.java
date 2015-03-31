@@ -86,7 +86,7 @@ public class UserInterface {
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(550, 540);
+		frame.setSize(552, 540);
 		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121, 163).darker()));
 		
 		enableFrameMovable();
