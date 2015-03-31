@@ -49,6 +49,9 @@ public class UserInterface {
 	private JLabel welcomeLabel;
 	private Point mouseDownCoords;
 
+//	public static void main (String[]args){
+//		run();
+//	}
 	public static UserInterface getInstance() {
 		if (UI == null) {
 			UI = new UserInterface();
@@ -170,6 +173,7 @@ public class UserInterface {
 		feedbackPanel.setLayout(new BorderLayout(0, 0));
 		showToUser = new JTextPane();
 		feedbackPanel.add(showToUser, BorderLayout.CENTER);
+		
 		showToUser.setFont(new Font("Lucida Fax", Font.PLAIN, 16));
 		showToUser.setBackground(new Color(255, 255, 255));
 		showToUser.setEditable(false);
@@ -200,7 +204,7 @@ public class UserInterface {
 
 		closeButton = new JButton("X");
 		buttonPanel.add(closeButton, BorderLayout.EAST);
-		closeButton.setFont(new Font("Calibri", Font.BOLD, 15));
+		closeButton.setFont(new Font("Calibri", Font.BOLD, 12));
 		closeButton.setBorder(UIManager.getBorder("Button.border"));
 		closeButton.setBackground(new Color(255, 255, 255));
 		closeButton.setForeground(new Color(0, 0, 128));
@@ -216,7 +220,7 @@ public class UserInterface {
 		minimiseButton = new JButton("-");
 		buttonPanel.add(minimiseButton, BorderLayout.WEST);
 		buttonPanel.setBorder(UIManager.getBorder("TextArea.border"));
-		minimiseButton.setFont(new Font("Calibri", Font.BOLD, 17));
+		minimiseButton.setFont(new Font("Calibri", Font.BOLD, 13));
 		minimiseButton.setBackground(new Color(255, 255, 255));
 		minimiseButton.setForeground(new Color(0, 0, 128));
 		minimiseButton.addMouseListener(new MouseAdapter() {
