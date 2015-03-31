@@ -48,6 +48,7 @@ public class UserInterface {
 	private JPanel buttonPanel;
 	private JLabel welcomeLabel;
 	private Point mouseDownCoords;
+	private String commandEntered;
 
 //	public static void main (String[]args){
 //		run();
@@ -281,6 +282,7 @@ public class UserInterface {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					String command = commandFromUser.getText();
 					String message = "";
+					commandEntered = command;
 					control.executeCommand(command);
 					showToUser.setText("");
 					StyledDocument doc = feedback.getStyledDocument();
@@ -305,6 +307,10 @@ public class UserInterface {
 					e.consume();
 					commandFromUser.setText("");
 				}
+				else if(e.getKeyCode() == KeyEvent.VK_UP){
+					commandFromUser.setText(commandEntered);
+				}
+				
 			}
 		});
 	}
