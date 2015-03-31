@@ -70,12 +70,12 @@ public class UpcomingView extends SingleView implements View {
 				t = " (by " + endDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
 				if (isOverdue) {
-					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
-					appendTasks(Color.RED, Color.WHITE, true, "! ");
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
-							tasks);
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
-							+ "\n");
+//					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+//					appendTasks(Color.RED, Color.WHITE, true, "! ");
+//					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
+//							tasks);
+//					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
+//							+ "\n");
 				} else {
 					appendTasks(Color.GRAY, Color.white, false, numbering);
 					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);

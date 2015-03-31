@@ -86,7 +86,7 @@ public class UserInterface {
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(552, 540);
+		frame.setSize(552, 535);
 		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121, 163).darker()));
 		
 		enableFrameMovable();
@@ -185,7 +185,7 @@ public class UserInterface {
 	private void initializeFeedback() {
 		feedback = new JTextPane();
 		feedback.setForeground(new Color(153, 0, 153));
-		feedback.setFont(new Font("Lucida Fax", Font.BOLD | Font.ITALIC, 15));
+		feedback.setFont(new Font("Lucida Fax", Font.BOLD | Font.ITALIC, 12));
 		feedback.setEditable(false);
 		feedbackPanel.add(feedback, BorderLayout.SOUTH);
 	}
@@ -252,6 +252,29 @@ public class UserInterface {
 	// }
 
 	private void getCommand() {
+		commandFromUser.addMouseListener(new MouseListener(){
+            public void mouseReleased(MouseEvent e) {
+                     }
+            public void mousePressed(MouseEvent e) {
+            }
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				commandFromUser.setBackground(Color.LIGHT_GRAY);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				commandFromUser.setBackground(Color.WHITE);
+			}
+
+        });
+
 		commandFromUser.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(java.awt.event.KeyEvent e) {

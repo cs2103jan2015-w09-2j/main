@@ -113,7 +113,7 @@ public class TodayView extends SingleView implements View {
 					appendTasks(Color.BLUE.darker(), Color.white, false, tasks
 							+ "\n");
 				}
-
+				
 			}
 
 		}

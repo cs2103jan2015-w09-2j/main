@@ -69,7 +69,7 @@ public class DateView implements View {
 			String numbering = "     " + i + ".   ";
 			if (task.isDeadlineTask()) {
 				String tasks = taskDes;
-				t = "  (by "
+				t = "  ( "
 						+ endTime.format(formatTime).replace("AM", "am")
 								.replace("PM", "pm") + ")";
 				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
@@ -79,7 +79,7 @@ public class DateView implements View {
 					appendTasks(Color.RED, Color.WHITE, true, "! ");
 					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
 							tasks);
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
+					appendTasks(Color.CYAN.darker(), Color.WHITE, false, t
 							+ "\n");
 				} else {
 					appendTasks(Color.GRAY, Color.white, false, numbering);
@@ -125,15 +125,16 @@ public class DateView implements View {
 			String numbering = "     " + i + ".   ";
 			if (task.isDeadlineTask()) {
 				String tasks = taskDes;
-				t = " (by " + endDate.format(formatter) + ")";
+				t = " ( " + endDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
 				if (isOverdue) {
-					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
-					appendTasks(Color.RED, Color.WHITE, true, "! ");
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
-							tasks);
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
-							+ "\n");
+//					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+//					appendTasks(Color.RED, Color.WHITE, true, "! ");
+//					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
+//							tasks);
+//					appendTasks(Color.CYAN.darker(), Color.WHITE, false, t
+//							+ "\n");
+					
 				} else {
 					appendTasks(Color.GRAY, Color.white, false, numbering);
 					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
@@ -145,15 +146,15 @@ public class DateView implements View {
 			else {
 				String tasks = taskDes;
 
-				t = "  (starts on " + startDate.format(formatter) + ")";
+				t = "  (starts " + startDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
 				if (isOverdue) {
-					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
-					appendTasks(Color.RED, Color.WHITE, true, "! ");
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
-							tasks);
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
-							+ "\n");
+//					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+//					appendTasks(Color.RED, Color.WHITE, true, "! ");
+//					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
+//							tasks);
+//					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
+//							+ "\n");
 				} else {
 					appendTasks(Color.GRAY, Color.white, false, numbering);
 					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
@@ -195,6 +196,10 @@ public class DateView implements View {
 		StyleConstants.setFontSize(style, 14);
 		StyleConstants.setBackground(style, bg);
 		StyleConstants.setForeground(style, c);
+		StyledDocument doc = showToUser.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
 		doc.insertString(doc.getLength(), s, style);
 		
 	}
