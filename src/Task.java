@@ -41,6 +41,24 @@ public class Task{
 	// Used internally by TaskSerializer
 	public Task(){
 		
+	}	
+	
+	// To update task's end time
+	public Task(LocalDateTime end){
+		this.end = end;
+	}
+	
+	// To create deadline task
+	public Task(LocalDateTime end, String description){
+		this.end = end;
+		this.description =  description;
+	}
+
+	// To create new timed task
+	public Task(LocalDateTime start, LocalDateTime end, String description){
+		this.start = start;
+		this.end = end;
+		this.description = description;
 	}
 	
 	/**
