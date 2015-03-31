@@ -1,3 +1,5 @@
+//@author A0112715
+
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -68,24 +70,28 @@ public class TodayView extends SingleView implements View {
 			getTaskInfo(task);
 			isTaskOverdue(task);
 			String t = "";
-			String numbering = "  "+i+".  ";
+			String numbering = "     " + i + ".   ";
 			if (task.isDeadlineTask()) {
 				String tasks = taskDes;
-				t =  " (by "
+				t = "  (by "
 						+ endTime.format(formatTime).replace("AM", "am")
 								.replace("PM", "pm") + ")";
 				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
-				if(isOverdue){
-					appendTasks(Color.GRAY,Color.WHITE, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
+				if (isOverdue) {
+					
+					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+					appendTasks(Color.RED, Color.WHITE, true, "! ");
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
+							tasks);
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
+							+ "\n");
+				} else {
+					appendTasks(Color.GRAY, Color.white, false, numbering);
+					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
+					appendTasks(Color.CYAN.darker(), Color.white, false, t
+							+ "\n");
 				}
-				else{
-				appendTasks(Color.GRAY,Color.white, numbering);
-				appendTasks(Color.BLUE.darker(),Color.white, tasks);
-				appendTasks(Color.CYAN.darker(),Color.white, t+"\n");
-				}
-				
+
 			} else {
 				String tasks = taskDes;
 				t = startTime.format(formatTime).replace("AM", "am")
@@ -94,16 +100,18 @@ public class TodayView extends SingleView implements View {
 						+ endTime.format(formatTime).replace("AM", "am")
 								.replace("PM", "pm") + ": ";
 				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
-				
-				if(isOverdue){
-					appendTasks(Color.GRAY, Color.white, numbering);
-					appendTasks(Color.CYAN.darker(), Color.WHITE, t);
-					appendTasks(Color.BLUE.darker(), Color.WHITE, tasks+"\n");
-				}
-				else{
-					appendTasks(Color.GRAY, Color.white, numbering);
-					appendTasks(Color.CYAN.darker(), Color.white, t);
-					appendTasks(Color.BLUE.darker(), Color.white, tasks+"\n");
+
+				if (isOverdue) {
+					appendTasks(Color.GRAY, Color.white, false, numbering);
+					appendTasks(Color.RED, Color.WHITE, true, "! ");
+					appendTasks(Color.CYAN.darker(), Color.WHITE, false, t);
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false, tasks
+							+ "\n");
+				} else {
+					appendTasks(Color.GRAY, Color.white, false, numbering);
+					appendTasks(Color.CYAN.darker(), Color.white, false, t);
+					appendTasks(Color.BLUE.darker(), Color.white, false, tasks
+							+ "\n");
 				}
 
 			}
@@ -111,10 +119,11 @@ public class TodayView extends SingleView implements View {
 		}
 	}
 
-	public void appendTasks(Color c, Color bg, String s) throws BadLocationException {
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 16);
-		StyleConstants.setBackground(style,bg);
+	public void appendTasks(Color c, Color bg, boolean isBold, String s)
+			throws BadLocationException {
+		StyleConstants.setBold(style, isBold);
+		StyleConstants.setFontSize(style, 14);
+		StyleConstants.setBackground(style, bg);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
 	}
@@ -123,13 +132,25 @@ public class TodayView extends SingleView implements View {
 	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
 		getTodayDate();
+//		StyleConstants.setBold(style, true);
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"\n\n\n							                                        ", style);
+		StyleConstants.setFontSize(style, 15);
 		StyleConstants.setForeground(style, Color.WHITE);
+		
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		StyleConstants.setBold(style, true);
-		StyleConstants.setFontSize(style, 18);
-		doc.insertString(doc.getLength(), "\n  		     Today (" + todayDate
-				+ ")	                   \n", style);
-		doc.insertString(doc.getLength(),"\n",style);
+		doc.insertString(doc.getLength(), "\n  		            Today (" + todayDate
+				+ ")	                                    \n", style);
+		doc.insertString(doc.getLength(),"\n", style); 
+//
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"							                                        \n\n\n", style);
+//		StyleConstants.setForeground(style, Color.BLACK);
+		StyleConstants.setBackground(style, Color.WHITE);
 		getToday();
 
 	}

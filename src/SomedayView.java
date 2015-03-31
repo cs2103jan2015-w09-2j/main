@@ -1,3 +1,4 @@
+//@author A0112715
 import java.awt.Color;
 import java.util.ArrayList;
 
@@ -23,32 +24,56 @@ public class SomedayView extends SingleView implements View{
 	}
 	
 	protected void getSomeday() throws BadLocationException {
-		 int i =0;
-		 for (Task task : getList()) {
-			 String tasks = "";
-		 i++;
-		 String numbering = "  "+i+".  ";
-		 appendTasks(Color.GRAY.brighter(), numbering);
-		 tasks =task.getDescription() + "\n";
-		 appendTasks(Color.BLUE.darker(),tasks);
-		 }
+		int i=0;
+		for (Task task : getList()) {
+			String tasks = "";
+			i++;
+			String numbering = "     " + i + ".   ";
+			appendTasks(Color.GRAY.brighter(), Color.WHITE, false, numbering);
+			String t = task.toString().replaceAll("-", "to");
+			t = task.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
+			tasks = t + "\n";
+			appendTasks(Color.BLUE.darker(), Color.WHITE,false, tasks);
+		}
 
 	}
 
-	public void appendTasks(Color c, String s) throws BadLocationException {
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 16);
-		StyleConstants.setBackground(style, Color.white);
+
+	public void appendTasks(Color c, Color bg, boolean isBold, String s)
+			throws BadLocationException {
+		StyleConstants.setBold(style, isBold);
+		StyleConstants.setFontSize(style, 14);
+		StyleConstants.setBackground(style, bg);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
+		
 	}
+	
 	@Override
 	public void show() throws BadLocationException {
 		// TODO Auto-generated method stub
+
+//		StyleConstants.setBold(style, true);
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"\n\n\n							                                        ", style);
+		StyleConstants.setFontSize(style, 15);
+		StyleConstants.setBold(style, true);
 		StyleConstants.setForeground(style, Color.WHITE);
+		doc.insertString(doc.getLength(),"\n", style); 
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(), "\n  			   Someday   			        \n", style);
+		doc.insertString(doc.getLength(),
+					"			   Someday                                 	        \n", style); 
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"							                                        \n\n\n", style);
+		StyleConstants.setForeground(style, Color.BLACK);
+		StyleConstants.setBackground(style, Color.WHITE);
+		doc.insertString(doc.getLength(),"\n", style); 
 		getSomeday();
+		StyleConstants.setForeground(style, Color.BLUE.brighter());
 	}
 
 }

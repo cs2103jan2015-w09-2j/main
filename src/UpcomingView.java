@@ -1,3 +1,4 @@
+//@author A0112715
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -57,51 +58,58 @@ public class UpcomingView extends SingleView implements View {
 	}
 
 	protected void getUpcoming() throws BadLocationException {
-		int i = 0;
+		int i =0;
 		for (Task task : getList()) {
 			i++;
 			getTaskInfo(task);
 			isTaskOverdue(task);
 			String t = "";
-			String numbering = "  " + i + ".  ";
+			String numbering = "     " + i + ".   ";
 			if (task.isDeadlineTask()) {
 				String tasks = taskDes;
 				t = " (by " + endDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
-				if(isOverdue){
-					appendTasks(Color.GRAY,Color.WHITE, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
-					appendTasks(Color.MAGENTA.darker(), Color.WHITE, t+"\n");
-				}
-				else{
-				appendTasks(Color.GRAY,Color.white, numbering);
-				appendTasks(Color.BLUE.darker(),Color.white, tasks);
-				appendTasks(Color.CYAN.darker(),Color.white, t+"\n");
+				if (isOverdue) {
+					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+					appendTasks(Color.RED, Color.WHITE, true, "! ");
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
+							tasks);
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
+							+ "\n");
+				} else {
+					appendTasks(Color.GRAY, Color.white, false, numbering);
+					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
+					appendTasks(Color.CYAN.darker(), Color.white, false, t
+							+ "\n");
 				}
 			}
 
 			else {
 				String tasks = taskDes;
-				
+
 				t = "  (starts on " + startDate.format(formatter) + ")";
 				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
-				if(isOverdue){
-					appendTasks(Color.GRAY,Color.WHITE, numbering);
-					appendTasks(Color.MAGENTA.darker(),Color.WHITE, tasks);
-					appendTasks(Color.MAGENTA.darker(),Color.WHITE, t+"\n");
-				}
-				else{
-				appendTasks(Color.GRAY,Color.white, numbering);
-				appendTasks(Color.BLUE.darker(),Color.white, tasks);
-				appendTasks(Color.CYAN.darker(),Color.white, t+"\n");
+				if (isOverdue) {
+					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
+					appendTasks(Color.RED, Color.WHITE, true, "! ");
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
+							tasks);
+					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
+							+ "\n");
+				} else {
+					appendTasks(Color.GRAY, Color.white, false, numbering);
+					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
+					appendTasks(Color.CYAN.darker(), Color.white, false, t
+							+ "\n");
 				}
 			}
 		}
 	}
 
-	public void appendTasks(Color c, Color bg, String s) throws BadLocationException {
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 16);
+	public void appendTasks(Color c, Color bg, boolean isBold, String s)
+			throws BadLocationException {
+		StyleConstants.setBold(style, isBold);
+		StyleConstants.setFontSize(style, 14);
 		StyleConstants.setBackground(style, bg);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
@@ -110,13 +118,24 @@ public class UpcomingView extends SingleView implements View {
 	@Override
 	public void show() throws BadLocationException {
 
+		StyleConstants.setBold(style, true);
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"\n\n\n							                                        ", style);
+		StyleConstants.setFontSize(style, 15);
 		StyleConstants.setForeground(style, Color.WHITE);
+		doc.insertString(doc.getLength(),"\n", style); 
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(), "  			   Upcoming    			        \n",
-				style);
-
+		doc.insertString(doc.getLength(),
+					"			   Upcoming                                 	        \n", style); 
+//		StyleConstants.setFontSize(style, 4);
+//		StyleConstants.setBackground(style, new Color(84, 121, 163));
+//		doc.insertString(doc.getLength(),
+//				"							                                        \n\n\n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		StyleConstants.setBackground(style, Color.WHITE);
+		doc.insertString(doc.getLength(),"\n", style); 
 		getUpcoming();
 	}
 

@@ -35,7 +35,7 @@ public class CompletedView extends SingleView implements View{
 	
 	public void appendTasks(Color c, String s) throws BadLocationException {
 		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 16);
+		StyleConstants.setFontSize(style, 14);
 		StyleConstants.setBackground(style, Color.white);
 		StyleConstants.setForeground(style, c);
 		doc.insertString(doc.getLength(), s, style);
@@ -55,7 +55,7 @@ public class CompletedView extends SingleView implements View{
 		StyleConstants.setForeground(style, Color.WHITE);
 		StyleConstants.setBackground(style, new Color(84, 121, 163));
 		StyleConstants.setBold(style, true);
-		StyleConstants.setFontSize(style, 18);
+		StyleConstants.setFontSize(style, 15);
 		doc.insertString(doc.getLength(), "\n  			  Completed  			       \n", style);
 		StyleConstants.setForeground(style, Color.BLACK);
 		StyleConstants.setBackground(style, Color.WHITE);
