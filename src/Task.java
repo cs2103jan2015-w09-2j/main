@@ -43,11 +43,6 @@ public class Task{
 		
 	}	
 	
-	// To update task's end time
-	public Task(LocalDateTime end){
-		this.end = end;
-	}
-	
 	// To create deadline task
 	public Task(LocalDateTime end, String description){
 		this.end = end;
