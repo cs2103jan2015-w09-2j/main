@@ -5,6 +5,7 @@ import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 
@@ -27,6 +28,7 @@ import javax.swing.JButton;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.UIManager;
 import javax.swing.JLabel;
@@ -48,7 +50,9 @@ public class UserInterface {
 	private JPanel buttonPanel;
 	private JLabel welcomeLabel;
 	private Point mouseDownCoords;
-	private String commandEntered;
+	private int noOfCurrentCmd;
+	private ArrayList<String> commandsEntered = new ArrayList<String>();
+	private int noOfCommandsEntered;
 
 //	public static void main (String[]args){
 //		run();
@@ -282,7 +286,8 @@ public class UserInterface {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					String command = commandFromUser.getText();
 					String message = "";
-					commandEntered = command;
+					commandsEntered.add(command);
+					noOfCommandsEntered = commandsEntered.size();
 					control.executeCommand(command);
 					showToUser.setText("");
 					StyledDocument doc = feedback.getStyledDocument();
@@ -308,9 +313,27 @@ public class UserInterface {
 					commandFromUser.setText("");
 				}
 				else if(e.getKeyCode() == KeyEvent.VK_UP){
-					commandFromUser.setText(commandEntered);
+					noOfCommandsEntered--;
+					try{
+					commandFromUser.setText(commandsEntered.get(noOfCommandsEntered));
+					noOfCurrentCmd = noOfCommandsEntered;
+					}
+					catch(ArrayIndexOutOfBoundsException e1){
+					noOfCommandsEntered = 0;
+					}
+				}
+			else if(e.getKeyCode() == KeyEvent.VK_DOWN){
+				try{
+				 commandFromUser.setText(commandsEntered.get(noOfCurrentCmd++));
+				 noOfCommandsEntered = noOfCurrentCmd;
 				}
 				
+				catch(IndexOutOfBoundsException e2){
+					commandFromUser.setText("");
+					noOfCommandsEntered = commandsEntered.size();
+					}
+			 }
+			
 			}
 		});
 	}
