@@ -77,7 +77,8 @@ public class Data{
 		ArrayList<Task> searchedList = new ArrayList<Task>();
 		
 		for(Task task : myList){
-			if(task.getDescription().contains(text)){
+			//if (task.getDescription().contains(text)){
+			if(task.getDescription().toLowerCase().contains(text.toLowerCase())){
 				searchedList.add(task);
 			}
 		}

@@ -32,7 +32,8 @@ public class SearchView extends SingleView implements View{
 		 for (Task task : getList()) {
 		 String tasks = "";
 		 i++;
-		 isTaskOverdue(task);
+		 //isTaskOverdue(task);
+		 isOverdue = task.isOverdue();
 		 String numbering = "    "+i+". ";
 		 tasks =task.getDescription() + "\n";
 		if(isOverdue){
