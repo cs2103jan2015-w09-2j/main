@@ -24,13 +24,6 @@ public class Task{
 		end = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMin);
 	}
 
-	// Floating task
-	public Task(String taskDescription) {
-		description = taskDescription;
-		start = null;
-		end = null;
-	}
-
 	// Deadline task
 	public Task(int endYear, int endMonth, int endDay, int endHour, int endMin,
 			String taskDescription) {
@@ -54,6 +47,13 @@ public class Task{
 		this.start = start;
 		this.end = end;
 		this.description = description;
+	}
+
+	// Floating task
+	public Task(String taskDescription) {
+		description = taskDescription;
+		start = null;
+		end = null;
 	}
 	
 	/**
@@ -157,6 +157,21 @@ public class Task{
 	}
 	
 	/**
+	 * Returns true if task is overdue, false otherwise
+	 * @return boolean
+	 */
+	public boolean isOverdue(){
+		LocalDateTime now = LocalDateTime.now();
+		
+		if (end == null){
+			return false;
+		}
+		else{
+			return end.isBefore(now);
+		}
+	}
+	
+	/**
 	 * Returns true if task is a floating task, false otherwise
 	 * @return true if task is a floating task, false otherwise
 	 */
@@ -200,9 +215,6 @@ public class Task{
 	 * @return true if deadline task's end field is today or if timed tasks's start field is today, false otherwise
 	 */
 	public boolean isTodayTask(){
-		if (this.isCompleted){
-			return false;
-		}
 		
 		LocalDate now = LocalDate.now();
 		
@@ -236,7 +248,10 @@ public class Task{
 		if (this.isCompleted){
 			return false;
 		}
-		if (!this.isSomedayTask() && !this.isTodayTask()){
+		else if (this.isOverdue()){
+			return false;
+		}
+		else if (!this.isSomedayTask() && !this.isTodayTask()){
 			return true;
 		}
 		else{
