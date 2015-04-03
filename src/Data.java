@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -99,8 +100,16 @@ public class Data{
 		currTask.setIsCompleted(isCompleted);
 	}
 	
-	public void update(Task currTask, Task updateElement){
-		currTask.update(updateElement);
+	public void update(Task task, String newDescription){
+		task.setDescription(newDescription);
+		task.setStart(null);
+		task.setEnd(null);
+	}
+	
+	public void update(Task task, String newDescription, LocalDateTime newStart, LocalDateTime newEnd){
+		task.setDescription(newDescription);
+		task.setStart(newStart);
+		task.setEnd(newEnd);
 	}
 			
 }
