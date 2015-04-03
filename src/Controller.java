@@ -15,7 +15,6 @@ public class Controller {
 		data.set(file.getData());
 		
 		display.setView(new DateView());
-		history.add(new ViewCmd("home"));
 	}
 		
 	public static Controller getInstance(){
