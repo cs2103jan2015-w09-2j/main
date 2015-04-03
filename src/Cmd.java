@@ -7,8 +7,10 @@ public abstract class Cmd {
 	protected static final String MESSAGE_ADD = "Added \"%1$s\" to %2$s”";
 	
 	protected static final String MESSAGE_EDIT_DES = "Description of the task \"%1$s\" is changed to %2$s";
-	protected static final String MESSAGE_EDIT_TIME = "Time of the task \"%1$s\" is changed to %2$s";
-	protected static final String MESSAGE_EDIT_DATE = "Date of the task \"%1$s\" is changed to %2$s";
+	protected static final String MESSAGE_START_TIME = "Start Time of the task \"%1$s\" is changed to %2$s";
+	protected static final String MESSAGE_END_TIME = "End Time of the task \"%1$s\" is changed to %2$s";
+	protected static final String MESSAGE_EDIT_START_DATE = "Start date of the task \"%1$s\" is changed to %2$s";
+	protected static final String MESSAGE_EDIT_END_DATE = "End date of the task \"%1$s\" is changed to %2$s";
 	
 	
 	//Instead of an undo message, just send back the edit?
