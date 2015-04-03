@@ -33,7 +33,12 @@ public class EditCmd extends ModifiableCmd{
 		this.description = description;
 	}
 	
-
+	public EditCmd(int index, String description, boolean isSomeday){
+		this(index, description);
+		assert(isSomeday);
+		this.isSomeday = isSomeday;
+	}
+	
 	//indicate: 1= start, 2= end
 	public EditCmd(int index, LocalDateTime time, int indicate){
 		this(index);
