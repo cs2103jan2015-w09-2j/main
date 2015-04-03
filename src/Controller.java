@@ -12,8 +12,10 @@ public class Controller {
 	
 	private Controller(){
 		file = new Storage();
-		data.set(file.getData());	
+		data.set(file.getData());
+		
 		display.setView(new DateView());
+		history.add(new ViewCmd("home"));
 	}
 		
 	public static Controller getInstance(){
