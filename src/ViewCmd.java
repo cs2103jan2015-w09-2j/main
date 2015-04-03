@@ -8,8 +8,11 @@ public class ViewCmd extends Cmd{
 	}
 
 	public boolean execute(){
-		Display display = Display.getInstance();
-		
+		setView();		
+	    return true;
+	}
+
+	private void setView(){
 		switch(view){
 			case "home" :
 				display.setView(new DateView());
@@ -32,8 +35,5 @@ public class ViewCmd extends Cmd{
 				display.setView(new DateView());
 				break;
 		}
-		
-	     return true;
 	}
-
 }

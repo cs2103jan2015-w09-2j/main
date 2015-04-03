@@ -41,6 +41,10 @@ public abstract class Cmd {
 	
 	public abstract boolean execute();
 	
+	public void undo(){
+		execute();
+	}
+	
 	protected Task getViewTask(int index) throws IndexOutOfBoundsException{
 		View view = display.getView();
 		

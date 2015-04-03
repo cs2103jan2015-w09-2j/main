@@ -6,10 +6,10 @@ public class History {
 
 	private static History history = null;
 	
-	private Stack<ModifiableCmd> list;
+	private Stack<Cmd> list;
 	
 	private History(){
-		list = new Stack<ModifiableCmd>();
+		list = new Stack<Cmd>();
 	}
 	
 	public static History getInstance(){
@@ -19,11 +19,11 @@ public class History {
 		return history;
 	}
 	
-	public void add(ModifiableCmd cmd){
+	public void add(Cmd cmd){
 		list.push(cmd);
 	}
 	
-	public ModifiableCmd remove() throws EmptyStackException{
+	public Cmd remove() throws EmptyStackException{
 		return list.pop();
 	}
 }

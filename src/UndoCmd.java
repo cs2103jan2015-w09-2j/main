@@ -11,7 +11,7 @@ public class UndoCmd extends Cmd {
 		History history = History.getInstance();
 		
 		try{
-			ModifiableCmd cmd = history.remove();
+			Cmd cmd = history.remove();
 			cmd.undo();
 		}
 		catch(EmptyStackException ex){

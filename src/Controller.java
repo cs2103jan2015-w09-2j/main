@@ -30,8 +30,8 @@ public class Controller {
 			Cmd cmd = oneTagParser.toCmd();
 			cmd.execute();
 			
-			if(cmd instanceof ModifiableCmd){
-				history.add((ModifiableCmd)cmd);
+			if(!(cmd instanceof UndoCmd)){
+				history.add(cmd);
 			}
 		}
 		catch(IndexOutOfBoundsException ex){

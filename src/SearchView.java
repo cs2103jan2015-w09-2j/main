@@ -14,17 +14,19 @@ public class SearchView extends SingleView implements View{
 	private JTextPane showToUser = UI.getShowToUser();
 	private StyledDocument doc = showToUser.getStyledDocument();
 	private Style style = showToUser.addStyle("Style", null);
+	
+	private String searchedText;
 	private boolean isOverdue;
 	
-	public SearchView(String searchedText){		
-		setList(data.getSearched(searchedText));
+	public SearchView(String searchedText){	
+		this.searchedText = searchedText;
+		update();
 	}
 	
 
 	@Override
 	public void update() {
-		// TODO Auto-generated method stub
-		
+		setList(data.getSearched(searchedText));
 	}
 		
 	protected void getSearchResults() throws BadLocationException {
