@@ -74,8 +74,12 @@ public class Storage {
 		logger.setLevel(Level.OFF);
 	}
 	
+	public String getPath(){
+		return filePath;
+	}
+	
 	/**
-	 * Gets the file path
+	 * Gets the file directory without the file name
 	 * @return String
 	 */
 	public String getFilePath(){

@@ -30,6 +30,7 @@ public abstract class Cmd {
 	protected static final String MESSAGE_SAVE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
 	protected static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s could not found!\r\n";
 	protected static final String MESSAGE_UNDO_SAVE = "Undo save: old file location restored";
+	protected static final String MESSAGE_SAVE_CONFIG_NOT_FOUND = "config file not found";
 	
 //	protected static final String MESSAGE_CLEAR = "all content deleted from %1$s";
 //	protected static final String MESSAGE_EMPTY = "%1$s is empty";

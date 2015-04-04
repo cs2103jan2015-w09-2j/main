@@ -1,9 +1,14 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Scanner;
 
 
 public class SaveCmd extends ModifiableCmd {
 	String storageLocation;
+	String previousStorageLocation;
 	Storage storage;
+	private static final String NAME_CONFIG = "config.json";
 	
 	public SaveCmd(String storageLocation) {
 		this.storageLocation = storageLocation;
@@ -12,6 +17,18 @@ public class SaveCmd extends ModifiableCmd {
 
 	@Override
 	public boolean execute(){
+		File config = new File(NAME_CONFIG);
+		if (config.exists()){
+			try {
+				previousStorageLocation = new Scanner(config).useDelimiter("\\Z").next();
+			} catch (FileNotFoundException e) {
+				display.setMessage(MESSAGE_SAVE_CONFIG_NOT_FOUND);
+			}
+		}
+		else{
+			previousStorageLocation = storage.getPath();
+		}
+		
 		try{
 		storage.setPath(storageLocation);
 		}catch(IOException ioEx){
@@ -25,6 +42,7 @@ public class SaveCmd extends ModifiableCmd {
 
 	@Override
 	public void undo() {
+		
 		try{
 			storage.setPath(storageLocation);
 			}catch(IOException ioEx){
