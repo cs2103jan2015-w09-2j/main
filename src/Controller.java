@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 
 public class Controller {
 	
@@ -39,7 +41,7 @@ public class Controller {
 			display.setMessage(MESSAGE_INVALID_INDEX);
 			return false;
 		}
-		
+
 		return true;
 	}
 
