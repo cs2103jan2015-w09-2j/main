@@ -39,18 +39,27 @@ public class EditCmd extends ModifiableCmd{
 		this.isSomeday = isSomeday;
 	}
 	
-	//indicate: 1= start, 2= end
+	//indicate: 1= start, 2= end, 3 = by
 	public EditCmd(int index, LocalDateTime time, int indicate){
 		this(index);
 		if(indicate == 1){
 			this.start = time;
 			this.end = null;
 		}
-		else{
-			assert(indicate == 2);
+		else if(indicate == 2){
 			this.start = null;
 			this.end = time;
 		}
+		else{
+			assert(indicate == 3);
+			this.start = null;
+			this.end = time;
+		}
+	}
+	
+	public EditCmd(int index, LocalDateTime start, LocalDateTime end){
+		this.start = start;
+		this.end = end;
 	}
 	
 	//indicate: 1= start, 2= end
