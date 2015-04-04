@@ -1,10 +1,11 @@
 
 
 public abstract class Cmd {
-	
+
 	//task description and header where description is added needs to be returned
 	// i.e. Added "Complete homework" to Today
 	protected static final String MESSAGE_ADD = "Added \"%1$s\" to %2$s”";
+	protected static final String MESSAGE_UNDO_ADD = "Undo Add: \"%1$s\" is removed from task list ";
 	
 	protected static final String MESSAGE_EDIT_DES = "Description of the task \"%1$s\" is changed to %2$s";
 	protected static final String MESSAGE_START_TIME = "Start Time of the task \"%1$s\" is changed to %2$s";
@@ -18,15 +19,12 @@ public abstract class Cmd {
 	protected static final String MESSAGE_UNDO_EDIT_TIME = "Undo Edit: Time is reverted back to %1$s";
 	protected static final String MESSAGE_UNDO_EDIT_DATE = "Undo Edit: Date is reverted back to %1$s";
 
-	protected static final String MESSAGE_UNDO_ADD = "Undo Add: \"%1$s\" is removed from task list ";
-	
 	//i.e. Lecture is added back to today 
-	protected static final String MESSAGE_UNDO_DELETE = "Undo Delete: \"%1$s\" is added back to %2$s";
-	protected static final String MESSAGE_UNDO_COMPLETED = "Undo Complete: \"%1$s\" is marked as undone";
-	
-	//
 	protected static final String MESSAGE_DELETE = "Deleted \"%1$s\"";
+	protected static final String MESSAGE_UNDO_DELETE = "Undo Delete: \"%1$s\" is added back to %2$s";	
+	
 	protected static final String MESSAGE_COMPLETED = "\"%1$s\" marked as completed!";
+	protected static final String MESSAGE_UNDO_COMPLETED = "Undo Complete: \"%1$s\" is marked as undone";
 
 //	protected static final String MESSAGE_CLEAR = "all content deleted from %1$s";
 //	protected static final String MESSAGE_EMPTY = "%1$s is empty";
@@ -38,6 +36,10 @@ public abstract class Cmd {
 	protected static final String MESSAGE_NO_VALUE = "Please indicate a valid task description!";
 	protected static final String MESSAGE_NO_FILE = "Storage file is not available";
 
+	private static final String TASKTYPE_TODAY = "TODAY";
+	private static final String TASKTYPE_UPCOMING = "UPCOMING";
+	private static final String TASKTYPE_SOMEDAY = "SOMEDAY";
+	
 	protected Data data = Data.getInstance();
 	protected Display display = Display.getInstance();
 	
@@ -53,4 +55,20 @@ public abstract class Cmd {
 		return view.getTask(index);
 	}
 
+	protected static String getTaskType(Task task){
+		String taskType = "";
+		
+		if(task.isTodayTask()){
+			taskType = TASKTYPE_TODAY;
+		}
+		else if(task.isUpcomingTask()){
+			taskType = TASKTYPE_UPCOMING;
+		}
+		else{
+			assert(task.isSomedayTask());
+			taskType = TASKTYPE_SOMEDAY;
+		}
+		
+		return taskType;
+	}
 }
