@@ -330,25 +330,6 @@ public class OneTagParser {
 		}
 		return null;
 	}
-/*
-	/**Returns Task Num to be edited.
-	 * 
-	 * @param message
-	 * @return int task number.
-	 *
-	private int parseEditNUM(String message) {
-		if(isEditDateTime(message)){
-			String[] separateWords = message.split(SPACE,INPUT_SPLIT_FOURTH);
-			System.out.println(separateWords[INPUT_SPLIT_SECOND]);
-			return parseNum(separateWords[INPUT_SPLIT_SECOND]);
-		}
-		else{
-			String[] separateWords = message.split(SPACE,INPUT_SPLIT_THIRD);
-			System.out.println(separateWords[INPUT_SPLIT_FIRST]);
-			return parseNum(separateWords[INPUT_SPLIT_FIRST]);
-		}
-	}
-	*/
 	/**This method returns the getParseDate
 	 * 
 	 * @param parseDate
