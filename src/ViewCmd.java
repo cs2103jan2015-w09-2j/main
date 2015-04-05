@@ -12,7 +12,7 @@ public class ViewCmd extends Cmd{
 	public boolean execute(){
 		switch(currView){
 		case "home" :
-			display.setView(new DateView());
+			display.setView(new HomeView());
 			break;
 		case "today" :
 			display.setView(new TodayView());
@@ -27,9 +27,10 @@ public class ViewCmd extends Cmd{
 			display.setView(new CompletedView());
 			break;
 		case "help" :
+			display.setView(new HelpView());
 			break;
 		default :
-			display.setView(new DateView());
+			display.setView(new HomeView());
 			break;
 	}	
 	    return true;

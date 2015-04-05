@@ -14,7 +14,7 @@ public class Controller {
 		file = new Storage();
 		data.set(file.getData());
 		
-		display.setView(new DateView());
+		display.setView(new HomeView());
 	}
 		
 	public static Controller getInstance(){

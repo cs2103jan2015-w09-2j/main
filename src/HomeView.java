@@ -14,7 +14,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-public class DateView implements View {
+public class HomeView implements View {
 	private UserInterface UI;
 	private JTextPane showToUser;
 	private StyledDocument doc;
@@ -37,7 +37,7 @@ public class DateView implements View {
 	private String todayDate = LocalDate.now().format(todayFormatter);
 	private StringBuilder output = new StringBuilder();
 
-	public DateView() {
+	public HomeView() {
 		update();
 	}
 

@@ -7,7 +7,7 @@ public class Display {
 	private String message;
 
 	private Display(){
-		view = new DateView();
+		view = new HomeView();
 		message = "";
 	}
 	
