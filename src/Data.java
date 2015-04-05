@@ -101,15 +101,23 @@ public class Data{
 	}
 	
 	public void update(Task task, String newDescription){
-		task.setDescription(newDescription);
+		if(newDescription != null){
+			task.setDescription(newDescription);
+		}
 		task.setStart(null);
 		task.setEnd(null);
 	}
 	
 	public void update(Task task, String newDescription, LocalDateTime newStart, LocalDateTime newEnd){
-		task.setDescription(newDescription);
-		task.setStart(newStart);
-		task.setEnd(newEnd);
+		if(newDescription != null){
+			task.setDescription(newDescription);
+		}
+		if(newStart != null){
+			task.setStart(newStart);
+		}
+		if(newEnd != null){
+			task.setEnd(newEnd);
+		}
 	}
 			
 }
