@@ -54,9 +54,9 @@ public class UserInterface {
 	private ArrayList<String> commandsEntered = new ArrayList<String>();
 	private int noOfCommandsEntered;
 
-//	public static void main (String[]args){
-//		run();
-//	}
+	// public static void main (String[]args){
+	// run();
+	// }
 	public static UserInterface getInstance() {
 		if (UI == null) {
 			UI = new UserInterface();
@@ -68,7 +68,7 @@ public class UserInterface {
 		return showToUser;
 	}
 
-	public void run(){
+	public void run() {
 		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
@@ -83,6 +83,7 @@ public class UserInterface {
 		window.frame.setOpacity(0.99f);
 		window.frame.setVisible(true);
 	}
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -92,8 +93,10 @@ public class UserInterface {
 		frame.setBounds(100, 100, 450, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(552, 535);
-		frame.getRootPane().setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121, 163).darker()));
-		
+		frame.getRootPane().setBorder(
+				BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121,
+						163).darker()));
+
 		enableFrameMovable();
 		initializeCmdFromUser();
 		initializeShowToUser();
@@ -107,41 +110,46 @@ public class UserInterface {
 	private void enableFrameMovable() {
 		// TODO Auto-generated method stub
 		mouseDownCoords = null;
-        frame.addMouseListener(new MouseListener(){
-            public void mouseReleased(MouseEvent e) {
-                mouseDownCoords = null;
-            }
-            public void mousePressed(MouseEvent e) {
-                mouseDownCoords = e.getPoint();
-            }
+		frame.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {
+				mouseDownCoords = null;
+			}
+
+			public void mousePressed(MouseEvent e) {
+				mouseDownCoords = e.getPoint();
+			}
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
-        });
+		});
 
-        frame.addMouseMotionListener(new MouseMotionListener(){
-            public void mouseMoved(MouseEvent e) {
-            }
+		frame.addMouseMotionListener(new MouseMotionListener() {
+			public void mouseMoved(MouseEvent e) {
+			}
 
-            public void mouseDragged(MouseEvent e) {
-                Point currCoords = e.getLocationOnScreen();
-                frame.setLocation(currCoords.x - mouseDownCoords.x, currCoords.y - mouseDownCoords.y);
-            }
-        });
-		
+			public void mouseDragged(MouseEvent e) {
+				Point currCoords = e.getLocationOnScreen();
+				frame.setLocation(currCoords.x - mouseDownCoords.x,
+						currCoords.y - mouseDownCoords.y);
+			}
+		});
+
 	}
 
 	private void initializeWelcomeLabel() {
@@ -177,8 +185,9 @@ public class UserInterface {
 		outerPanel.add(feedbackPanel, BorderLayout.CENTER);
 		feedbackPanel.setLayout(new BorderLayout(0, 0));
 		showToUser = new JTextPane();
+		showToUser.setContentType("text/html");
 		feedbackPanel.add(showToUser, BorderLayout.CENTER);
-		
+		showToUser.setContentType("");
 		showToUser.setFont(new Font("Lucida Fax", Font.PLAIN, 16));
 		showToUser.setBackground(new Color(255, 255, 255));
 		showToUser.setEditable(false);
@@ -257,28 +266,32 @@ public class UserInterface {
 	// }
 
 	private void getCommand() {
-		commandFromUser.addMouseListener(new MouseListener(){
-            public void mouseReleased(MouseEvent e) {
-                     }
-            public void mousePressed(MouseEvent e) {
-            }
+		commandFromUser.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			public void mousePressed(MouseEvent e) {
+			}
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
 				commandFromUser.setBackground(Color.LIGHT_GRAY);
 			}
+
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
 				commandFromUser.setBackground(Color.WHITE);
 			}
 
-        });
+		});
 
 		commandFromUser.addKeyListener(new KeyAdapter() {
 			@Override
@@ -289,7 +302,7 @@ public class UserInterface {
 					commandsEntered.add(command);
 					noOfCommandsEntered = commandsEntered.size();
 					control.executeCommand(command);
-					showToUser.setText("");
+	
 					StyledDocument doc = feedback.getStyledDocument();
 					SimpleAttributeSet center = new SimpleAttributeSet();
 					StyleConstants.setAlignment(center,
@@ -305,35 +318,34 @@ public class UserInterface {
 						feedback.setText("");
 					}
 					try {
-						Display.getInstance().getView().show();
+						Display.getInstance().getView().show();;
 					} catch (BadLocationException e1) {
 						System.out.println("Error");
 					}
 					e.consume();
 					commandFromUser.setText("");
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_UP){
+				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
 					noOfCommandsEntered--;
-					try{
-					commandFromUser.setText(commandsEntered.get(noOfCommandsEntered));
-					noOfCurrentCmd = noOfCommandsEntered;
+					try {
+						commandFromUser.setText(commandsEntered
+								.get(noOfCommandsEntered));
+						noOfCurrentCmd = noOfCommandsEntered;
+					} catch (ArrayIndexOutOfBoundsException e1) {
+						noOfCommandsEntered = 0;
 					}
-					catch(ArrayIndexOutOfBoundsException e1){
-					noOfCommandsEntered = 0;
+				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+					try {
+						commandFromUser.setText(commandsEntered
+								.get(noOfCurrentCmd++));
+						noOfCommandsEntered = noOfCurrentCmd;
+					}
+
+					catch (IndexOutOfBoundsException e2) {
+						commandFromUser.setText("");
+						noOfCommandsEntered = commandsEntered.size();
 					}
 				}
-			else if(e.getKeyCode() == KeyEvent.VK_DOWN){
-				try{
-				 commandFromUser.setText(commandsEntered.get(noOfCurrentCmd++));
-				 noOfCommandsEntered = noOfCurrentCmd;
-				}
-				
-				catch(IndexOutOfBoundsException e2){
-					commandFromUser.setText("");
-					noOfCommandsEntered = commandsEntered.size();
-					}
-			 }
-			
+
 			}
 		});
 	}
@@ -361,10 +373,15 @@ public class UserInterface {
 					if (wordR == after
 							|| String.valueOf(text.charAt(wordR))
 									.matches("\\W")) {
-						if (text.substring(wordL, wordR).toLowerCase().matches("(\\W)*(add|delete|edit|search|from|to|by)")){
-							setCharacterAttributes(wordL, wordR - wordL, attr,false);}
-						else{
-							setCharacterAttributes(wordL, wordR - wordL,attrBlack, false);
+						if (text.substring(wordL, wordR)
+								.toLowerCase()
+								.matches(
+										"(\\W)*(add|delete|edit|search|from|to|by)")) {
+							setCharacterAttributes(wordL, wordR - wordL, attr,
+									false);
+						} else {
+							setCharacterAttributes(wordL, wordR - wordL,
+									attrBlack, false);
 						}
 						wordL = wordR;
 					}

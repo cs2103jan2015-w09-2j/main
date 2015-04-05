@@ -30,10 +30,11 @@ public class DateView implements View {
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private boolean isOverdue;
-	private DateTimeFormatter formatter = DateTimeFormatter
-			.ofPattern("dd-MM-yyyy");
-	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern(
-			"h:mm a", Locale.US);
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+			"dd MMMM yyyy", Locale.US);
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
+			Locale.US);
+	private StringBuilder output = new StringBuilder();
 
 	public DateView() {
 		update();
@@ -62,104 +63,100 @@ public class DateView implements View {
 	protected void getToday() throws BadLocationException {
 		i = 0;
 		for (Task task : today) {
-			i++;
-			getTaskInfo(task);
-			isTaskOverdue(task);
-			String t = "";
-			String numbering = "     " + i + ".   ";
-			if (task.isDeadlineTask()) {
-				String tasks = taskDes;
-				t = "  ( "
-						+ endTime.format(formatTime).replace("AM", "am")
-								.replace("PM", "pm") + ")";
-				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
-				if (isOverdue) {
-					
-					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
-					appendTasks(Color.RED, Color.WHITE, true, "! ");
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
-							tasks);
-					appendTasks(Color.CYAN.darker(), Color.WHITE, false, t
-							+ "\n");
+			if (i < 12) {
+				i++;
+				getTaskInfo(task);
+				String t = "";
+				String taskNo = "" + i + ".   ";
+				if (task.isDeadlineTask()) {
+					String tasks = taskDes;
+					t = endTime.format(formatTime).replace("AM", "am")
+							.replace("PM", "pm").replace(".00", "");
+					t = t.toString().replaceAll("\\[", "")
+							.replaceAll("\\]", " -");
+					if (task.isOverdue()) {
+
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FF0000", "!", 2);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
+					} else {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
+					}
+
 				} else {
-					appendTasks(Color.GRAY, Color.white, false, numbering);
-					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
-					appendTasks(Color.CYAN.darker(), Color.white, false, t
-							+ "\n");
+					String tasks = taskDes;
+					t = startTime.format(formatTime).replace("AM", "am")
+							.replace("PM", "pm").replace(".00", "")
+							+ " - "
+							+ endTime.format(formatTime).replace("AM", "am")
+									.replace("PM", "pm").replace(".00", "");
+					t = t.toString().replaceAll("\\[", "")
+							.replaceAll("\\]", " -");
+
+					if (task.isOverdue()) {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FF0000", "!", 2);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
+
+					} else {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
+					}
+
 				}
-
-			} else {
-				String tasks = taskDes;
-				t = startTime.format(formatTime).replace("AM", "am")
-						.replace("PM", "pm")
-						+ " to "
-						+ endTime.format(formatTime).replace("AM", "am")
-								.replace("PM", "pm") + ": ";
-				t = t.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
-
-				if (isOverdue) {
-					appendTasks(Color.GRAY, Color.white, false, numbering);
-					appendTasks(Color.RED, Color.WHITE, true, "! ");
-					appendTasks(Color.CYAN.darker(), Color.WHITE, false, t);
-					appendTasks(Color.BLUE.darker(), Color.WHITE, false, tasks
-							+ "\n");
-				} else {
-					appendTasks(Color.GRAY, Color.white, false, numbering);
-					appendTasks(Color.CYAN.darker(), Color.white, false, t);
-					appendTasks(Color.BLUE.darker(), Color.white, false, tasks
-							+ "\n");
-				}
-
 			}
-
 		}
 	}
 
 	protected void getUpcoming() throws BadLocationException {
 
 		for (Task task : upcoming) {
-			i++;
-			getTaskInfo(task);
-			isTaskOverdue(task);
-			String t = "";
-			String numbering = "     " + i + ".   ";
-			if (task.isDeadlineTask()) {
-				String tasks = taskDes;
-				t = " ( " + endDate.format(formatter) + ")";
-				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
-				if (isOverdue) {
-//					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
-//					appendTasks(Color.RED, Color.WHITE, true, "! ");
-//					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
-//							tasks);
-//					appendTasks(Color.CYAN.darker(), Color.WHITE, false, t
-//							+ "\n");
-					
-				} else {
-					appendTasks(Color.GRAY, Color.white, false, numbering);
-					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
-					appendTasks(Color.CYAN.darker(), Color.white, false, t
-							+ "\n");
+			if (i < 9) {
+				i++;
+				getTaskInfo(task);
+				String t = "";
+				String taskNo = "     " + i + ".   ";
+				if (task.isDeadlineTask()) {
+					String tasks = taskDes;
+					t = endDate.format(formatter);
+					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+					if (task.isOverdue()) {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FF0000", "!", 2);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
+
+					} else {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
+					}
 				}
-			}
 
-			else {
-				String tasks = taskDes;
+				else {
+					String tasks = taskDes;
 
-				t = "  (starts " + startDate.format(formatter) + ")";
-				t = t.replaceAll("\\[", "").replaceAll("\\]", " -");
-				if (isOverdue) {
-//					appendTasks(Color.GRAY, Color.WHITE, false, numbering);
-//					appendTasks(Color.RED, Color.WHITE, true, "! ");
-//					appendTasks(Color.BLUE.darker(), Color.WHITE, false,
-//							tasks);
-//					appendTasks(Color.BLUE.darker(), Color.WHITE, false, t
-//							+ "\n");
-				} else {
-					appendTasks(Color.GRAY, Color.white, false, numbering);
-					appendTasks(Color.BLUE.darker(), Color.white, false, tasks);
-					appendTasks(Color.CYAN.darker(), Color.white, false, t
-							+ "\n");
+					t = startDate.format(formatter);
+					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+					if (task.isOverdue()) {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FF0000", "!", 2);
+						appendTasks("#4B088A", tasks, 3);
+						appendTasks("#01A9DB", t, 4);
+					} else {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#4B088A", tasks, 3);
+						appendTasks("#01A9DB", t, 4);
+					}
 				}
 			}
 		}
@@ -168,109 +165,130 @@ public class DateView implements View {
 	protected void getSomeday() throws BadLocationException {
 
 		for (Task task : someday) {
-			String tasks = "";
-			i++;
-			String numbering = "     " + i + ".   ";
-			appendTasks(Color.GRAY.brighter(), Color.WHITE, false, numbering);
-			String t = task.toString().replaceAll("-", "to");
-			t = task.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
-			tasks = t + "\n";
-			appendTasks(Color.BLUE.darker(), Color.WHITE,false, tasks);
-		}
-
-	}
-
-	protected void isTaskOverdue(Task task) {
-		isOverdue = false;
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime endDateTime = task.getEnd();
-
-		if (endDateTime.isBefore(now)) {
-			isOverdue = true;
+			if (i < 7) {
+				String tasks = "";
+				i++;
+				String taskNo = "     " + i + ".   ";
+				String t = task.toString().replaceAll("-", "to");
+				t = task.toString().replaceAll("\\[", "")
+						.replaceAll("\\]", " -");
+				tasks = t + "\n";
+				appendTasks("#848484", taskNo, 1);
+				appendTasks("#FFFFFF", "&nbsp ", 2);
+				appendTasks("#4B088A", tasks, 3);
+				appendTasks("#FFFFFF", "&nbsp ", 4);
+			}
 		}
 	}
 
-	public void appendTasks(Color c, Color bg, boolean isBold, String s)
+//	protected void isTaskOverdue(Task task) {
+//		isOverdue = false;
+//		LocalDateTime now = LocalDateTime.now();
+//		LocalDateTime endDateTime = task.getEnd();
+//
+//		if (endDateTime.isBefore(now)) {
+//			isOverdue = true;
+//		}
+//	}
+
+	public void appendTasks(String textColour, String s, int row)
 			throws BadLocationException {
-		StyleConstants.setBold(style, isBold);
-		StyleConstants.setFontSize(style, 14);
-		StyleConstants.setBackground(style, bg);
-		StyleConstants.setForeground(style, c);
-		StyledDocument doc = showToUser.getStyledDocument();
-		SimpleAttributeSet center = new SimpleAttributeSet();
-		StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
-		doc.setParagraphAttributes(0, doc.getLength(), center, false);
-		doc.insertString(doc.getLength(), s, style);
-		
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >"
+					+ "<td width=\"40px\"><font size=\"4\" color=\""
+					+ textColour + "\"><p align=\"right\"><b>" + s
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td width=\"1px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"center\"><b>" + s
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td width=\"120px\"><font size=\"4\" color=\""
+					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
+		} else if (row == 4) {
+			output.append("<td width=\"420px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
+		}
+
+		// StyleConstants.setBold(style, isBold);
+		// StyleConstants.setFontSize(style, 14);
+		// StyleConstants.setBackground(style, bg);
+		// StyleConstants.setForeground(style, c);
+		// StyledDocument doc = showToUser.getStyledDocument();
+		// SimpleAttributeSet center = new SimpleAttributeSet();
+		// StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
+		// doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		// doc.insertString(doc.getLength(), s, style);
+
 	}
 
 	public void show() throws BadLocationException {
 		UI = UserInterface.getInstance();
 		showToUser = UI.getShowToUser();
-		doc = showToUser.getStyledDocument();
 		style = showToUser.addStyle("Style", null);
-//		StyleConstants.setBold(style, true);
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"\n\n\n							                                        ", style);
-		StyleConstants.setFontSize(style, 15);
-		StyleConstants.setForeground(style, Color.WHITE);
-		StyleConstants.setBold(style, true);
-		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(),
-					"\n			    Today                         	                      \n", style); 
-		doc.insertString(doc.getLength(),"\n", style); 
-//
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"							                                        \n\n\n", style);
-//		StyleConstants.setForeground(style, Color.BLACK);
-		StyleConstants.setBackground(style, Color.WHITE);
+
+		showToUser.setContentType("text/html");
+
+		output.append("<html>");
+		output.append("&nbsp");
+		output.append("<table cellspacing=\"2px\" cellpadding=\"2px\" width=\"100%\">");
+		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today </b></p></font></td></tr>");
 		getToday();
+		output.append("&nbsp");
+		output.append("</table>");
 
-		StyleConstants.setBold(style, true);
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"\n\n\n							                                        ", style);
-		StyleConstants.setFontSize(style, 15);
-		StyleConstants.setForeground(style, Color.WHITE);
-		doc.insertString(doc.getLength(),"\n", style); 
-		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(),
-					"			 Upcoming                                   	        \n", style); 
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"							                                        \n\n\n", style);
-		StyleConstants.setForeground(style, Color.BLACK);
-		StyleConstants.setBackground(style, Color.WHITE);
-		doc.insertString(doc.getLength(),"\n", style); 
-		getUpcoming();
+		if (i < 9) {
+			output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
+			output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
+			getUpcoming();
+			output.append("&nbsp");
+			output.append("</table>");
+		}
 
-//		StyleConstants.setBold(style, true);
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"\n\n\n							                                        ", style);
-		StyleConstants.setFontSize(style, 15);
-		StyleConstants.setBold(style, true);
-		StyleConstants.setForeground(style, Color.WHITE);
-		doc.insertString(doc.getLength(),"\n", style); 
-		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(),
-					"			  Someday                                   	        \n", style); 
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"							                                        \n\n\n", style);
-		StyleConstants.setForeground(style, Color.BLACK);
-		StyleConstants.setBackground(style, Color.WHITE);
-		doc.insertString(doc.getLength(),"\n", style); 
-		getSomeday();
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
+		if (i < 7) {
+			output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
+			output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Someday </b></p></font></td></tr>");
+			getSomeday();
+			output.append("&nbsp");
+			output.append("</table>");
+		}
+		output.append("</html>");
+
+		showToUser.setText(output.toString());
+
+		/*
+		 * StyleConstants.setFontSize(style, 7);
+		 * StyleConstants.setForeground(style, Color.WHITE);
+		 * StyleConstants.setBold(style, true);
+		 * StyleConstants.setBackground(style, new Color(84, 121, 163));
+		 * doc.insertString( doc.getLength(),
+		 * "\n			    Today                         	                      \n",
+		 * style); doc.insertString(doc.getLength(), "\n", style);
+		 * StyleConstants.setBackground(style, Color.WHITE); getToday();
+		 * 
+		 * StyleConstants.setBold(style, true);
+		 * StyleConstants.setFontSize(style, 15);
+		 * StyleConstants.setForeground(style, Color.WHITE);
+		 * doc.insertString(doc.getLength(), "\n", style);
+		 * StyleConstants.setBackground(style, new Color(84, 121, 163));
+		 * doc.insertString(doc.getLength(),
+		 * "			 Upcoming                                   	        \n", style);
+		 * StyleConstants.setForeground(style, Color.BLACK);
+		 * StyleConstants.setBackground(style, Color.WHITE);
+		 * doc.insertString(doc.getLength(), "\n", style); getUpcoming();
+		 * 
+		 * StyleConstants.setFontSize(style, 15); StyleConstants.setBold(style,
+		 * true); StyleConstants.setForeground(style, Color.WHITE);
+		 * doc.insertString(doc.getLength(), "\n", style);
+		 * StyleConstants.setBackground(style, new Color(84, 121, 163));
+		 * doc.insertString(doc.getLength(),
+		 * "			  Someday                                   	        \n", style);
+		 * StyleConstants.setForeground(style, Color.BLACK);
+		 * StyleConstants.setBackground(style, Color.WHITE);
+		 * doc.insertString(doc.getLength(), "\n", style); getSomeday();
+		 * StyleConstants.setForeground(style, Color.BLUE.brighter());
+		 */
 
 	}
 

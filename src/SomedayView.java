@@ -8,72 +8,82 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-
-public class SomedayView extends SingleView implements View{
+public class SomedayView extends SingleView implements View {
 	private UserInterface UI = UserInterface.getInstance();
 	private JTextPane showToUser = UI.getShowToUser();
 	private StyledDocument doc = showToUser.getStyledDocument();
 	private Style style = showToUser.addStyle("Style", null);
+
+	private StringBuilder output = new StringBuilder();
 	
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
-		
+
 		setList(data.getSomeday());
-		
+
 	}
-	
+
 	protected void getSomeday() throws BadLocationException {
-		int i=0;
+		int i = 0;
 		for (Task task : getList()) {
-			String tasks = "";
-			i++;
-			String numbering = "     " + i + ".   ";
-			appendTasks(Color.GRAY.brighter(), Color.WHITE, false, numbering);
-			String t = task.toString().replaceAll("-", "to");
-			t = task.toString().replaceAll("\\[", "").replaceAll("\\]", " -");
-			tasks = t + "\n";
-			appendTasks(Color.BLUE.darker(), Color.WHITE,false, tasks);
+			if (i < 10) {
+				String tasks = "";
+				i++;
+				String taskNo = "     " + i + ".   ";
+				String t = task.toString().replaceAll("-", "to");
+				t = task.toString().replaceAll("\\[", "")
+						.replaceAll("\\]", " -");
+				tasks = t + "\n";
+				appendTasks("#848484", taskNo, 1);
+				appendTasks("#FFFFFF", "&nbsp ", 2);
+				appendTasks("#4B088A", tasks, 3);
+				appendTasks("#FFFFFF", "&nbsp ", 4);
+			}
 		}
 
 	}
 
-
-	public void appendTasks(Color c, Color bg, boolean isBold, String s)
+	public void appendTasks(String textColour, String s, int row)
 			throws BadLocationException {
-		StyleConstants.setBold(style, isBold);
-		StyleConstants.setFontSize(style, 14);
-		StyleConstants.setBackground(style, bg);
-		StyleConstants.setForeground(style, c);
-		doc.insertString(doc.getLength(), s, style);
-		
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >"
+					+ "<td width=\"40px\"><font size=\"4\" color=\""
+					+ textColour + "\"><p align=\"right\"><b>" + s
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td width=\"1px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"center\"><b>" + s
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td width=\"120px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td>");
+		} else if (row == 4) {
+			output.append("<td width=\"420px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
+		}
+
 	}
-	
+
 	@Override
 	public void show() throws BadLocationException {
-		// TODO Auto-generated method stub
 
-//		StyleConstants.setBold(style, true);
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"\n\n\n							                                        ", style);
-		StyleConstants.setFontSize(style, 15);
-		StyleConstants.setBold(style, true);
-		StyleConstants.setForeground(style, Color.WHITE);
-		doc.insertString(doc.getLength(),"\n", style); 
-		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		doc.insertString(doc.getLength(),
-					"			   Someday                                 	        \n", style); 
-//		StyleConstants.setFontSize(style, 4);
-//		StyleConstants.setBackground(style, new Color(84, 121, 163));
-//		doc.insertString(doc.getLength(),
-//				"							                                        \n\n\n", style);
-		StyleConstants.setForeground(style, Color.BLACK);
-		StyleConstants.setBackground(style, Color.WHITE);
-		doc.insertString(doc.getLength(),"\n", style); 
-		getSomeday();
-		StyleConstants.setForeground(style, Color.BLUE.brighter());
+		UI = UserInterface.getInstance();
+		showToUser = UI.getShowToUser();
+		style = showToUser.addStyle("Style", null);
+
+		showToUser.setContentType("text/html");
+		output.append("<html>");
+		output.append("&nbsp");
+			output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
+			output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Someday </b></p></font></td></tr>");
+			getSomeday();
+			output.append("&nbsp");
+			output.append("</table>");
+		output.append("</html>");
+
+		showToUser.setText(output.toString());
 	}
 
 }
