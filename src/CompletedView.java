@@ -1,4 +1,7 @@
 import java.awt.Color;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -6,64 +9,118 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-
-public class CompletedView extends SingleView implements View{
+public class CompletedView extends SingleView implements View {
 	private int i;
 	private UserInterface UI = UserInterface.getInstance();
 	private JTextPane showToUser = UI.getShowToUser();
 	private StyledDocument doc = showToUser.getStyledDocument();
 	private Style style = showToUser.addStyle("Style", null);
+	private StringBuilder output = new StringBuilder();
+	private DateTimeFormatter formatter = DateTimeFormatter
+			.ofPattern("dd-MM-yyyy");
+	private String taskDes;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
 	
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
-		
+
 		setList(data.getCompleted());
 	}
 	
-	protected void getCompletedTask() throws BadLocationException {
-		 int i =0;
-		 for (Task task : getList()) {
-			 String tasks = "";
-		 i++;
-		 String numbering = "  "+i+".  ";
-		 appendTasks(Color.GRAY.brighter(), numbering);
-		 tasks =task.getDescription() + "\n";
-		 appendTasks(Color.GREEN.darker(),tasks);
-		 }
+	protected void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if (!task.isFloatingTask()) {
+			if (!task.isDeadlineTask()) {
+				startDate = task.getStart().toLocalDate();
+				startTime = task.getStart().toLocalTime();
+			}
+			endDate = task.getEnd().toLocalDate();
+			endTime = task.getEnd().toLocalTime();
+		}
 	}
-	
-	public void appendTasks(Color c, String s) throws BadLocationException {
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 14);
-		StyleConstants.setBackground(style, Color.white);
-		StyleConstants.setForeground(style, c);
-		doc.insertString(doc.getLength(), s, style);
+
+	protected void getCompletedTask() throws BadLocationException {
+		int i = 0;
+		for (Task task : getList()) {
+			if (i < 10) {
+				i++;
+				getTaskInfo(task);
+				String t = "";
+				String taskNo = "     " + i + ".   ";
+				if (task.isDeadlineTask()) {
+					String tasks = taskDes;
+					t = endDate.format(formatter);
+					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#009900", t, 3);
+						appendTasks("#E68A00", tasks, 4);
+				}
+
+				else {
+					String tasks = taskDes;
+
+					t = startDate.format(formatter);
+					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#009900", t, 3);
+						appendTasks("#E68A00", tasks, 4);
+					
+				}
+			}
+		}
+	}
+
+	public void appendTasks(String textColour, String s, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >"
+					+ "<td width=\"40px\"><font size=\"4\" color=\""
+					+ textColour + "\"><p align=\"right\"><b>" + s
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td width=\"1px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"center\"><b>" + s
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td width=\"120px\"><font size=\"4\" color=\""
+					+ textColour + "\"><p align=\"left\"><b>" + s
+					+ "</b></p></font></td>");
+		} else if (row == 4) {
+			output.append("<td width=\"420px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s
+					+ "</p></font></td></tr>");
+		}
+
 	}
 
 	@Override
 	public void show() throws BadLocationException {
-		UserInterface UI = UserInterface.getInstance();
-		JTextPane showToUser = UI.getShowToUser();
-	//	String COMPLETED_TASKS_MESSAGE = "Amazing! You have completed " + i + " tasks";
-		StyledDocument doc = showToUser.getStyledDocument();
-		Style style = showToUser.addStyle("Style", null);
-	//	StyleConstants.setBold(style, true);
-	//	StyleConstants.setFontSize(style, 18);
-	//	StyleConstants.setForeground(style, Color.BLUE);
-	//	doc.insertString(doc.getLength(), "\n  	 " +COMPLETED_TASKS_MESSAGE+"         \n", style);
-		StyleConstants.setForeground(style, Color.WHITE);
-		StyleConstants.setBackground(style, new Color(84, 121, 163));
-		StyleConstants.setBold(style, true);
-		StyleConstants.setFontSize(style, 15);
-		doc.insertString(doc.getLength(), "\n  			  Completed  			       \n", style);
-		StyleConstants.setForeground(style, Color.BLACK);
-		StyleConstants.setBackground(style, Color.WHITE);
-		StyleConstants.setBold(style, false);
-		StyleConstants.setFontSize(style, 16);
-		
+
+		UI = UserInterface.getInstance();
+		showToUser = UI.getShowToUser();
+		style = showToUser.addStyle("Style", null);
+
+		showToUser.setContentType("text/html");
+
+		output.append("<html>");
+		output.append("&nbsp");
+		output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
+		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Completed </b></p></font></td></tr>");
 		getCompletedTask();
-		
+		output.append("&nbsp");
+		output.append("</table>");
+		output.append("</html>");
+
+		showToUser.setText(output.toString());
+
+
 	}
 
 }
