@@ -359,7 +359,7 @@ public class UserInterface {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
 								.matches(
-										"(\\W)*(add|delete|edit|search|from|to|by)")) {
+										"(\\W)*(add|delete|edit|search|from|to|by|today|upcoming|someday|help|done)")) {
 							setCharacterAttributes(wordL, wordR - wordL, attr,
 									false);
 						} else {
@@ -382,7 +382,7 @@ public class UserInterface {
 				int after = findFirstNonWordChar(text, offs);
 
 				if (text.substring(before, after).toLowerCase()
-						.matches("(\\W)*(add|delete|edit|search|from|to|by)")) {
+						.matches("(\\W)*(add|delete|edit|search|from|to|by|today|upcoming|someday|help|done)")) {
 					setCharacterAttributes(before, after - before, attr, false);
 				} else {
 					setCharacterAttributes(before, after - before, attrBlack,
