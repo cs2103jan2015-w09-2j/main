@@ -149,7 +149,7 @@ public class TodayView extends SingleView implements View {
 		output.append("<html>");
 		output.append("&nbsp");
 		output.append("<table cellspacing=\"2px\" cellpadding=\"2px\" width=\"100%\">");
-		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today </b></p></font></td></tr>");
+		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today ("+todayDate+") </b></p></font></td></tr>");
 		getToday();
 		output.append("&nbsp");
 		output.append("</table>");
