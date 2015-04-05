@@ -2,7 +2,6 @@
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -95,18 +94,15 @@ public class StorageTest {
 	}
 	
 	@Test
-	public void testSetPath() throws IOException {
+	public void testSetPath() {
 		//Partition for location ending with "/" changed successfully
-		storage.setPath(DIRECTORY_NEW);
+		assertEquals(MESSAGE_TEST_SET_PATH, storage.setPath(DIRECTORY_NEW), MESSAGE_NEW_DIRECTORY_SET);
 		filePath = DIRECTORY_NEW + "oneTag.json";
 		File changedLocation = new File(filePath);
 		assertTrue(MESSAGE_TEST_FILE_EXIST, changedLocation.exists());
 		//Partition for location not ending with "/" changed successfully
 		filePath = currentRelativePath;
-		storage.setPath(filePath);
-		changedLocation = new File(filePath);
-		assertTrue(MESSAGE_TEST_FILE_EXIST, changedLocation.exists());
-
+		assertEquals(MESSAGE_TEST_SET_PATH, storage.setPath(filePath), MESSAGE_OLD_DIRECTORY_SET);
 		
 	}
 

@@ -296,7 +296,7 @@ public class TaskTest {
 		assertFalse(floatingTask.equals(integer));
 	}
 	
-	/*
+		
 	@Test
 	public void testUpdate(){
 		//Timed task updating
@@ -310,7 +310,6 @@ public class TaskTest {
 		
 		
 	}
-	*/
 	
 
 }

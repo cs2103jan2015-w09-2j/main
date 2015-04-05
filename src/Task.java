@@ -139,7 +139,6 @@ public class Task{
 	 * Updates the fields of the current object with the fields of the newTask
 	 * @param newTask updates the fields of the current object with the fields of the newTask
 	 */
-	/*
 	public void update(Task otherTask) {
 		String otherDescription = otherTask.getDescription();
 		LocalDateTime otherStart = otherTask.getStart();
@@ -156,7 +155,6 @@ public class Task{
 		}
 		setIsCompleted(isCompletedOther);
 	}
-	*/
 	
 	/**
 	 * Returns true if task is overdue, false otherwise

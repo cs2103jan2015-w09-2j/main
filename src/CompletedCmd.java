@@ -14,7 +14,8 @@ public class CompletedCmd extends ModifiableCmd{
 		data.update(task, true);
 		writeToFile();
 		
-		display.setMessage(MESSAGE_COMPLETED);
+		String completeMessage = String.format(MESSAGE_COMPLETED, task.getDescription());
+		display.setMessage(completeMessage);
 
 		return true;
 	}
@@ -23,6 +24,7 @@ public class CompletedCmd extends ModifiableCmd{
 		data.update(task, false);
 		writeToFile();
 		
-		display.setMessage(MESSAGE_UNDO_COMPLETED);
+		String undoCompleteMessage = String.format(MESSAGE_UNDO_COMPLETED, task.getDescription());
+		display.setMessage(undoCompleteMessage);
 	}
 }
