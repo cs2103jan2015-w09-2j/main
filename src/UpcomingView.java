@@ -25,8 +25,8 @@ public class UpcomingView extends SingleView implements View {
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private boolean isOverdue;
-	private DateTimeFormatter formatter = DateTimeFormatter
-			.ofPattern("dd-MM-yyyy");
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+			"EEE, dd MMM yyyy", Locale.US);
 	private StringBuilder output = new StringBuilder();
 
 	@Override
@@ -118,7 +118,7 @@ public class UpcomingView extends SingleView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"120px\"><font size=\"4\" color=\""
+			output.append("<td width=\"150px\"><font size=\"4\" color=\""
 					+ textColour + "\"><p align=\"left\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 4) {

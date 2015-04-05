@@ -23,17 +23,18 @@ public class DateView implements View {
 	private ArrayList<Task> upcoming;
 	private ArrayList<Task> someday;
 	private int i = 0;
-	private int noOfOverdueTasks = 0;
 	private String taskDes;
 	private LocalDate startDate;
 	private LocalDate endDate;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private boolean isOverdue;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-			"dd MMMM yyyy", Locale.US);
+			"EEE, dd MMM yyyy", Locale.US);
+	private DateTimeFormatter todayFormatter = DateTimeFormatter
+			.ofPattern("EEE, dd MMMM");
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
 			Locale.US);
+	private String todayDate = LocalDate.now().format(todayFormatter);
 	private StringBuilder output = new StringBuilder();
 
 	public DateView() {
@@ -204,7 +205,7 @@ public class DateView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"120px\"><font size=\"4\" color=\""
+			output.append("<td width=\"150px\"><font size=\"4\" color=\""
 					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""
@@ -233,7 +234,7 @@ public class DateView implements View {
 		output.append("<html>");
 		output.append("&nbsp");
 		output.append("<table cellspacing=\"2px\" cellpadding=\"2px\" width=\"100%\">");
-		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today </b></p></font></td></tr>");
+		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today ("+todayDate+") </b></p></font></td></tr>");
 		getToday();
 		output.append("&nbsp");
 		output.append("</table>");

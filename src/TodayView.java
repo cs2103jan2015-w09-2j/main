@@ -28,7 +28,7 @@ public class TodayView extends SingleView implements View {
 	private LocalTime endTime;
 	private boolean isOverdue;
 	private DateTimeFormatter formatter = DateTimeFormatter
-			.ofPattern("dd-MM-yyyy");
+			.ofPattern("EEE, dd MMMM");
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern(
 			"h:mm a", Locale.US);
 	private StringBuilder output = new StringBuilder();
