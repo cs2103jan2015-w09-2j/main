@@ -97,8 +97,8 @@ public class UpcomingView extends SingleView implements View {
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#4B088A", tasks, 3);
-						appendTasks("#01A9DB", t, 4);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
 					}
 				}
 			}
