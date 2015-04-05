@@ -8,18 +8,23 @@ public class AddCmd extends ModifiableCmd{
 	}
 	
 	public boolean execute(){
+		
 		data.add(task);
 		writeToFile();
-	       
-	    display.setMessage(MESSAGE_ADD);
+	     
+		String addMessage = String.format(MESSAGE_ADD, task.getDescription(), getTaskType(task));
+	    display.setMessage(addMessage);
 	    
 		return true;
 	}
 	
 	public void undo(){
+	
 		data.remove(task);
 		writeToFile();
 		
-	    display.setMessage(MESSAGE_UNDO_ADD);
+		String undoMessage = String.format(MESSAGE_UNDO_ADD, task.getDescription(), getTaskType(task));
+	    display.setMessage(undoMessage);
+	
 	}
 }

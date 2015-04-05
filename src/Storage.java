@@ -26,6 +26,7 @@ public class Storage {
 	private static final String USER_DIRECTORY = "user.dir";
 	private static final String CHARACTER_BACKSLASH = "\\";
 	private static final String CHARACTER_REVERSE_BACKSLASH = "/";
+	private static final String MESSAGE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
 	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
 	private static Logger logger = Logger.getLogger("Storage");
@@ -88,17 +89,24 @@ public class Storage {
 	/**
 	 * Changes the directory to specified directory
 	 */
-	public void setPath(String userSpecifiedDirectory) throws IOException{
+	public String setPath(String userSpecifiedDirectory) {
 		copyFile(userSpecifiedDirectory);
 
 		File configFile = new File(NAME_CONFIG_FILE);
-		configFile.createNewFile();
-	
+		try {
+			configFile.createNewFile();
+		} catch (IOException e) {
+			logger.log(Level.WARNING, String.format(
+					MESSAGE_ERROR_FILE_NOT_FOUND, NAME_CONFIG_FILE), e
+					.getMessage());
+		}
 		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
 		writeStringToFile(filePath, NAME_CONFIG_FILE);
 
 		closeFileHandler();
 
+		return String
+				.format(MESSAGE_NEW_USER_DIRECTORY, userSpecifiedDirectory);
 	}
 
 	private void copyFile(String userSpecifiedDirectory) {

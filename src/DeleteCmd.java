@@ -14,7 +14,8 @@ public class DeleteCmd extends ModifiableCmd{
 		data.remove(task);
 		writeToFile();
 	     
-		display.setMessage(MESSAGE_DELETE);
+		String deleteMsg = String.format(MESSAGE_DELETE, task.getDescription());
+		display.setMessage(deleteMsg);
 
 	    return true;
 	}
@@ -23,6 +24,7 @@ public class DeleteCmd extends ModifiableCmd{
 		data.add(task);
 		writeToFile();
 		
-		display.setMessage(MESSAGE_UNDO_DELETE);
+		String undoMessage = String.format(MESSAGE_UNDO_DELETE, task.getDescription(), getTaskType(task));
+		display.setMessage(undoMessage);
 	}
 }

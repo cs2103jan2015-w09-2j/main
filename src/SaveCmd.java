@@ -1,5 +1,3 @@
-import java.io.IOException;
-
 
 public class SaveCmd extends ModifiableCmd {
 	String storageLocation;
@@ -7,32 +5,19 @@ public class SaveCmd extends ModifiableCmd {
 	
 	public SaveCmd(String storageLocation) {
 		this.storageLocation = storageLocation;
-		storage = new Storage();
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public boolean execute(){
-		try{
+	public boolean execute() {
+		storage = new Storage();
 		storage.setPath(storageLocation);
-		}catch(IOException ioEx){
-			display.setMessage(String.format(MESSAGE_ERROR_FILE_NOT_FOUND, storageLocation));
-			return false;
-		}
-		display.setMessage(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
-		
 		return true;
 	}
 
 	@Override
 	public void undo() {
-		try{
-			storage.setPath(storageLocation);
-			}catch(IOException ioEx){
-				display.setMessage(String.format(MESSAGE_ERROR_FILE_NOT_FOUND, storageLocation));
-				return;
-			}
-		
-		display.setMessage(MESSAGE_UNDO_SAVE);
+		storage.setPath(storageLocation);
 	}
 
 }

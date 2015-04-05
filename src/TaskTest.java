@@ -221,12 +221,12 @@ public class TaskTest {
 		assertTrue(MESSAGE_TEST_TODAY_TASK, todayTask.isTodayTask());
 		earlyDeadlineTask.setEnd(today);
 		assertTrue(MESSAGE_TEST_TODAY_TASK, earlyDeadlineTask.isTodayTask());
+		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.isTodayTask());
 		
 		// Check if tasks of any other time will fail
 		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_TOMORROW_TASK, tomorrowTask.isTodayTask());
-		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTomorrowTask.isTodayTask());
 		
 		// check against null task
@@ -296,7 +296,7 @@ public class TaskTest {
 		assertFalse(floatingTask.equals(integer));
 	}
 	
-	/*
+		
 	@Test
 	public void testUpdate(){
 		//Timed task updating
@@ -310,7 +310,6 @@ public class TaskTest {
 		
 		
 	}
-	*/
 	
 
 }
