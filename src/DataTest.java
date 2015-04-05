@@ -133,6 +133,8 @@ public class DataTest {
 		data.set(oneItemList);
 		assertEquals("is description", data.getSearched(TASK_BUY_ORANGE), oneItemList);
 		assertEquals("is not description", data.getSearched(TASK_GO_RT), emptyList);	
+		assertEquals("search upper case", data.getSearched(TASK_BUY_ORANGE.toUpperCase()), oneItemList);
+		assertEquals("search lower case", data.getSearched(TASK_BUY_ORANGE.toLowerCase()), oneItemList);
 	}
 	
 }
