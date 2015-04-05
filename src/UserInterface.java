@@ -53,10 +53,8 @@ public class UserInterface {
 	private int noOfCurrentCmd;
 	private ArrayList<String> commandsEntered = new ArrayList<String>();
 	private int noOfCommandsEntered;
+	private String message = "";
 
-	// public static void main (String[]args){
-	// run();
-	// }
 	public static UserInterface getInstance() {
 		if (UI == null) {
 			UI = new UserInterface();
@@ -97,18 +95,17 @@ public class UserInterface {
 				BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121,
 						163).darker()));
 
-		enableFrameMovable();
+		makeFrameMovable();
 		initializeCmdFromUser();
 		initializeShowToUser();
 		initializeFeedback();
 		initializeCloseButton();
 		initializeMinimizeButton();
 		initializeWelcomeLabel();
-		getCommand();
+		processKeyPressed();
 	}
 
-	private void enableFrameMovable() {
-		// TODO Auto-generated method stub
+	private void makeFrameMovable() {
 		mouseDownCoords = null;
 		frame.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
@@ -121,20 +118,16 @@ public class UserInterface {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 
 		});
@@ -241,31 +234,66 @@ public class UserInterface {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// minimizeApplication();
+				frame.setState(frame.ICONIFIED);
 			}
 		});
 	}
 
-	// minimize app to SystemTray
-	// protected void minimizeApplication() {
-	// // TODO Auto-generated method stub
-	// TrayIcon trayIcon = null;
-	// if (SystemTray.isSupported()) {
-	// // get the SystemTray instance
-	// SystemTray tray = SystemTray.getSystemTray();
-	// // load an image
-	// Image image = Toolkit.getDefaultToolkit().getImage("");
-	// // create a action listener to listen for default action executed on the
-	// tray icon
-	// ActionListener listener = new ActionListener() {
-	// public void actionPerformed(ActionEvent e) {
-	// // execute default action of the application
-	// // ...
-	// }
-	// };
-	//
-	// }
+	private void processKeyPressed() {
+		inputBoxChangeColour();
+		commandFromUser.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(java.awt.event.KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					processCommand();
+					e.consume();
+					commandFromUser.setText("");
+				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+					pressedUpKey();
+				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+					pressedDownKey();
+				}
 
-	private void getCommand() {
+			}
+		});
+	}
+
+	private void processCommand() {
+		String command = commandFromUser.getText();
+		commandsEntered.add(command);
+		noOfCommandsEntered = commandsEntered.size();
+		control.executeCommand(command);
+		showMessageToUser();
+		try {
+			Display.getInstance().getView().show();
+		} catch (BadLocationException e1) {
+			System.out.println("Error");
+		}
+	}
+
+	private void pressedUpKey() {
+		noOfCommandsEntered--;
+		try {
+			commandFromUser.setText(commandsEntered.get(noOfCommandsEntered));
+			noOfCurrentCmd = noOfCommandsEntered;
+		} catch (ArrayIndexOutOfBoundsException e1) {
+			noOfCommandsEntered = 0;
+		}
+	}
+
+	private void pressedDownKey() {
+		try {
+			commandFromUser.setText(commandsEntered.get(noOfCurrentCmd++));
+			noOfCommandsEntered = noOfCurrentCmd;
+		}
+
+		catch (IndexOutOfBoundsException e2) {
+			commandFromUser.setText("");
+			noOfCommandsEntered = commandsEntered.size();
+		}
+	}
+
+	private void inputBoxChangeColour() {
 		commandFromUser.addMouseListener(new MouseListener() {
 			public void mouseReleased(MouseEvent e) {
 			}
@@ -275,79 +303,34 @@ public class UserInterface {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
 				commandFromUser.setBackground(Color.LIGHT_GRAY);
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
 				commandFromUser.setBackground(Color.WHITE);
 			}
-
 		});
 
-		commandFromUser.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(java.awt.event.KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					String command = commandFromUser.getText();
-					String message = "";
-					commandsEntered.add(command);
-					noOfCommandsEntered = commandsEntered.size();
-					control.executeCommand(command);
-	
-					StyledDocument doc = feedback.getStyledDocument();
-					SimpleAttributeSet center = new SimpleAttributeSet();
-					StyleConstants.setAlignment(center,
-							StyleConstants.ALIGN_CENTER);
-					doc.setParagraphAttributes(0, doc.getLength(), center,
-							false);
-					message = Display.getInstance().getMessage();
-					try {
-						if (!message.isEmpty()) {
-							feedback.setText((message) + "\n");
-						}
-					} catch (NullPointerException nullException) {
-						feedback.setText("");
-					}
-					try {
-						Display.getInstance().getView().show();;
-					} catch (BadLocationException e1) {
-						System.out.println("Error");
-					}
-					e.consume();
-					commandFromUser.setText("");
-				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-					noOfCommandsEntered--;
-					try {
-						commandFromUser.setText(commandsEntered
-								.get(noOfCommandsEntered));
-						noOfCurrentCmd = noOfCommandsEntered;
-					} catch (ArrayIndexOutOfBoundsException e1) {
-						noOfCommandsEntered = 0;
-					}
-				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-					try {
-						commandFromUser.setText(commandsEntered
-								.get(noOfCurrentCmd++));
-						noOfCommandsEntered = noOfCurrentCmd;
-					}
+	}
 
-					catch (IndexOutOfBoundsException e2) {
-						commandFromUser.setText("");
-						noOfCommandsEntered = commandsEntered.size();
-					}
-				}
-
+	private void showMessageToUser() {
+		StyledDocument doc = feedback.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		message = Display.getInstance().getMessage();
+		try {
+			if (!message.isEmpty()) {
+				feedback.setText((message) + "\n");
 			}
-		});
+		} catch (NullPointerException nullException) {
+			feedback.setText("");
+		}
 	}
 
 	private void colourRestrictedWords() {
