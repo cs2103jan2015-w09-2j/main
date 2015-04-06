@@ -28,6 +28,7 @@ public class HomeView implements View {
 	private LocalDate endDate;
 	private LocalTime startTime;
 	private LocalTime endTime;
+	private int noOverdueTasks=0;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
 			"EEE, dd MMM yyyy", Locale.US);
 	private DateTimeFormatter todayFormatter = DateTimeFormatter
@@ -39,6 +40,7 @@ public class HomeView implements View {
 	private String todayDate = LocalDate.now().format(todayFormatter);
 	private StringBuilder output = new StringBuilder();
 	long timeDifference; 
+	String WELCOME_MESSAGE="";
 
 	public HomeView() {
 		update();
@@ -64,6 +66,23 @@ public class HomeView implements View {
 	
 		}
 	}
+	
+	private void setWelcomeMessage(){
+		//time 12am to 12pm
+		if (nowTime.isBefore(LocalTime.MIDNIGHT) && nowTime.isAfter(LocalTime.NOON)){
+			WELCOME_MESSAGE="Good Morning! Hope you have a great day!";
+		}
+		//time 12pm to 6pm
+		//time 6pm tp 8pm
+		//time 8pm to 12pm
+		else if(nowTime.isAfter(LocalTime.MIDNIGHT) && nowTime.isBefore(LocalTime.NOON)){
+				WELCOME_MESSAGE="Good Night! Hope you sleep well!";
+		}else if(nowTime.isAfter(LocalTime.MIDNIGHT)){
+			WELCOME_MESSAGE="Good Evening! Hope you are having a wonderful day!";
+		}
+		
+		
+	}
 
 	protected void getToday() throws BadLocationException {
 		i = 0;
@@ -80,7 +99,7 @@ public class HomeView implements View {
 					t = t.toString().replaceAll("\\[", "")
 							.replaceAll("\\]", " -");
 					if (task.isOverdue()) {
-
+						noOverdueTasks++;
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
@@ -108,12 +127,12 @@ public class HomeView implements View {
 							.replaceAll("\\]", " -");
 
 					if (task.isOverdue()) {
+						noOverdueTasks++;
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
 						appendTasks("#4B088A", tasks, 4);
-
-					}else if (task.getIsCompleted()) { //coloured green and striked thru
+					} else if (task.getIsCompleted()) { //coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
@@ -143,13 +162,7 @@ public class HomeView implements View {
 					String tasks = taskDes;
 					t = endDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-					if (task.isOverdue()) {
-						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FF0000", "!", 2);
-						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
-
-					}else if (task.getIsCompleted()) { //coloured green and striked thru
+				 if (task.getIsCompleted()) { //coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
@@ -169,12 +182,7 @@ public class HomeView implements View {
 
 					t = startDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-					if (task.isOverdue()) {
-						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FF0000", "!", 2);
-						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
-					} else if (task.getIsCompleted()) { //completed tasks are green and striked thru
+					if (task.getIsCompleted()) { //completed tasks are green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
@@ -204,8 +212,7 @@ public class HomeView implements View {
 				tasks = t + "\n";
 				appendTasks("#848484", taskNo, 1);
 				appendTasks("#FFFFFF", "&nbsp ", 2);
-				appendTasks("#4B088A", tasks, 3);
-				appendTasks("#FFFFFF", "&nbsp ", 4);
+				appendTasks("#4B088A", tasks, 5);
 			}
 		}
 	}
@@ -239,6 +246,10 @@ public class HomeView implements View {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""
 					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
 		}
+		else if (row == 5) {
+			output.append("<td colspan=\"420px\" width=\"420px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
+		}
 
 		// StyleConstants.setBold(style, isBold);
 		// StyleConstants.setFontSize(style, 14);
@@ -258,12 +269,13 @@ public class HomeView implements View {
 		style = showToUser.addStyle("Style", null);
 
 		showToUser.setContentType("text/html");
-
+		setWelcomeMessage();
 		output.append("<html>");
-		output.append("&nbsp");
+		output.append("<font color=\"#E68A00\"><p align=\"right\"><b>Date: "+todayDate+" &nbsp</b></p></font>");
 		output.append("<table width=\"100%\">");
-		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today ("+todayDate+") </b></p></font></td></tr>");
+		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
 		getToday();
+		
 		output.append("&nbsp");
 		output.append("</table>");
 
