@@ -64,9 +64,6 @@ public class UserInterface {
 		return UI;
 	}
 
-	public JTextPane getShowToUser() {
-		return showToUser;
-	}
 
 	public void executeInterface(){
 	SwingUtilities.invokeLater(new Runnable(){
@@ -74,9 +71,10 @@ public class UserInterface {
 		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
+	//	control.executeCommand("home");
+		showToUser.setContentType("text/html");
 		try {
-
-			Display.getInstance().getView().show();
+			showToUser.setText(Display.getInstance().getView().show());
 		} catch (BadLocationException | IOException e) {
 			e.printStackTrace();
 		}
@@ -267,19 +265,17 @@ public class UserInterface {
 		String command = commandFromUser.getText();
 		commandsEntered.add(command);
 		noOfCommandsEntered = commandsEntered.size();
+		showToUser.setContentType("text/html");
 		control.executeCommand(command);
 		showMessageToUser();
 		try {
-			if(command.equalsIgnoreCase("today") || command.equalsIgnoreCase("upcoming") ||command.equalsIgnoreCase("done") || command.equalsIgnoreCase("someday") || command.equalsIgnoreCase("search")   ){
-				Display.getInstance().getView().show();
-			}
-			else{
-				Display.getInstance().getView().show();
-				control.executeCommand("home");
-			}
-		} catch (BadLocationException | IOException e1) {
-			System.out.println("Error");
+			showToUser.setText(Display.getInstance().getView().show());
+		} catch (BadLocationException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+			
+		
 	}
 
 	private void pressedUpKey() {

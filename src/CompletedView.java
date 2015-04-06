@@ -11,10 +11,6 @@ import javax.swing.text.StyledDocument;
 
 public class CompletedView extends SingleView implements View {
 	private int i;
-	private UserInterface UI = UserInterface.getInstance();
-	private JTextPane showToUser = UI.getShowToUser();
-	private StyledDocument doc = showToUser.getStyledDocument();
-	private Style style = showToUser.addStyle("Style", null);
 	private StringBuilder output = new StringBuilder();
 	private DateTimeFormatter formatter = DateTimeFormatter
 			.ofPattern("dd-MM-yyyy");
@@ -101,13 +97,8 @@ public class CompletedView extends SingleView implements View {
 	}
 
 	@Override
-	public void show() throws BadLocationException {
-
-		UI = UserInterface.getInstance();
-		showToUser = UI.getShowToUser();
-		style = showToUser.addStyle("Style", null);
-
-		showToUser.setContentType("text/html");
+	public String show() throws BadLocationException {
+		output = new StringBuilder();
 
 		output.append("<html>");
 		output.append("&nbsp");
@@ -118,7 +109,7 @@ public class CompletedView extends SingleView implements View {
 		output.append("</table>");
 		output.append("</html>");
 
-		showToUser.setText(output.toString());
+		return output.toString();
 
 
 	}

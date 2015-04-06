@@ -10,9 +10,6 @@ import javax.swing.text.StyledDocument;
 
 public class SomedayView extends SingleView implements View {
 	private UserInterface UI = UserInterface.getInstance();
-	private JTextPane showToUser = UI.getShowToUser();
-	private StyledDocument doc = showToUser.getStyledDocument();
-	private Style style = showToUser.addStyle("Style", null);
 
 	private StringBuilder output = new StringBuilder();
 	
@@ -67,13 +64,8 @@ public class SomedayView extends SingleView implements View {
 	}
 
 	@Override
-	public void show() throws BadLocationException {
-
-		UI = UserInterface.getInstance();
-		showToUser = UI.getShowToUser();
-		style = showToUser.addStyle("Style", null);
-
-		showToUser.setContentType("text/html");
+	public String show() throws BadLocationException {
+		output = new StringBuilder();
 		output.append("<html>");
 		output.append("&nbsp");
 			output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
@@ -83,7 +75,7 @@ public class SomedayView extends SingleView implements View {
 			output.append("</table>");
 		output.append("</html>");
 
-		showToUser.setText(output.toString());
+		return output.toString();
 	}
 
 }

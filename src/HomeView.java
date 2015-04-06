@@ -1,22 +1,18 @@
 //@author A0112715
-import java.awt.Color;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 public class HomeView implements View {
 	private UserInterface UI;
-	private JTextPane showToUser;
 	private StyledDocument doc;
 	private Style style;
 	private ArrayList<Task> today;
@@ -32,7 +28,7 @@ public class HomeView implements View {
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
 			"EEE, dd MMM yyyy", Locale.US);
 	private DateTimeFormatter todayFormatter = DateTimeFormatter
-			.ofPattern("EEE, dd MMMM");
+			.ofPattern("EEEE, dd MMMM yyyy");
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
 			Locale.US);
 	private LocalDate nowDate = LocalDate.now();
@@ -240,7 +236,7 @@ public class HomeView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"150px\"><font size=\"4\" color=\""
+			output.append("<td width=\"150px\"><font size=\"4.5\" color=\""
 					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""
@@ -263,15 +259,11 @@ public class HomeView implements View {
 
 	}
 
-	public void show() throws BadLocationException {
-		UI = UserInterface.getInstance();
-		showToUser = UI.getShowToUser();
-		style = showToUser.addStyle("Style", null);
-
-		showToUser.setContentType("text/html");
+	public String show() throws BadLocationException {
 		setWelcomeMessage();
+		output = new StringBuilder();
 		output.append("<html>");
-		output.append("<font color=\"#E68A00\"><p align=\"right\"><b>Date: "+todayDate+" &nbsp</b></p></font>");
+		output.append("<font size=\"4.5\" color=\"#E68A00\"><p align=\"right\"><b>Date: "+todayDate+" &nbsp</b></p></font>");
 		output.append("<table width=\"100%\">");
 		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
 		getToday();
@@ -296,7 +288,7 @@ public class HomeView implements View {
 		}
 		output.append("</html>");
 
-		showToUser.setText(output.toString());
+		return output.toString();
 
 		/*
 		 * StyleConstants.setFontSize(style, 7);
