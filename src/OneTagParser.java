@@ -1,8 +1,14 @@
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 //import java.util.Scanner;
 //import java.util.Map;
 import java.lang.String;
@@ -200,7 +206,9 @@ public class OneTagParser {
 		String testWord = null , dateString = null,taskDescription = null;	
 		boolean isDeadlineTask = false;
 		boolean isTimedTask = false;
-		LocalDateTime endDateTime = null,startDateTime = null , deadlineDateTime = null;
+		LocalDateTime endDateTime = null;
+		LocalDateTime deadlineDateTime = null;
+		LocalDateTime startDateTime = null;
 		Parser dateParser = new Parser();
 		int posKeyword = getNumWords(message) - NUM_ONE;	
 		for(int count =getNumWords(message)- 1 ; count >= NUM_ZERO; count--){
@@ -244,13 +252,38 @@ public class OneTagParser {
 	 * @return infoDateTime
 	 */
 	private LocalDateTime parseDate(String dateString, Parser dateParser) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ccc MMM dd hh:mm:ss zzz YYYY");
 		System.out.println("dateString in parseDate : "+dateString);
 		List<DateGroup> listOfDates = dateParser.parse(dateString);
-		dateString = getDateTimeinString(listOfDates);
-		System.out.println("dateString that has been parsed : "+dateString);
-		LocalDateTime dateTime = LocalDateTime.parse(dateString, formatter);
-		return dateTime;
+		String testDate = null;
+		Date parseResult = null;
+		for(DateGroup group:listOfDates) {
+			List<Date> dates = group.getDates();
+			parseResult = dates.get(POS_ZERO);
+			testDate = dates.get(POS_ZERO).toString();
+			break;
+		}
+		final int yearGroup = 1;
+        final int monthGroup = 2;
+        final int dayGroup = 3;
+		
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("u/M/d");
+        String yyyymmddRegex = "(\\d\\d\\d\\d)[/-](0?[1-9]|1[012])[/-](3[01]|[012]?[0-9])";
+        
+        Pattern pattern = Pattern.compile(yyyymmddRegex);
+        Matcher matcher = pattern.matcher(testDate);
+      
+    
+		 Calendar calendar = GregorianCalendar.getInstance();
+	     calendar.setTime(parseResult);
+	     LocalDate localDate = LocalDate.parse(
+                 matcher.group(yearGroup) + "/" + matcher.group(monthGroup)
+                         + "/" + matcher.group(dayGroup), formatter);
+		
+	     LocalTime localTime =  LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),calendar.get(Calendar.MILLISECOND));
+	     LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+	     
+	     return localDateTime;
+		
 	}
 	/**Returns the dateString containing the date to be sent for parsing.
 	 * 
@@ -280,7 +313,8 @@ public class OneTagParser {
 		String testWord,dateString;
 		String taskDescription = null;
 		int posKeyword = getNumWords(message) - NUM_ONE;
-		LocalDateTime endDateTime = null,startDateTime = null, deadlineDateTime = null;
+		LocalDateTime endDateTime = null;
+		LocalDateTime startDateTime = null, deadlineDateTime = null;
 		Parser dateParser = new Parser();
 		if(message.contains(FROM)|| message.contains(TO) || message.contains(BY)){
 			String[] word = input.split(SPACE);
@@ -330,6 +364,7 @@ public class OneTagParser {
 		}
 		return null;
 	}
+
 	/**This method returns the getParseDate
 	 * 
 	 * @param parseDate
@@ -365,14 +400,36 @@ public class OneTagParser {
 	 * @param groups
 	 * @return testDate
 	 */	
-	private String getDateTimeinString(List<DateGroup> groups) {
+	private LocalDateTime getDateTimeinString(List<DateGroup> groups) {
 		String testDate = null;
+		Date parseResult = null;
 		for(DateGroup group:groups) {
 			List<Date> dates = group.getDates();
+			parseResult = dates.get(POS_ZERO);
 			testDate = dates.get(POS_ZERO).toString();
 			break;
 		}
-		return testDate;
+		final int yearGroup = 1;
+        final int monthGroup = 2;
+        final int dayGroup = 3;
+		
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("u/M/d");
+        String yyyymmddRegex = "(\\d\\d\\d\\d)[/-](0?[1-9]|1[012])[/-](3[01]|[012]?[0-9])";
+        
+        Pattern pattern = Pattern.compile(yyyymmddRegex);
+        Matcher matcher = pattern.matcher(testDate);
+      
+    
+		 Calendar calendar = GregorianCalendar.getInstance();
+	     calendar.setTime(parseResult);
+	     LocalDate localDate = LocalDate.parse(
+                 matcher.group(yearGroup) + "/" + matcher.group(monthGroup)
+                         + "/" + matcher.group(dayGroup), formatter);
+		
+	     LocalTime localTime =  LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),calendar.get(Calendar.MILLISECOND));
+	     LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+	     
+	     return localDateTime;
 	}
 
 	/**This method returns the date and time string which can be parsed by the parser.
