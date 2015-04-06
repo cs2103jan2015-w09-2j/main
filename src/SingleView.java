@@ -3,12 +3,7 @@ import java.util.ArrayList;
 public abstract class SingleView implements View{
 
 	protected Data data = Data.getInstance();
-	
 	private ArrayList<Task> list;
-	
-	public SingleView(){
-		update();
-	}
 	
 	public ArrayList<Task> getList(){
 		return this.list;

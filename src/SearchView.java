@@ -14,7 +14,7 @@ import javax.swing.text.StyledDocument;
 public class SearchView extends SingleView implements View {
 	private UserInterface UI = UserInterface.getInstance();
 
-	private String searchedText;
+	private String searchedText = "";
 	private String taskDes;
 	private LocalDate startDate;
 	private LocalDate endDate;
@@ -25,8 +25,8 @@ public class SearchView extends SingleView implements View {
 			.ofPattern("dd-MM-yyyy");
 	private StringBuilder output = new StringBuilder();
 
-
 	public SearchView(String searchedText) {
+		System.out.println("search:" + searchedText);
 		this.searchedText = searchedText;
 		update();
 	}

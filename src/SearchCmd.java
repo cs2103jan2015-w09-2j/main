@@ -2,7 +2,7 @@
 
 public class SearchCmd extends Cmd{
 	
-	private String searchedText;
+	private String searchedText = "";
 	private View preView;
 	
 	public SearchCmd(String searchedText){
@@ -10,7 +10,7 @@ public class SearchCmd extends Cmd{
 		this.preView = display.getView();
 	}
 	
-	public boolean execute(){
+	public boolean execute(){	
 		if(data.getSearched(searchedText).isEmpty()){
 			display.setMessage(MESSAGE_EMPTY_SEARCH);
 		}

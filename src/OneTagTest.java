@@ -13,7 +13,7 @@ import org.junit.Test;
 public class OneTagTest {
 	
 	private static final String ADD_DATELINE = "add market proposal for boss by 6pm";
-	private static final String ADD_TIMED = "add meeting with Mr Lee from 11am to 1pm";
+	private static final String ADD_TIMED = "add meeting with Mr Lee from 8 april 11am to 8 april 1pm";
 	private static final String ADD_FLOATING = "add bring daughter for skating";
 	private static final String EDIT_SIMPLE = "edit 1 by 5pm";
 	private static final String EDIT_COMPLEX = "edit 2 meeting with Mrs Lee to 2pm";
