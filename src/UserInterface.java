@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
@@ -28,6 +29,7 @@ import javax.swing.JButton;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.UIManager;
@@ -66,6 +68,8 @@ public class UserInterface {
 		return showToUser;
 	}
 
+	public void executeInterface(){
+	SwingUtilities.invokeLater(new Runnable(){
 	public void run() {
 		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
@@ -73,7 +77,7 @@ public class UserInterface {
 		try {
 
 			Display.getInstance().getView().show();
-		} catch (BadLocationException e) {
+		} catch (BadLocationException | IOException e) {
 			e.printStackTrace();
 		}
 
@@ -81,6 +85,7 @@ public class UserInterface {
 		window.frame.setOpacity(0.99f);
 		window.frame.setVisible(true);
 	}
+	});}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -265,8 +270,14 @@ public class UserInterface {
 		control.executeCommand(command);
 		showMessageToUser();
 		try {
-			Display.getInstance().getView().show();
-		} catch (BadLocationException e1) {
+			if(command.equalsIgnoreCase("today") || command.equalsIgnoreCase("upcoming") ||command.equalsIgnoreCase("done") || command.equalsIgnoreCase("someday") || command.equalsIgnoreCase("search")   ){
+				Display.getInstance().getView().show();
+			}
+			else{
+				Display.getInstance().getView().show();
+				control.executeCommand("home");
+			}
+		} catch (BadLocationException | IOException e1) {
 			System.out.println("Error");
 		}
 	}
@@ -358,8 +369,7 @@ public class UserInterface {
 									.matches("\\W")) {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
-								.matches(
-										"(\\W)*(add|delete|edit|search|from|to|by|today|upcoming|someday|help|done)")) {
+								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|from|to|by|^(today|upcoming|someday)|^(help)|^(done))")) {
 							setCharacterAttributes(wordL, wordR - wordL, attr,
 									false);
 						} else {
@@ -382,7 +392,7 @@ public class UserInterface {
 				int after = findFirstNonWordChar(text, offs);
 
 				if (text.substring(before, after).toLowerCase()
-						.matches("(\\W)*(add|delete|edit|search|from|to|by|today|upcoming|someday|help|done)")) {
+						.matches("(\\W)*(^(add)|delete|edit|search|from|to|by|^(today)|upcoming|someday|help|done)")) {
 					setCharacterAttributes(before, after - before, attr, false);
 				} else {
 					setCharacterAttributes(before, after - before, attrBlack,
