@@ -203,12 +203,10 @@ public class OneTagParser {
 	 */	
 	private Task parseMsgforAddCmd(String message){
 		String[] word = message.split(SPACE);
-		String testWord = null , dateString = null,taskDescription = null;	
-		boolean isDeadlineTask = false;
+		String testWord = null , dateString = null,taskDescription = null, endDateTimeString = null, startDateTimeString = null, deadlineDateTimeString = null;	
+		LocalDateTime endDateTime = null, startDateTime = null , deadlineDateTime = null; 
 		boolean isTimedTask = false;
-		LocalDateTime endDateTime = null;
-		LocalDateTime deadlineDateTime = null;
-		LocalDateTime startDateTime = null;
+		boolean isDeadlineTask = false;
 		Parser dateParser = new Parser();
 		int posKeyword = getNumWords(message) - NUM_ONE;	
 		for(int count =getNumWords(message)- 1 ; count >= NUM_ZERO; count--){
@@ -218,11 +216,13 @@ public class OneTagParser {
 				dateString = word[count+1] + SPACE ;
 				if(posKeyword == word.length- NUM_ONE){
 					dateString = getDateTimeString(dateString, posKeyword, word,count);
-					endDateTime = parseDate(dateString, dateParser);
+					endDateTimeString = parseDate(dateString, dateParser);
+					endDateTime = getDateTimeFormat(endDateTimeString);
 					posKeyword = count;
 				}else{
 					dateString = getNewDateTimeString(dateString, posKeyword, word,count);
-					startDateTime = parseDate(dateString,dateParser);
+					startDateTimeString = parseDate(dateString,dateParser);
+					startDateTime = getDateTimeFormat(startDateTimeString);
 					posKeyword = count;
 					taskDescription = getTaskDescription(posKeyword, word);
 					return new Task(startDateTime, endDateTime, taskDescription);
@@ -232,7 +232,8 @@ public class OneTagParser {
 				isDeadlineTask = true;
 				posKeyword = count;
 				dateString = getDateString(word, message, count);
-				deadlineDateTime = parseDate(dateString,dateParser);
+				deadlineDateTimeString = parseDate(dateString,dateParser);
+				deadlineDateTime = getDateTimeFormat(deadlineDateTimeString);
 				taskDescription = getTaskDescription(posKeyword,word);
 				return new Task(deadlineDateTime,taskDescription);
 			}
@@ -245,45 +246,27 @@ public class OneTagParser {
 	}
 
 
+	private LocalDateTime getDateTimeFormat(String endDateTimeString) {
+		int[] test = getDateAndTime(endDateTimeString);
+		LocalDateTime dateTime = LocalDateTime.of(test[0],test[1],test[2],test[3],test[4]);
+		return dateTime;
+	}
+
 	/**Parses the dateString and return an array with date & time information.
 	 * 
 	 * @param dateString
 	 * @param dateParser
 	 * @return infoDateTime
 	 */
-	private LocalDateTime parseDate(String dateString, Parser dateParser) {
-		System.out.println("dateString in parseDate : "+dateString);
+	private String parseDate(String dateString, Parser dateParser) {
 		List<DateGroup> listOfDates = dateParser.parse(dateString);
 		String testDate = null;
-		Date parseResult = null;
 		for(DateGroup group:listOfDates) {
 			List<Date> dates = group.getDates();
-			parseResult = dates.get(POS_ZERO);
 			testDate = dates.get(POS_ZERO).toString();
 			break;
 		}
-		final int yearGroup = 1;
-        final int monthGroup = 2;
-        final int dayGroup = 3;
-		
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("u/M/d");
-        String yyyymmddRegex = "(\\d\\d\\d\\d)[/-](0?[1-9]|1[012])[/-](3[01]|[012]?[0-9])";
-        
-        Pattern pattern = Pattern.compile(yyyymmddRegex);
-        Matcher matcher = pattern.matcher(testDate);
-      
-    
-		 Calendar calendar = GregorianCalendar.getInstance();
-	     calendar.setTime(parseResult);
-	     LocalDate localDate = LocalDate.parse(
-                 matcher.group(yearGroup) + "/" + matcher.group(monthGroup)
-                         + "/" + matcher.group(dayGroup), formatter);
-		
-	     LocalTime localTime =  LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),calendar.get(Calendar.MILLISECOND));
-	     LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
-	     
-	     return localDateTime;
-		
+	      return testDate;	
 	}
 	/**Returns the dateString containing the date to be sent for parsing.
 	 * 
@@ -300,7 +283,7 @@ public class OneTagParser {
 	}
 
 /*
-	/**Returns Task object with dates editted.
+	/**Returns Task object with dates edited.
 	 * @param message
 	 * @return	
 	 */
@@ -400,7 +383,7 @@ public class OneTagParser {
 	 * @param groups
 	 * @return testDate
 	 */	
-	private LocalDateTime getDateTimeinString(List<DateGroup> groups) {
+	private String getDateTimeinString(List<DateGroup> groups) {
 		String testDate = null;
 		Date parseResult = null;
 		for(DateGroup group:groups) {
@@ -409,27 +392,7 @@ public class OneTagParser {
 			testDate = dates.get(POS_ZERO).toString();
 			break;
 		}
-		final int yearGroup = 1;
-        final int monthGroup = 2;
-        final int dayGroup = 3;
-		
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("u/M/d");
-        String yyyymmddRegex = "(\\d\\d\\d\\d)[/-](0?[1-9]|1[012])[/-](3[01]|[012]?[0-9])";
-        
-        Pattern pattern = Pattern.compile(yyyymmddRegex);
-        Matcher matcher = pattern.matcher(testDate);
-      
-    
-		 Calendar calendar = GregorianCalendar.getInstance();
-	     calendar.setTime(parseResult);
-	     LocalDate localDate = LocalDate.parse(
-                 matcher.group(yearGroup) + "/" + matcher.group(monthGroup)
-                         + "/" + matcher.group(dayGroup), formatter);
-		
-	     LocalTime localTime =  LocalTime.of(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND),calendar.get(Calendar.MILLISECOND));
-	     LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
-	     
-	     return localDateTime;
+		return testDate;
 	}
 
 	/**This method returns the date and time string which can be parsed by the parser.
