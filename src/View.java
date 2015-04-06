@@ -8,7 +8,7 @@ public interface View {
 		
 	void update();
 	
-	void show() throws BadLocationException, IOException;
+	String show() throws BadLocationException, IOException;
 	
 	Task getTask(int index) throws IndexOutOfBoundsException;
 	
