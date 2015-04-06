@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JTextPane;
@@ -349,6 +350,16 @@ public class HomeView implements View {
 			int somedayIndex = index - dateSize;
 			return someday.get(somedayIndex);
 		}
+	}
+
+	@Override
+	public ArrayList<Task> getList() {
+		List<Task> combinedList = new ArrayList<Task>();
+		combinedList.addAll(today);
+		combinedList.addAll(upcoming);
+		combinedList.addAll(someday);
+		
+		return (ArrayList<Task>)combinedList;
 	}
 
 }

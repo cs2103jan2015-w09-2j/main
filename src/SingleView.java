@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public abstract class SingleView{
+public abstract class SingleView implements View{
 
 	protected Data data = Data.getInstance();
 	
@@ -10,7 +10,7 @@ public abstract class SingleView{
 		update();
 	}
 	
-	protected ArrayList<Task> getList(){
+	public ArrayList<Task> getList(){
 		return this.list;
 	}
 	
@@ -24,5 +24,5 @@ public abstract class SingleView{
 		return list.get(index);
 	}
 
-	abstract void update();
+	public abstract void update();
 }
