@@ -20,6 +20,9 @@ public class OneTagTest {
 	private static final String DELETE_1 = "delete 1";
 	private static final String ADD_TASK_SOFTWARE_ENGINEERING = "add Software engineering tutorial from 9am to 10am";
 	private static final String ADD_TASK_INTEGRATION = "add complete integration testing by 2am";
+	private static final String ADD_TASK_SWIMMING = "add Learn swimming";
+	private static final String ADD_TASK_SKYDIVING = "add Go skydiving";
+	private static final String ADD_TASK_READ_GATSBY = "add Read The Great Gatsby";
 	private static final String UNDO = "undo";
 	private Controller control = Controller.getInstance();
 	private LocalDateTime today = LocalDateTime.now();
@@ -29,23 +32,19 @@ public class OneTagTest {
 	@Test
 	public void addTasks(){
 		UserInterface UI = UserInterface.getInstance();
-		UI.run();
+		UI.executeInterface();
 		//tasks for today
 		control.executeCommand(ADD_TASK_INTEGRATION);
 		control.executeCommand(ADD_TASK_SOFTWARE_ENGINEERING);
-		control.executeCommand("add Stats Tutorial from 11am to 12pm");
-		control.executeCommand("add Lunch with Wan Tian from 1pm to 2pm");
 		
 		//tasks for upcoming
-		control.executeCommand("add Resize buttons by 02/04/2015");
-		control.executeCommand("add AI Assignment by 13 April 2015");
 		control.executeCommand(ADD_TASK_COMPLETE_ESSAY);
 		control.executeCommand(ADD_TASK_COMPLETE_REVISION);
 		
 		//tasks for Someday
-		control.executeCommand("add Learn swimming");
-		control.executeCommand("add Go skydiving");
-		control.executeCommand("add Read Great Gatsby");
+		control.executeCommand(ADD_TASK_SWIMMING);
+		control.executeCommand(ADD_TASK_SKYDIVING);
+		control.executeCommand(ADD_TASK_READ_GATSBY);
 	}
 	
 	@Test
