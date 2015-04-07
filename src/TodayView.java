@@ -138,7 +138,7 @@ public class TodayView extends SingleView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"120px\"><font size=\"4\" color=\""
+			output.append("<td width=\"140px\"><font size=\"4\" color=\""
 					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""

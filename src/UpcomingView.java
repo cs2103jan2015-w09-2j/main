@@ -23,6 +23,8 @@ public class UpcomingView extends SingleView implements View {
 	private boolean isOverdue;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
 			"EEE, dd MMM yyyy", Locale.US);
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
+			Locale.US);
 	private StringBuilder output = new StringBuilder();
 
 	@Override
@@ -61,22 +63,25 @@ public class UpcomingView extends SingleView implements View {
 				i++;
 				getTaskInfo(task);
 				String t = "";
+				String endTimeMsg ="";
 				String taskNo = "     " + i + ".   ";
 				if (task.isDeadlineTask()) {
 					String tasks = taskDes;
 					t = endDate.format(formatter);
+					endTimeMsg = endTime.format(formatTime).replace("AM", "am")
+							.replace("PM", "pm").replace(".00", "");
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
 				 if (task.getIsCompleted()) { //coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
+						appendTasks("#00B800",  "<p align=\"left\"><strike>"+t+"</strike></p>"+"<strike><p align=\"left\">"+endTimeMsg+"</p></strike>", 3);
 						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
 
 					}  
 					else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", t, 3);
+						appendTasks("#01A9DB", "<p align=\"left\">"+t+"</p>"+"<p align=\"left\">"+endTimeMsg+"</p>", 3);
 						appendTasks("#4B088A", tasks, 4);
 					}
 				}
@@ -84,17 +89,26 @@ public class UpcomingView extends SingleView implements View {
 				else {
 					String tasks = taskDes;
 
-					t = startDate.format(formatter);
+					t = startDate.format(formatter) +" - " ;
+					String endDateMsg = endDate.format(formatter);
+					endTimeMsg = startTime.format(formatTime).replace("AM", "am")
+							.replace("PM", "pm").replace(".00", "")
+							+ " - "
+							+ endTime.format(formatTime).replace("AM", "am")
+									.replace("PM", "pm").replace(".00", "");
+					endTimeMsg = endTimeMsg.toString().replaceAll("\\[", "")
+							.replaceAll("\\]", " -");
+					
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
 					if (task.getIsCompleted()) { //completed tasks are green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
+						appendTasks("#00B800", "<p align=\"left\"><strike>"+t+"</strike></p>"+"<p align=\"left\"><strike>"+endDateMsg+"</strike></p>"+"<strike><p align=\"left\">"+endTimeMsg+"</p></strike>", 3);
 						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", t, 3);
+						appendTasks("#01A9DB", "<p align=\"left\">"+t+"</p>"+"<p align=\"left\">"+endDateMsg+"</p>"+"<p align=\"left\">"+endTimeMsg+"</p>", 3);
 						appendTasks("#4B088A", tasks, 4);
 						
 					}
@@ -116,9 +130,9 @@ public class UpcomingView extends SingleView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"150px\"><font size=\"4\" color=\""
-					+ textColour + "\"><p align=\"left\"><b>" + s
-					+ "</b></p></font></td>");
+			output.append("<td width=\"400px\"><font size=\"4\" color=\""
+					+ textColour + "\"><b>" + s
+					+ "</b></font></td>");
 		} else if (row == 4) {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""
 					+ textColour + "\"><p align=\"left\">" + s
