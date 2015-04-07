@@ -103,12 +103,12 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#191964", tasks, 4);
+						appendTasks("#3C7795", tasks, 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#191964", tasks, 4);
+						appendTasks("#3C7795", tasks, 4);
 					}
 
 				} else {
@@ -131,12 +131,12 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#191964", tasks, 4);
+						appendTasks("#3C7795", tasks, 4);
 					}  else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#191964", tasks, 4);
+						appendTasks("#3C7795", tasks, 4);
 					}
 
 				}
@@ -166,7 +166,7 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#191964", tasks, 4);
+						appendTasks("#3C7795", tasks, 4);
 					}
 				}
 
@@ -184,7 +184,7 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#191964", tasks, 4);
+						appendTasks("#3C7795", tasks, 4);
 						
 					}
 				}
@@ -210,7 +210,7 @@ public class HomeView implements View {
 				} else{
 				appendTasks("#848484", taskNo, 1);
 				appendTasks("#FFFFFF", "!", 2);
-				appendTasks("#191964", tasks, 5);
+				appendTasks("#3C7795", tasks, 5);
 				}
 			}
 		}
@@ -239,7 +239,7 @@ public class HomeView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"180px\"><font size=\"5\" color=\""
+			output.append("<td width=\"180px\"><font size=\"4.5\" color=\""
 					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""

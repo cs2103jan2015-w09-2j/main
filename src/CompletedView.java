@@ -59,9 +59,10 @@ public class CompletedView extends SingleView implements View {
 
 				else {
 					String tasks = taskDes;
-
+					if(!task.isFloatingTask()){
 					t = startDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+					}
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#009900", t, 3);
