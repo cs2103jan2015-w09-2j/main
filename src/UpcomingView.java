@@ -57,7 +57,7 @@ public class UpcomingView extends SingleView implements View {
 	protected void getUpcoming() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 10) {
+			if (i < 9) {
 				i++;
 				getTaskInfo(task);
 				String t = "";
@@ -66,13 +66,14 @@ public class UpcomingView extends SingleView implements View {
 					String tasks = taskDes;
 					t = endDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-					if (task.isOverdue()) {
+				 if (task.getIsCompleted()) { //coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FF0000", "!", 2);
-						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
+						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
 
-					} else {
+					}  
+					else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
@@ -85,16 +86,17 @@ public class UpcomingView extends SingleView implements View {
 
 					t = startDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-					if (task.isOverdue()) {
+					if (task.getIsCompleted()) { //completed tasks are green and striked thru
 						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FF0000", "!", 2);
-						appendTasks("#4B088A", tasks, 3);
-						appendTasks("#01A9DB", t, 4);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
+						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
 						appendTasks("#4B088A", tasks, 4);
+						
 					}
 				}
 			}

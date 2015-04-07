@@ -63,7 +63,7 @@ public class TodayView extends SingleView implements View {
 	protected void getToday() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 10) {
+			if (i < 12) {
 				i++;
 				getTaskInfo(task);
 				String t = "";
@@ -74,8 +74,13 @@ public class TodayView extends SingleView implements View {
 							.replace("PM", "pm").replace(".00", "");
 					t = t.toString().replaceAll("\\[", "")
 							.replaceAll("\\]", " -");
-					if (task.isOverdue()) {
-
+					if (task.getIsCompleted()) { //coloured green and striked thru
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
+						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+					} else if (task.isOverdue()) {
+						
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
@@ -97,13 +102,18 @@ public class TodayView extends SingleView implements View {
 					t = t.toString().replaceAll("\\[", "")
 							.replaceAll("\\]", " -");
 
-					if (task.isOverdue()) {
+					if (task.getIsCompleted()) { //coloured green and striked thru
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
+						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+
+					} else if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
 						appendTasks("#4B088A", tasks, 4);
-
-					} else {
+					}  else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);

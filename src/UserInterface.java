@@ -326,14 +326,13 @@ public class UserInterface {
 	}
 
 	private void showMessageToUser() {
-		StyledDocument doc = feedback.getStyledDocument();
-		SimpleAttributeSet center = new SimpleAttributeSet();
-		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		StringBuilder htmlMessage = new StringBuilder();
+		feedback.setContentType("text/html");
 		message = Display.getInstance().getMessage();
 		try {
 			if (!message.isEmpty()) {
-				feedback.setText((message) + "\n");
+				htmlMessage.append("<html><p valign=\"top\" align=\"center\"><font color=\"#660000\" size=\"5\">"+Display.getInstance().getMessage()+"</font></p></html>");
+				feedback.setText((htmlMessage.toString()) + "\n");
 			}
 		} catch (NullPointerException nullException) {
 			feedback.setText("");

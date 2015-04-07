@@ -55,9 +55,9 @@ public class SearchView extends SingleView implements View {
 			}
 			endDate = task.getEnd().toLocalDate();
 			endTime = task.getEnd().toLocalTime();
+	
 		}
 	}
-	
 	protected void getSearchResults() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
@@ -86,8 +86,9 @@ public class SearchView extends SingleView implements View {
 
 				else {
 					String tasks = taskDes;
-
+					if(!task.isFloatingTask() && !task.isDeadlineTask()){
 					t = startDate.format(formatter);
+					}
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
 					if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
