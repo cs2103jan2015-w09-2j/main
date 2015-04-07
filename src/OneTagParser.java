@@ -332,7 +332,7 @@ public class OneTagParser {
 	 * @param message
 	 * @return	
 	 */
-	private EditCmd parseEditDate(String message) {
+		private EditCmd parseEditDate(String message) {
 		String[] inputArr = message.split(SPACE,INPUT_SPLIT_THIRD);
 		System.out.println("InputArr[0] :"+inputArr[0]);
 		String endDateTimeString, startDateTimeString; 
@@ -345,7 +345,7 @@ public class OneTagParser {
 		int index = Integer.parseInt(inputArr[0]);
 		String testWord,dateString;
 		String taskDescription = null;
-		int posKeyword = getNumWords(toDo) - NUM_ONE;
+		int posKeyword = toDo.length() - NUM_ONE;
 		LocalDateTime endDateTime = null;
 		LocalDateTime startDateTime = null, deadlineDateTime = null;
 		Parser dateParser = new Parser();
@@ -354,55 +354,19 @@ public class OneTagParser {
 			String[] word = toDo.split(SPACE);
 			for(int count =getNumWords(toDo)- 1 ; count >= NUM_ZERO; count--){
 				testWord =word[count].trim();
-				if(checkTimedTask(testWord)){
-					System.out.println("This is a check timed task");
-					dateString = word[count+1] + SPACE ;
-					if(posKeyword == toDo.length()- NUM_ONE){
-						System.out.println("To timing is working");
-						dateString = getDateTimeString(dateString, posKeyword, word,count);
-						endDateTimeString = parseDate(dateString, dateParser);
-						endDateTime = getDateTimeFormat(endDateTimeString);
-						isToTime = true;
-						posKeyword = count;
-					}else{
-						dateString = getNewDateTimeString(dateString, posKeyword, word,count);
-						startDateTimeString = parseDate(dateString,dateParser);
-						startDateTime = getDateTimeFormat(startDateTimeString); 
-						isFromTime = true;
-						posKeyword = count;
-					    taskDescription = getTaskDescription(posKeyword, word);
-					    isTaskDescription = true;
-					}
-		}else if(isDeadlineTask(testWord)){
-			posKeyword = count;
-			dateString = getDateString(word, message, count);
-			deadlineDateTimeString = parseDate(dateString,dateParser);
-			deadlineDateTime = getDateTimeFormat(deadlineDateTimeString);
-			taskDescription = getTaskDescription(posKeyword,word);
-			return new EditCmd(index,deadlineDateTime,2);
+				if(isDeadlineTask(testWord)){
+					posKeyword = count;
+					dateString = getDateString(word, toDo, count);
+					deadlineDateTimeString = parseDate(dateString,dateParser);
+					deadlineDateTime = getDateTimeFormat(deadlineDateTimeString);
+					taskDescription = getTaskDescription(posKeyword,word);
+					return new EditCmd(index,deadlineDateTime,2);
+				}
+			}
 		}
-	}		
-		if(isToTime == true && isFromTime == false && isTaskDescription == false){
-			return new EditCmd(index,endDateTime,2);
-		}else if (isToTime == false && isFromTime == true && isTaskDescription == false){
-			return new EditCmd(index,startDateTime,1);
-		}else if(isToTime == true && isFromTime == false && isTaskDescription == true){
-			return new EditCmd(index,taskDescription,endDateTime,2);
-		}else if(isToTime == false && isFromTime == true && isTaskDescription == true){
-			return new EditCmd(index,taskDescription,endDateTime,2);
-		}else if(isToTime == true && isFromTime == true && isTaskDescription == true){
-			System.out.println("Test");
-			return new EditCmd(index,taskDescription, startDateTime, endDateTime);
-		}else if(isToTime == false && isFromTime == false && isTaskDescription == true){
-			return new EditCmd(index, taskDescription);
+			taskDescription = inputArr[1];
+			return new EditCmd(index,taskDescription) ;
 		}
-		}
-		taskDescription = inputArr[1];
-		return new EditCmd(index,taskDescription) ;
-		
-		//System.out.println("Testing edit Cmd");
-		//re/turn null;
-	}
 	/**This method returns the getParseDate
 	 * 
 	 * @param parseDate
