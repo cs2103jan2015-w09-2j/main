@@ -15,7 +15,7 @@ public class UndoCmd extends Cmd {
 			cmd.undo();
 		}
 		catch(EmptyStackException ex){
-			display.setMessage(MESSAGE_UNDO_EMPTY);
+			display.setMessage(UNDO_EMPTY_MESSAGE);
 		}
 		return true;
 	}
