@@ -6,6 +6,7 @@ public class EditCmd extends ModifiableCmd{
 	private Task task;
 	private Task editContent; 	//depreciated
 	private int index;
+	private int viewIndex;
 	
 	private String description = null;
 	private LocalDateTime start = null;
@@ -26,17 +27,20 @@ public class EditCmd extends ModifiableCmd{
 		this(index);
 		assert(isSomeday);
 		this.isSomeday = isSomeday;
+		this.viewIndex = 1;
 	}
 	
 	public EditCmd(int index, String description){
 		this(index);
 		this.description = description;
+		this.viewIndex = 2;
 	}
 	
 	public EditCmd(int index, String description, boolean isSomeday){
 		this(index, description);
 		assert(isSomeday);
 		this.isSomeday = isSomeday;
+		this.viewIndex = 3;
 	}
 	
 	//indicate: 1= start, 2= end, 3 = by
@@ -55,23 +59,27 @@ public class EditCmd extends ModifiableCmd{
 			this.start = null;
 			this.end = time;
 		}
+		this.viewIndex = 4;
 	}
 	
 	public EditCmd(int index, LocalDateTime start, LocalDateTime end){
 		this.start = start;
 		this.end = end;
+		this.viewIndex = 5;
 	}
 	
 	//indicate: 1= start, 2= end
 	public EditCmd(int index, String description, LocalDateTime time, int indicate){
 		this(index, time, indicate);
 		this.description = description;
+		this.viewIndex = 6;
 	}
 	
 	public EditCmd(int index, String description, LocalDateTime start, LocalDateTime end){
 		this(index, description);
 		this.start = start;
 		this.end = end;
+		this.viewIndex = 7;
 	}
 	
 	public boolean execute() throws IndexOutOfBoundsException{
@@ -96,7 +104,16 @@ public class EditCmd extends ModifiableCmd{
 		start = tempStart;
 		end = tempEnd;
 		
-		//display.setMessage(MESSAGE_EDIT);
+		if(viewIndex == 2){
+			display.setMessage(String.format(MESSAGE_EDIT_DES, description, task.getDescription()));
+		}
+		else if(viewIndex == 4){
+			display.setMessage(String.format(MESSAGE_EDIT_DES, end.toLocalDate() + " " + end.toLocalTime(), 
+					task.getEnd().toLocalDate() + " " + task.getEnd().toLocalTime()));
+		}
+		else{
+			display.setMessage("");
+		}
 		
 		return true;
 	}
@@ -105,7 +122,7 @@ public class EditCmd extends ModifiableCmd{
 		data.update(task, description, start, end);
 		writeToFile();
 		
-		//display.setMessage(MESSAGE_UNDO_EDIT);
+		display.setMessage("");
 	}
 		
 	//depreciated
