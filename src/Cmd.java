@@ -3,37 +3,38 @@
 public abstract class Cmd {
 
 
-	protected static final String MESSAGE_ADD = "Added <i>%1$s</i> to <i>%2$s<i>";
-	protected static final String MESSAGE_UNDO_ADD = "Undo Add: <i>%1$s</i> is removed from task list ";
+	protected static final String ADD_TASK_MESSAGE = "Added <i>%1$s</i> to <i>%2$s</i>";
+	protected static final String UNDO_ADD_MESSAGE = "Undo action: \"Add <i>%1$s</i>\"";
 	
-	protected static final String MESSAGE_EDIT_DES = "Detail of the task change from <i>%1$s</i> to <i>%2$s</i>";
-	protected static final String MESSAGE_START_TIME = "Start Time of the task <i>%1$s</i>  is changed to <i>%2$s</i>";
-	protected static final String MESSAGE_END_TIME = "End Time of the task </i>%1$s is changed to %2$s</i>";
-	protected static final String MESSAGE_EDIT_START_DATE = "Start date of the task <i>%1$s</i> is changed to <i>%2$s</i>";
-	protected static final String MESSAGE_EDIT_END_DATE = "End date of the task <i>%1$s</i> is changed to <i>%2$s</i>";
+	protected static final String EDIT_DES_MESSAGE = "Task description is changed to <i>%1$s</i>";
+	protected static final String EDIT_START_TIME_MESSAGE = "<i>%1$s</i> will begin on <i>%2$s</i> instead of <i>%3$s</i>";
+	protected static final String EDIT_DEADLINE_MESSAGE = "<i>%1$s</i> is moved to <i>%2$s</i>";
+	protected static final String EDIT_DES_AND_DEADLINE_MESSAGE = "<p align=\"center\"><i>%1$s</i> is changed to <i>%2$s</i>.</p><p align=\"center\">It is moved from to <i>%3$s</i></p>";
+	protected static final String EDIT_DES_AND_TIME_MESSAGE = "<p align=\"center\">Task description is changed to <i>%1$s</i>.</p><p align=\"center\">It will begin at<i>%2$s</i> and will end at <i>%3$s</i></p>";
+	protected static final String EDIT_DES_AND_DATE_MESSAGE = "<p align=\"center\">Task description is changed to <i>%1$s</i>.</p><p align=\"center\">It will begin at<i>%2$s</i> and will end at <i>%3$s</i></p>";
+	protected static final String EDIT_TASK_TO_SOMEDAY_MESSAGE = "<i>%1$s</i> is changed from the category <i>%2$s</i> to Someday";
+	protected static final String EDIT_TASK_DES_START_DATE_MESSAGE = "<p align=\"center\">Task description is changed to <i>%1$s</i>.</p><p align=\"center\">It will begin at<i>%2$s</i>";
+	protected static final String EDIT_TASK_DES_END_DATE_MESSAGE = "<p align=\"center\">Task description is changed to <i>%1$s</i>.</p><p align=\"center\">It will end at<i>%2$s</i>";
+	protected static final String EDIT_TASK_START_DATE_MESSAGE = "<i>%1$s</i>will begin at<i>%2$s</i>";
+	protected static final String EDIT_TASK_END_DATE_MESSAGE = "<i>%1$s</i> will end at<i>%2$s</i>";
+	protected static final String EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE = "<i>%1$s</i> is changed from the category <i>%2$s</i> to Someday";
 	
+	protected static final String DELETE_TASK_MESSAGE = "Deleted <i>%1$s</i>";
+	protected static final String UNDO_DELETE_MESSAGE = "Undo action: \"Delete <i>%1$s</i>\"";	
 	
-	protected static final String MESSAGE_UNDO_EDIT_DES = "Undo Edit: Reverted back to <i>%1$s</i>";
-	protected static final String MESSAGE_UNDO_EDIT_TIME = "Undo Edit: Time is reverted back to <i>%1$s</i>";
-	protected static final String MESSAGE_UNDO_EDIT_DATE = "Undo Edit: Date is reverted back to <i>%1$s</i>";
+	protected static final String COMPLETE_TASK_MESSAGE = "<i>%1$s</i> is marked as completed!";
+	protected static final String UNDO_COMPLETED_MESSAGE = "Undo action: Mark <i>%1$s</i> as completed";
 
-	protected static final String MESSAGE_DELETE = "Deleted <i>%1$s</i>";
-	protected static final String MESSAGE_UNDO_DELETE = "Undo Delete: <i>%1$s</i> is added back to %2$s";	
+	protected static final String SEARCH_KEYWORD_IS_EMPTY = "No task contains the keyword <i>%1$s</i>";
+	protected static final String UNDO_EMPTY_MESSAGE = "No action to undo";
+	protected static final String INVALID_MESSAGE = "<p align=\"center\">You have entered an invalid command.</p><p align=\"center\">Enter a valid command or <i>Help</i> for assistance.</p>";
+
+	protected static final String EMPTY_DES_MESSAGE = "Please enter a task description to add.";
+	protected static final String NO_FILE_FOUND_MESSAGE = "The storage file is not available";
 	
-	protected static final String MESSAGE_COMPLETED = "<i>%1$s</i> marked as completed!";
-	protected static final String MESSAGE_UNDO_COMPLETED = "Undo Complete: <i>%1$s</i> is marked as undone";
-
-	
-	protected static final String MESSAGE_EMPTY_SEARCH = "Keyword <i>%1$s</i> is not found";
-	protected static final String MESSAGE_UNDO_EMPTY = "No action to undo";
-	protected static final String MESSAGE_INVALID = "You have entered an invalid command. Enter a valid command or <i>Help</i> for assistance.";
-
-	protected static final String MESSAGE_NO_VALUE = "Please indicate a valid task description!";
-	protected static final String MESSAGE_NO_FILE = "Storage file is not available";
-
-	private static final String TASKTYPE_TODAY = "Today";
-	private static final String TASKTYPE_UPCOMING = "Upcoming";
-	private static final String TASKTYPE_SOMEDAY = "Someday";
+	private static final String TODAY_TASK = "Today";
+	private static final String UPCOMING_TASK = "Upcoming";
+	private static final String SOMEDAY_TASK = "Someday";
 	
 	protected Data data = Data.getInstance();
 	protected Display display = Display.getInstance();
@@ -54,14 +55,14 @@ public abstract class Cmd {
 		String taskType = "";
 		
 		if(task.isTodayTask()){
-			taskType = TASKTYPE_TODAY;
+			taskType = TODAY_TASK;
 		}
 		else if(task.isUpcomingTask()){
-			taskType = TASKTYPE_UPCOMING;
+			taskType = UPCOMING_TASK;
 		}
 		else{
 			assert(task.isSomedayTask());
-			taskType = TASKTYPE_SOMEDAY;
+			taskType = SOMEDAY_TASK;
 		}
 		
 		return taskType;

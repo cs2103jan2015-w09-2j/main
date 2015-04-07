@@ -97,18 +97,18 @@ public class HomeView implements View {
 					if (task.getIsCompleted()) { //coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
-						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+						appendTasks("#848484", "<strike>"+t+"</strike>", 3);
+						appendTasks("#848484", "<strike>"+tasks+"</strike>", 4);
 					} else if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#191964", tasks, 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#191964", tasks, 4);
 					}
 
 				} else {
@@ -124,19 +124,19 @@ public class HomeView implements View {
 					if (task.getIsCompleted()) { //coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
-						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+						appendTasks("#848484", "<strike>"+t+"</strike>", 3);
+						appendTasks("#848484", "<strike>"+tasks+"</strike>", 4);
 
 					} else if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#191964", tasks, 4);
 					}  else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#191964", tasks, 4);
 					}
 
 				}
@@ -159,14 +159,14 @@ public class HomeView implements View {
 				 if (task.getIsCompleted()) { //coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
-						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+						appendTasks("#848484", "<strike>"+t+"</strike>", 3);
+						appendTasks("#848484", "<strike>"+tasks+"</strike>", 4);
 					}  
 					else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#191964", tasks, 4);
 					}
 				}
 
@@ -178,13 +178,13 @@ public class HomeView implements View {
 					if (task.getIsCompleted()) { //completed tasks are green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800", "<strike>"+t+"</strike>", 3);
-						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+						appendTasks("#848484", "<strike>"+t+"</strike>", 3);
+						appendTasks("#848484", "<strike>"+tasks+"</strike>", 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#191964", tasks, 4);
 						
 					}
 				}
@@ -206,11 +206,11 @@ public class HomeView implements View {
 				if (task.getIsCompleted()) { //completed tasks are green and striked thru
 					appendTasks("#848484", taskNo, 1);
 					appendTasks("#FFFFFF", "!", 2);
-					appendTasks("#00B800", "<strike>"+tasks+"</strike>", 5);
+					appendTasks("#848484", "<strike>"+tasks+"</strike>", 5);
 				} else{
 				appendTasks("#848484", taskNo, 1);
 				appendTasks("#FFFFFF", "!", 2);
-				appendTasks("#4B088A", tasks, 5);
+				appendTasks("#191964", tasks, 5);
 				}
 			}
 		}
@@ -239,7 +239,7 @@ public class HomeView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"150px\"><font size=\"4.5\" color=\""
+			output.append("<td width=\"180px\"><font size=\"5\" color=\""
 					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""
@@ -266,7 +266,6 @@ public class HomeView implements View {
 		setWelcomeMessage();
 		output = new StringBuilder();
 		output.append("<html>");
-		output.append("<font size=\"4.5\" color=\"#E68A00\"><p align=\"right\"><b>Date: "+todayDate+" &nbsp</b></p></font>");
 		output.append("<table width=\"100%\">");
 		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
 		getToday();

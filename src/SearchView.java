@@ -93,8 +93,8 @@ public class SearchView extends SingleView implements View {
 					if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
-						appendTasks("#4B088A", tasks, 3);
-						appendTasks("#01A9DB", t, 4);
+						appendTasks("#01A9DB", t, 3);
+						appendTasks("#4B088A", tasks, 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
@@ -136,7 +136,7 @@ public class SearchView extends SingleView implements View {
 		output.append("<html>");
 		output.append("&nbsp");
 		output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
-		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
+		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Search Results </b></p></font></td></tr>");
 		getSearchResults();
 		output.append("&nbsp");
 		output.append("</table>");
