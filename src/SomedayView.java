@@ -24,7 +24,7 @@ public class SomedayView extends SingleView implements View {
 	protected void getSomeday() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 10) {
+			if (i < 6) {
 				String tasks = "";
 				i++;
 				String taskNo = "     " + i + ".   ";
@@ -32,10 +32,15 @@ public class SomedayView extends SingleView implements View {
 				t = task.toString().replaceAll("\\[", "")
 						.replaceAll("\\]", " -");
 				tasks = t + "\n";
+				if (task.getIsCompleted()) { //completed tasks are green and striked thru
+					appendTasks("#848484", taskNo, 1);
+					appendTasks("#FFFFFF", "!", 2);
+					appendTasks("#00B800", "<strike>"+tasks+"</strike>", 5);
+				} else{
 				appendTasks("#848484", taskNo, 1);
-				appendTasks("#FFFFFF", "&nbsp ", 2);
-				appendTasks("#4B088A", tasks, 3);
-				appendTasks("#FFFFFF", "&nbsp ", 4);
+				appendTasks("#FFFFFF", "!", 2);
+				appendTasks("#4B088A", tasks, 5);
+				}
 			}
 		}
 
@@ -54,12 +59,26 @@ public class SomedayView extends SingleView implements View {
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"120px\"><font size=\"5\" color=\""
-					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td>");
+			output.append("<td width=\"150px\"><font size=\"4.5\" color=\""
+					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td width=\"420px\"><font size=\"5\" color=\""
 					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
 		}
+		else if (row == 5) {
+			output.append("<td colspan=\"420px\" width=\"420px\"><font size=\"5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
+		}
+
+		// StyleConstants.setBold(style, isBold);
+		// StyleConstants.setFontSize(style, 14);
+		// StyleConstants.setBackground(style, bg);
+		// StyleConstants.setForeground(style, c);
+		// StyledDocument doc = showToUser.getStyledDocument();
+		// SimpleAttributeSet center = new SimpleAttributeSet();
+		// StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
+		// doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		// doc.insertString(doc.getLength(), s, style);
 
 	}
 
