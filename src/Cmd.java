@@ -70,7 +70,7 @@ public abstract class Cmd {
 	protected static final String SEARCH_KEYWORD_IS_EMPTY = "No task contains the keyword <i>%1$s</i>";
 	protected static final String UNDO_EMPTY_MESSAGE = "No action to undo";
 	protected static final String INVALID_MESSAGE = "<p align=\"center\">You have entered an invalid command.</p><p align=\"center\">Enter a valid command or <i>Help</i> for assistance.</p>";
-
+	
 	protected static final String EMPTY_DES_MESSAGE = "Please enter a task description to add.";
 	
 	//storage file specified by user
@@ -79,6 +79,11 @@ public abstract class Cmd {
 	private static final String TODAY_TASK = "Today";
 	private static final String UPCOMING_TASK = "Upcoming";
 	private static final String SOMEDAY_TASK = "Someday";
+	
+	protected static final String MESSAGE_SAVE_CONFIG_NOT_FOUND = "config file not found";
+	protected static final String MESSAGE_SAVE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
+	protected static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s could not found!\r\n";
+	protected static final String MESSAGE_UNDO_SAVE = "Undo save: old file location restored";
 	
 	protected Data data = Data.getInstance();
 	protected Display display = Display.getInstance();

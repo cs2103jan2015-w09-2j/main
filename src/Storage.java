@@ -75,8 +75,12 @@ public class Storage {
 		logger.setLevel(Level.OFF);
 	}
 	
+	public String getPath(){
+		return filePath;
+	}
+	
 	/**
-	 * Gets the file path
+	 * Gets the file directory without the file name
 	 * @return String
 	 */
 	public String getFilePath(){
@@ -89,24 +93,18 @@ public class Storage {
 	/**
 	 * Changes the directory to specified directory
 	 */
-	public String setPath(String userSpecifiedDirectory) {
+	public void setPath(String userSpecifiedDirectory) throws IOException{
 		copyFile(userSpecifiedDirectory);
 
 		File configFile = new File(NAME_CONFIG_FILE);
-		try {
+		
 			configFile.createNewFile();
-		} catch (IOException e) {
-			logger.log(Level.WARNING, String.format(
-					MESSAGE_ERROR_FILE_NOT_FOUND, NAME_CONFIG_FILE), e
-					.getMessage());
-		}
+
 		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
 		writeStringToFile(filePath, NAME_CONFIG_FILE);
 
 		closeFileHandler();
 
-		return String
-				.format(MESSAGE_NEW_USER_DIRECTORY, userSpecifiedDirectory);
 	}
 
 	private void copyFile(String userSpecifiedDirectory) {
