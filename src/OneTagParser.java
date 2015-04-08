@@ -1,4 +1,30 @@
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+//import java.util.Scanner;
+//import java.util.Map;
+import java.lang.String;
+
+import com.joestelmach.natty.*;//CANNOT HAVE .* Must have specific libray
+
+import java.util.Date;
+import java.util.List;
+//import java.util.Scanner;
+//import java.util.Map;
+import java.lang.String;
+
+//@author A0108436H
+public class OneTagParser {
 	//private static final String INVALID_EDIT_COMMAND = "INVALID ERROR COMMAND!";
 	//	private static final int DUMMY_VALUE = -1;
 	private static final int NUM_ZERO = 0;
