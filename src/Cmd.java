@@ -80,13 +80,15 @@ public abstract class Cmd {
 	private static final String UPCOMING_TASK = "Upcoming";
 	private static final String SOMEDAY_TASK = "Someday";
 	
-	protected static final String MESSAGE_SAVE_CONFIG_NOT_FOUND = "config file not found";
+	protected static final String MESSAGE_SAVE_CONFIG_NOT_FOUND = "config.json file not found";
 	protected static final String MESSAGE_SAVE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
-	protected static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s could not found!\r\n";
 	protected static final String MESSAGE_UNDO_SAVE = "Undo save: old file location restored";
-	
+	protected static final String MESSAGE_STORAGE_FILE_NOT_FOUND = "OneTag.json is not found!\r\n";
+	protected static final String NAME_CLASS_STORAGE = "storage";
+	protected static final String MESSAGE_FILE_ACCESS_NOT_ALLOWED = "Error with oneTag.json file access";
 	protected Data data = Data.getInstance();
 	protected Display display = Display.getInstance();
+	protected OneTagLogger logger = OneTagLogger.getInstance();
 	
 	public abstract boolean execute();
 	
