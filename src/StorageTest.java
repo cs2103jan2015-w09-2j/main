@@ -73,8 +73,15 @@ public class StorageTest {
 	}
 	
 	@Test
+	public void testGetPath(){
+		//Only one partition because file path can never be set to null assertions in code
+		assertEquals(MESSAGE_TEST_GET_PATH, storage.getPath(), filePath);
+
+	}
+	
+	@Test
 	public void testGetFilePath(){
-		//Only one partition because file path is always initialized
+		//Path can never be null or empty
 		assertEquals(MESSAGE_TEST_GET_PATH, storage.getFilePath(), currentRelativePath + CHARACTER_BACKSLASH);
 	}
 	

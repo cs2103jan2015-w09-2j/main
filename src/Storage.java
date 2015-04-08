@@ -39,11 +39,6 @@ public class Storage {
 		checkFileExist(userSpecifiedDirectory);
 	}
 	
-	public Storage(ArrayList<Task> task) throws IOException{
-		allTasks = task;
-		checkFileExist(this.filePath);
-	}
-	
 	// Used for testing
 	public Storage(String directory, ArrayList<Task> task) throws IOException{
 		filePath = directory;
@@ -74,6 +69,8 @@ public class Storage {
 	 * Changes the directory to specified directory
 	 */
 	public void setPath(String userSpecifiedDirectory) throws IOException{
+		assert (userSpecifiedDirectory == null);
+		
 		String oldFilePath = filePath;
 		
 		if (userSpecifiedDirectory.endsWith(CHARACTER_BACKSLASH) | userSpecifiedDirectory.endsWith(CHARACTER_REVERSE_BACKSLASH)){
@@ -100,7 +97,7 @@ public class Storage {
 	 * @param tasks
 	 */
 	public void writeToFile(ArrayList<Task> tasks) throws IOException{
-
+		
 		String json = convertTaskToString(tasks);
 		writeStringToFile(json, filePath);
 
