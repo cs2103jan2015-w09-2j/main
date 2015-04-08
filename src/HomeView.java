@@ -62,23 +62,7 @@ public class HomeView implements View {
 	
 		}
 	}
-	
-	private void setWelcomeMessage(){
-		//time 12am to 12pm
-		if (nowTime.isBefore(LocalTime.MIDNIGHT) && nowTime.isAfter(LocalTime.NOON)){
-			WELCOME_MESSAGE="Good Morning! Hope you have a great day!";
-		}
-		//time 12pm to 6pm
-		//time 6pm tp 8pm
-		//time 8pm to 12pm
-		else if(nowTime.isAfter(LocalTime.MIDNIGHT) && nowTime.isBefore(LocalTime.NOON)){
-				WELCOME_MESSAGE="Good Night! Hope you sleep well!";
-		}else if(nowTime.isAfter(LocalTime.MIDNIGHT)){
-			WELCOME_MESSAGE="Good Evening! Hope you are having a wonderful day!";
-		}
-		
-		
-	}
+
 
 	protected void getToday() throws BadLocationException {
 		i = 0;
@@ -263,7 +247,6 @@ public class HomeView implements View {
 	}
 
 	public String show() throws BadLocationException {
-		setWelcomeMessage();
 		output = new StringBuilder();
 		output.append("<html>");
 		output.append("<table width=\"100%\">");
