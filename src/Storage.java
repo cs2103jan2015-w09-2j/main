@@ -2,7 +2,6 @@
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,11 +9,6 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,59 +16,45 @@ import com.google.gson.reflect.TypeToken;
 
 public class Storage {
 
+	private static final String CHARACTER_END_OF_FILE = "\\Z";
 	private static final String NAME_CONFIG_FILE = "config.json";
 	private static final String USER_DIRECTORY = "user.dir";
 	private static final String CHARACTER_BACKSLASH = "\\";
 	private static final String CHARACTER_REVERSE_BACKSLASH = "/";
-	private static final String MESSAGE_NEW_USER_DIRECTORY = "Directory has been set to %1$s";
-	private static final String MESSAGE_ERROR_FILE_NOT_FOUND = "%1$s is not found!\r\n";
 	private static final String CHARACTER_EMPTY_STRING = "";
-	private static Logger logger = Logger.getLogger("Storage");
-	private static final String DIRECTORY_LOGGER = "StorageLog";
+	private static OneTagLogger logger = OneTagLogger.getInstance();
 
 	private String fileName = "oneTag.json"; // default name is oneTag.json
 	private ArrayList<Task> allTasks;
 	private String currentRelativePath = System.getProperty(USER_DIRECTORY);
 	private String filePath = currentRelativePath + CHARACTER_BACKSLASH + fileName;
 
-	public Storage() {
+	public Storage() throws IOException{
 		allTasks = new ArrayList<Task>();
 		checkFileExist(this.filePath);
-		initializeLogger();
 	}
-
-	public Storage(ArrayList<Task> task) {
+	
+	public Storage(String userSpecifiedDirectory) throws IOException{
+		allTasks = new ArrayList<Task>();
+		checkFileExist(userSpecifiedDirectory);
+	}
+	
+	public Storage(ArrayList<Task> task) throws IOException{
 		allTasks = task;
 		checkFileExist(this.filePath);
-		initializeLogger();
 	}
 	
 	// Used for testing
-	public Storage(String directory, ArrayList<Task> task) {
+	public Storage(String directory, ArrayList<Task> task) throws IOException{
 		filePath = directory;
 		allTasks = task;
 		checkFileExist(this.filePath);
-		initializeLogger();
-	}
-
-	private void initializeLogger() {
-		Handler fh;
-		try {
-			fh = new FileHandler(DIRECTORY_LOGGER, true);
-		} catch (SecurityException e) {
-			e.printStackTrace();
-			return;
-		} catch (IOException e) {
-			System.out.println(String.format(MESSAGE_ERROR_FILE_NOT_FOUND,
-					DIRECTORY_LOGGER));
-			return;
-		}
-		SimpleFormatter formatter = new SimpleFormatter();
-		fh.setFormatter(formatter);
-		logger.addHandler(fh);
-		logger.setLevel(Level.OFF);
 	}
 	
+	/**
+	 * Gets the entire file path
+	 * @return String
+	 */
 	public String getPath(){
 		return filePath;
 	}
@@ -94,22 +74,7 @@ public class Storage {
 	 * Changes the directory to specified directory
 	 */
 	public void setPath(String userSpecifiedDirectory) throws IOException{
-		copyFile(userSpecifiedDirectory);
-
-		File configFile = new File(NAME_CONFIG_FILE);
-		
-			configFile.createNewFile();
-
-		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
-		writeStringToFile(filePath, NAME_CONFIG_FILE);
-
-		closeFileHandler();
-
-	}
-
-	private void copyFile(String userSpecifiedDirectory) {
 		String oldFilePath = filePath;
-		File oldLocationFile = new File(oldFilePath);
 		
 		if (userSpecifiedDirectory.endsWith(CHARACTER_BACKSLASH) | userSpecifiedDirectory.endsWith(CHARACTER_REVERSE_BACKSLASH)){
 			filePath = userSpecifiedDirectory + fileName;
@@ -117,22 +82,16 @@ public class Storage {
 		else{
 		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
 		}
-		File updatedLocationFile = new File(filePath);
-
-		try {
-			Files.copy(oldLocationFile.toPath(), updatedLocationFile.toPath());
-		} catch (IOException e1) {
-			logger.log(Level.WARNING,
-					String.format(MESSAGE_ERROR_FILE_NOT_FOUND, fileName));
+		
+		File file = new File(filePath);
+		if (!file.exists()){
+		copyFile(oldFilePath, filePath);
 		}
+		writeStringToFile(filePath, NAME_CONFIG_FILE);
+		
+		File oldFile = new File(oldFilePath);
+		oldFile.delete();
 
-		oldLocationFile.delete();
-	}
-
-	private void closeFileHandler() {
-		for (Handler h : logger.getHandlers()) {
-			h.close();
-		}
 	}
 
 	/**
@@ -140,34 +99,11 @@ public class Storage {
 	 * 
 	 * @param tasks
 	 */
-	public void writeToFile(ArrayList<Task> tasks) {
+	public void writeToFile(ArrayList<Task> tasks) throws IOException{
 
 		String json = convertTaskToString(tasks);
 		writeStringToFile(json, filePath);
-		closeFileHandler();
 
-	}
-
-	private String convertTaskToString(ArrayList<Task> tasks) {
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.setPrettyPrinting().registerTypeAdapter(Task.class,
-				new TaskSerializer());
-		Gson gson = gsonBuilder.create();
-		String json = gson.toJson(tasks);
-		return json;
-	}
-
-	private void writeStringToFile(String json, String filePath) {
-		FileWriter fw;
-		try {
-			fw = new FileWriter(filePath);
-			fw.write(json);
-			;
-			fw.flush();
-			fw.close();
-		} catch (Exception e) {
-			logger.log(Level.WARNING, e.getMessage());
-		}
 	}
 
 	/**
@@ -175,7 +111,7 @@ public class Storage {
 	 * 
 	 * @return ArrayList<Task>
 	 */
-	public ArrayList<Task> getData() {
+	public ArrayList<Task> getData() throws IOException{
 		String jsonString = new String(CHARACTER_EMPTY_STRING);
 		jsonString = readStringFromFile(jsonString);
 
@@ -185,12 +121,53 @@ public class Storage {
 			allTasks = new ArrayList<Task>();
 		}
 
-		closeFileHandler();
 
 		return allTasks;
 
 	}
+	
+	/*
+	 * Contains mechanism to correct missing config.json files and oneTag.json file
+	 */
+	private boolean checkFileExist(String filePath) throws IOException {
 
+		File file;
+		File configFile = new File(NAME_CONFIG_FILE);
+		
+		if (configFile.exists()) {
+			Scanner scanConfig = new Scanner(configFile);
+			this.filePath = scanConfig.useDelimiter(CHARACTER_END_OF_FILE).next();
+			scanConfig.close();
+			file = new File(this.filePath);
+			if (file.exists()){
+				return true;
+			}
+			else{
+				file.createNewFile();
+				return false;
+			}
+		} else {
+			configFile.createNewFile();
+			file = new File(filePath);
+			file.createNewFile();
+			writeStringToFile(filePath, NAME_CONFIG_FILE);
+			return false;
+		}
+
+	}
+	
+	private void copyFile(String oldFilePath, String userSpecifiedPath) throws IOException {
+		
+		File oldLocationFile = new File(oldFilePath);
+		filePath = userSpecifiedPath;
+		
+		File updatedLocationFile = new File(filePath);
+		
+		
+		Files.copy(oldLocationFile.toPath(), updatedLocationFile.toPath());
+		
+	}
+	
 	private void convertStringToTask(String jsonString) {
 		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class,
 				new TaskDeserializer()).create();
@@ -198,63 +175,36 @@ public class Storage {
 		}.getType();
 		allTasks = gson.fromJson(jsonString, listType);
 	}
+	
+	private String convertTaskToString(ArrayList<Task> tasks) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.setPrettyPrinting().registerTypeAdapter(Task.class, new TaskSerializer());
+		Gson gson = gsonBuilder.create();
+		String json = gson.toJson(tasks);
+		
+		return json;
+	}
 
-	private String readStringFromFile(String jsonString) {
+	private String readStringFromFile(String fileString) throws IOException {
 
 		BufferedReader br = null;
 
-		try {
-			String line;
-			br = new BufferedReader(new FileReader(filePath));
-			while ((line = br.readLine()) != null) {
-				jsonString += line;
-			}
-		} catch (Exception e) {
-			logger.log(Level.WARNING, e.getMessage());
-		} finally {
-			try {
-				br.close();
-			} catch (IOException e) {
-				logger.log(Level.WARNING, e.getMessage());
-			}
+		String line;
+		br = new BufferedReader(new FileReader(filePath));
+		while ((line = br.readLine()) != null) {
+			fileString += line;
 		}
-		return jsonString;
+		
+		br.close();
+		
+		return fileString;
 	}
-
-	/**
-	 * 
-	 * @param filePath
-	 * @return boolean
-	 */
-	private boolean checkFileExist(String filePath) {
-
-		File file = new File(filePath);
-		File configFile = new File(NAME_CONFIG_FILE);
-
-		if (configFile.exists()) {
-			try {
-				this.filePath = new Scanner(new File(NAME_CONFIG_FILE))
-						.useDelimiter("\\Z").next();
-			} catch (FileNotFoundException e) {
-				logger.log(Level.WARNING,
-						String.format(MESSAGE_ERROR_FILE_NOT_FOUND, fileName));
-			}
-		} else {
-			if (file.exists()) {
-				return true;
-			} else {
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					logger.log(Level.WARNING, String.format(
-							MESSAGE_ERROR_FILE_NOT_FOUND, fileName));
-					return false;
-				}
-			}
-
-		}
-
-		return false;
+	
+	private void writeStringToFile(String stringToWrite, String filePath) throws IOException{
+		FileWriter fw;
+		fw = new FileWriter(filePath);
+		fw.write(stringToWrite);
+		fw.flush();
+		fw.close();
 	}
-
 }
