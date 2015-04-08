@@ -364,7 +364,7 @@ public class UserInterface {
 									.matches("\\W")) {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
-								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|from|to|by|^(today|upcoming|someday)|^(help)|^(done))")) {
+								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|from|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save))")) {
 							setCharacterAttributes(wordL, wordR - wordL, attr,
 									false);
 						} else {
