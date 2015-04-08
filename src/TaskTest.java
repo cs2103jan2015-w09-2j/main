@@ -69,40 +69,32 @@ public class TaskTest {
 	private Task nullReferenceTask = null;
 	private Task undefinedTask;
 	private Integer integer;
-	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
 
 	@Before
 	public void setUp() throws Exception {
 		today = LocalDateTime.now();
 		tomorrow = LocalDateTime.now().plusDays(oneDay);
-		todayTask = new Task(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), TASK_GO_HIKING);
+		todayTask = new Task(today, TASK_GO_HIKING);
 		tomorrowTask = new Task(tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth(), tomorrow.getHour(), tomorrow.getMinute(), TASK_BUY_APPLE);
 		floatingTask = new Task(TASK_BUY_ORANGE);
 		dupFloatingTask = new Task(TASK_BUY_ORANGE);
-		earlyTimedTask = new Task(2015, 3, 10, 19, 0, 2015, 3, 10, 19, 30, TASK_GO_RUNNING);
-		lateTimedTask = new Task(2015, 3, 10, 20, 0, 2015, 3, 10, 20, 30, TASK_GO_HOME);
-		dupLateTimedTask = new Task(2015, 3, 10, 20, 0, 2015, 3, 10, 20, 30, TASK_GO_HOME);
-		earlyDeadlineTask = new Task(2015, 3, 10, 21, 30, TASK_GO_RT);
-		lateDeadlineTask = new Task(2015, 3, 10, 22, 30, TASK_MOP_FLOOR);
-		dupLateDeadlineTask = new Task(2015, 3, 10, 22, 30, TASK_MOP_FLOOR);
+		earlyTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 19, 0), LocalDateTime.of(2015, 3, 10, 19, 30), TASK_GO_RUNNING);
+		lateTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 20, 0), LocalDateTime.of(2015, 3, 10, 20, 30), TASK_GO_HOME);
+		dupLateTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 20, 0) ,LocalDateTime.of(2015, 3, 10, 20, 30), TASK_GO_HOME);
+		earlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
+		lateDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 22, 30), TASK_MOP_FLOOR);
+		dupLateDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 22, 30), TASK_MOP_FLOOR);
 		completedFloatingTask = new Task(TASK_BUY_ORANGE);
 		completedFloatingTask.setIsCompleted(true);
-		completedEarlyTimedTask = new Task(2015, 3, 10, 19, 0, 2015, 3, 10, 19, 30, TASK_GO_RUNNING);
+		completedEarlyTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 19, 0),LocalDateTime.of(2015, 3, 10, 19, 30), TASK_GO_RUNNING);
 		completedEarlyTimedTask.setIsCompleted(true);
-		completedEarlyDeadlineTask = new Task(2015, 3, 10, 21, 30, TASK_GO_RT);
+		completedEarlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
 		completedEarlyDeadlineTask.setIsCompleted(true);
-		completedTodayTask = new Task(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), TASK_GO_HIKING);
+		completedTodayTask = new Task(today, TASK_GO_HIKING);
 		completedTodayTask.setIsCompleted(true);
-		completedTomorrowTask = new Task(tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth(), tomorrow.getHour(), tomorrow.getMinute(), TASK_BUY_APPLE);
+		completedTomorrowTask = new Task(tomorrow, TASK_BUY_APPLE);
 		completedTomorrowTask.setIsCompleted(true);
-		dupCompletedEarlyDeadlineTask = new Task(2015, 3, 10, 21, 30, TASK_GO_RT);
+		dupCompletedEarlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
 		dupCompletedEarlyDeadlineTask.setIsCompleted(true);
 		nullTask = new Task();
 		emptyStringFloatingTask = new Task(EMPTY_SPACE_STRING);
