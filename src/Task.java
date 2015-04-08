@@ -13,24 +13,7 @@ public class Task{
 	private LocalDateTime start = null;
 	private LocalDateTime end = null;
 	private boolean isCompleted = false;
-	
-	// Timed Task
-	public Task(int startYear, int startMonth, int startDay, int startHour,
-			int startMin, int endYear, int endMonth, int endDay, int endHour,
-			int endMin, String taskDescription) {
-		description = taskDescription;
-		start = LocalDateTime.of(startYear, startMonth, startDay, startHour,
-				startMin);
-		end = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMin);
-	}
-
-	// Deadline task
-	public Task(int endYear, int endMonth, int endDay, int endHour, int endMin,
-			String taskDescription) {
-		description = taskDescription;
-		end = LocalDateTime.of(endYear, endMonth, endDay, endHour, endMin);
-	}
-	
+		
 	// Used internally by TaskSerializer
 	public Task(){
 		
@@ -133,27 +116,6 @@ public class Task{
 	 */
 	public void setIsCompleted(boolean isCompleted){
 		this.isCompleted = isCompleted;
-	}
-	
-	/**
-	 * Updates the fields of the current object with the fields of the newTask
-	 * @param newTask updates the fields of the current object with the fields of the newTask
-	 */
-	public void update(Task otherTask) {
-		String otherDescription = otherTask.getDescription();
-		LocalDateTime otherStart = otherTask.getStart();
-		LocalDateTime otherEnd = otherTask.getEnd();
-		boolean isCompletedOther = otherTask.getIsCompleted();
-		if (otherDescription != null){
-		setDescription(otherDescription);
-		}
-		if (otherStart!=null){
-		setStart(otherStart);
-		}
-		if (otherEnd != null){
-		setEnd(otherEnd);
-		}
-		setIsCompleted(isCompletedOther);
 	}
 	
 	/**
