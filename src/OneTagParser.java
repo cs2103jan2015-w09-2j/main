@@ -1,31 +1,5 @@
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-//import java.util.Scanner;
-//import java.util.Map;
-import java.lang.String;
-
-import com.joestelmach.natty.*;
-
-import java.util.Date;
-import java.util.List;
-//import java.util.Scanner;
-//import java.util.Map;
-import java.lang.String;
-
-import com.joestelmach.natty.*;
-
-@SuppressWarnings({ "unused", "unused" })
-public class OneTagParser {
-	private static final String INVALID_EDIT_COMMAND = "INVALID ERROR COMMAND!";
+	//private static final String INVALID_EDIT_COMMAND = "INVALID ERROR COMMAND!";
 	//	private static final int DUMMY_VALUE = -1;
 	private static final int NUM_ZERO = 0;
 	private static final int POS_ZERO = 0;
@@ -45,13 +19,13 @@ public class OneTagParser {
 	private static final int INPUT_SPLIT_THIRD = 2;
 	private static final int INPUT_SPLIT_FIRST = 0;
 	private static final int INPUT_SPLIT_SECOND = 1;	
-	private static final int INPUT_SPLIT_FOURTH = 3;	
+	//private static final int INPUT_SPLIT_FOURTH = 3;	
 
 	//String used in parser
 	private static final String COLON = ":";
 	private static final String SPACE = " ";
 
-	//Error Messages
+	//Error Messages: WILL BE HANDLED BY CONTROLLER.
 	private static final String INVALID_MSG = "invalid";
 	private static final String INVALID_CMD_MSG = "command type string cannot be null!";
 	private static final String ERROR_EDIT = "Edit cannot be a null";
@@ -119,25 +93,24 @@ public class OneTagParser {
 	private String input;
 	
 	public OneTagParser(String input){
-		this.input = input;
+		this.input = input.trim();
 	}
 
-	//@author A0108436H
+	
 	/**Takes input String from Logic and sends it for sorting.
 	 * 
 	 * @param input String given by Logic
 	 * @return Cmd after parsing
 	 */
 	public Cmd toCmd() {
-		input.trim();
 		String[] inputArr = input.split(SPACE);
-		if(inputArr.length == 1){
+
+		if(inputArr.length == NUM_ONE){
 			return parseOneWordCmd();
 		}else{
 			return parseLongInput();
 		}
 	}
-
 
 	/**Determines whether cmd is 'View' ,'Help', 'Undo', 'Exit' and returns appropriate Cmd object.
 	 * 
@@ -160,9 +133,8 @@ public class OneTagParser {
 			return new UndoCmd();
 		case EXIT:
 			System.exit(0);
-			//Need to add assumption here.
 		default:
-			throw new Error("invalid");
+			throw new ArithmeticException();//test
 		}
 	}
 
@@ -205,18 +177,17 @@ public class OneTagParser {
 	 */	
 	private Task parseMsgforAddCmd(String message){
 		String[] word = message.split(SPACE);
-		String testWord = null , dateString = null,taskDescription = null, endDateTimeString = null, startDateTimeString = null, deadlineDateTimeString = null;	
+		String testWord = "" , dateString = null,taskDescription = null, endDateTimeString = null, startDateTimeString = null, deadlineDateTimeString = null;	
 		LocalDateTime endDateTime = null, startDateTime = null , deadlineDateTime = null; 
-		boolean isTimedTask = false;
-		boolean isDeadlineTask = false;
-		Parser dateParser = new Parser();
-		int posKeyword = getNumWords(message) - NUM_ONE;	
-		for(int count =getNumWords(message)- 1 ; count >= NUM_ZERO; count--){
+		boolean isTimedTask = false, isDeadlineTask = false;
+		int posKeyword = word.length - NUM_ONE;	
+		
+		for(int count = posKeyword ; count >= NUM_ZERO; count--){
 			testWord =word[count].trim();
-			if(checkTimedTask(testWord)){ 
-				dateString = word[count+1] + SPACE ;
+			if(isTimedTask(testWord)){ 
+				dateString = word[count+1] + SPACE;
 				if(posKeyword == word.length- NUM_ONE){
-					dateString = getDateTimeString(dateString, posKeyword, word,count);
+					dateString = getDateTimeString(dateString, posKeyword, word, count);
 				/*	if(dateString.contains("/") || dateString.contains("-")){
 						if(dateString.contains("/")){
 							String[] words = dateString.split("/",3);
@@ -232,52 +203,51 @@ public class OneTagParser {
 					}*/
 					if(isValidDateTime(dateString)){
 						isTimedTask = true;
-						endDateTimeString = parseDate(dateString, dateParser);
-						endDateTime = getDateTimeFormat(endDateTimeString);
+						endDateTime = parseDate(dateString);
 						posKeyword = count;
 					}
-				}else{
+				}
+				else{
 					dateString = getNewDateTimeString(dateString, posKeyword, word,count);
-					startDateTimeString = parseDate(dateString,dateParser);
-					startDateTime = getDateTimeFormat(startDateTimeString);
+					startDateTime = parseDate(dateString);
 					posKeyword = count;
 					taskDescription = getTaskDescription(posKeyword, word);
 					return new Task(startDateTime, endDateTime, taskDescription);
-			}
+				}
 			}
 			else if(isDeadlineTask(testWord)){
 				posKeyword = count;
 				dateString = getDateString(word, message, count);
 				if(isValidDateTime(dateString)){
 					isDeadlineTask = true;
-					deadlineDateTimeString = parseDate(dateString,dateParser);
-					deadlineDateTime = getDateTimeFormat(deadlineDateTimeString);
+					deadlineDateTime = parseDate(dateString);
 					taskDescription = getTaskDescription(posKeyword,word);
 					return new Task(deadlineDateTime,taskDescription);
 				}
 			}
 		}
+		
+		
 		if(isFloatingTask(isDeadlineTask, isTimedTask)){
 			taskDescription=getTaskDescription(word.length,word);
 			return new Task(taskDescription);
 		}
 		throw new Error(ERROR_ADD_CMD);
 	}
-	private String[] swap(String[] words){
+	/*private String[] swap(String[] words){
 		String temp = words[0];
 		words[0] = words[1];
 		words[1] = temp;
-	}
+	}*/
 
 
 
 	private boolean isValidDateTime(String dateString) {
-		String testDate = null;
-		Parser dateParser = new Parser();
+		LocalDateTime testDate;
 		String[] words = dateString.split(SPACE);
 		int count = words.length; 
 		for(String element: words){
-			testDate = parseDate(dateString,dateParser);
+			testDate = parseDate(element);
 			if(testDate != null){
 				count--;
 				continue;
@@ -303,15 +273,18 @@ public class OneTagParser {
 	 * @param dateParser
 	 * @return infoDateTime
 	 */
-	private String parseDate(String dateString, Parser dateParser) {
+	private LocalDateTime parseDate(String dateString) {
+		Instant instant = null;
+		Parser dateParser = new Parser();
 		List<DateGroup> listOfDates = dateParser.parse(dateString);
-		String testDate = null;
 		for(DateGroup group:listOfDates) {
 			List<Date> dates = group.getDates();
-			testDate = dates.get(POS_ZERO).toString();
+			Date thisDate = dates.get(POS_ZERO);
+			instant = Instant.ofEpochMilli(thisDate.getTime());
 			break;
 		}
-	      return testDate;	
+		LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+	    return dateTime;	
 	}
 	/**Returns the dateString containing the date to be sent for parsing.
 	 * 
@@ -332,9 +305,62 @@ public class OneTagParser {
 	 * @param message
 	 * @return	
 	 */
-		private EditCmd parseEditDate(String message) {
+	private EditCmd parseEditDate(String message) {
+		LocalDateTime dateTime;
 		String[] inputArr = message.split(SPACE,INPUT_SPLIT_THIRD);
-		System.out.println("InputArr[0] :"+inputArr[0]);
+		int index = Integer.parseInt(inputArr[0].trim());
+		String userChanges = inputArr[1].trim();
+		System.out.println("userChanges : "+userChanges);
+		if(userChanges.contains(BY)){
+			System.out.println("userChanges.indexOf(BY) : "+userChanges.indexOf(BY));
+			if(userChanges.indexOf(BY) == 0){
+				String dateTimeString = userChanges.substring(2).trim();
+				if(isValidDateTime(dateTimeString)){
+					dateTime = parseDate(dateTimeString);
+					return new EditCmd(index, dateTime, 3);
+				}
+			}
+			String[] splitBy = userChanges.split(BY);
+			System.out.println("splitBy[0] : "+splitBy[0]);
+			System.out.println("splitBy[1] : "+splitBy[1]);
+		}
+		
+		
+		
+		
+		
+
+		
+		return null;
+	}
+		
+		
+		
+		
+		
+		/*
+		if(userChanges.contains(BY)||userChanges.contains(TO)||userChanges.contains(FROM)){//Means contains a keywords.
+			if(userChanges.contains(BY) && !userChanges.contains(FROM) && !userChanges.contains(TO)){
+				//PARSE DEADLINE TASK 
+			}else if(userChanges.contains(BY) && userChanges.contains(FROM) && !userChanges.contains(TO))''
+					
+					
+					)
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+		
+		return null;
+	}
+		
+		/*
+		}
 		String endDateTimeString, startDateTimeString; 
 		String deadlineDateTimeString;
 		boolean isToTime = false;
@@ -342,7 +368,7 @@ public class OneTagParser {
 		boolean isTaskDescription = false;
 		String toDo = inputArr[1];
 		System.out.println("toDo : "+toDo);
-		int index = Integer.parseInt(inputArr[0]);
+		
 		String testWord,dateString;
 		String taskDescription = null;
 		int posKeyword = toDo.length() - NUM_ONE;
@@ -352,7 +378,7 @@ public class OneTagParser {
 		if(toDo.contains(FROM)|| toDo.contains(TO) || toDo.contains(BY)){
 			System.out.println("Keyword Detected");
 			String[] word = toDo.split(SPACE);
-			for(int count =getNumWords(toDo)- 1 ; count >= NUM_ZERO; count--){
+			for(int count =toDo.length - 1 ; count >= NUM_ZERO; count--){
 				testWord =word[count].trim();
 				if(isDeadlineTask(testWord)){
 					posKeyword = count;
@@ -362,11 +388,57 @@ public class OneTagParser {
 					taskDescription = getTaskDescription(posKeyword,word);
 					return new EditCmd(index,deadlineDateTime,2);
 				}
-			}
+			}*/
+		
+		//	taskDescription = inputArr[1];
+		//	return new EditCmd(index,taskDescription) ;
+				/*if(checkTimedTask(testWord)){
+					System.out.println("This is a check timed task");
+					dateString = word[count+1] + SPACE ;
+					if(posKeyword == toDo.length()- NUM_ONE){
+						System.out.println("To timing is working");
+						dateString = getDateTimeString(dateString, posKeyword, word,count);
+						endDateTimeString = parseDate(dateString, dateParser);
+						endDateTime = getDateTimeFormat(endDateTimeString);
+						isToTime = true;
+						posKeyword = count;
+					}else{
+						dateString = getNewDateTimeString(dateString, posKeyword, word,count);
+						startDateTimeString = parseDate(dateString,dateParser);
+						startDateTime = getDateTimeFormat(startDateTimeString); 
+						isFromTime = true;
+						posKeyword = count;
+					    taskDescription = getTaskDescription(posKeyword, word);
+					    isTaskDescription = true;
+					}
+		}*//*else if(isDeadlineTask(testWord)){
+			posKeyword = count;
+			dateString = getDateString(word, message, count);
+			deadlineDateTimeString = parseDate(dateString,dateParser);
+			deadlineDateTime = getDateTimeFormat(deadlineDateTimeString);
+			taskDescription = getTaskDescription(posKeyword,word);
+			return new EditCmd(index,deadlineDateTime,2);
+		}*
+		/*/	
+		/*if(isToTime == true && isFromTime == false && isTaskDescription == false){
+			return new EditCmd(index,endDateTime,2);
+		}else if (isToTime == false && isFromTime == true && isTaskDescription == false){
+			return new EditCmd(index,startDateTime,1);
+		}else if(isToTime == true && isFromTime == false && isTaskDescription == true){
+			return new EditCmd(index,taskDescription,endDateTime,2);
+		}else if(isToTime == false && isFromTime == true && isTaskDescription == true){
+			return new EditCmd(index,taskDescription,endDateTime,2);
+		}else if(isToTime == true && isFromTime == true && isTaskDescription == true){
+			System.out.println("Test");
+			return new EditCmd(index,taskDescription, startDateTime, endDateTime);
+		}else if(isToTime == false && isFromTime == false && isTaskDescription == true){
+			return new EditCmd(index, taskDescription);
 		}
-			taskDescription = inputArr[1];
-			return new EditCmd(index,taskDescription) ;
-		}
+		}*/
+	
+		
+		//System.out.println("Testing edit Cmd");
+		
 	/**This method returns the getParseDate
 	 * 
 	 * @param parseDate
@@ -484,7 +556,7 @@ public class OneTagParser {
 	 * @param testWord
 	 * @return
 	 */
-	private static boolean checkTimedTask(String testWord) {
+	private static boolean isTimedTask(String testWord) {
 		return testWord.equalsIgnoreCase(FROM)|| testWord.equalsIgnoreCase(TO);
 	}
 
@@ -627,9 +699,7 @@ public class OneTagParser {
 	 * @return COMMAND_TYPE
 	 */
 	private static COMMAND_TYPE getCommand(String input){
-		if (input == null){
-			throw new Error(INVALID_CMD_MSG);
-		}
+		assert(input == null);
 		if (input.equalsIgnoreCase(HOME)) {
 			return COMMAND_TYPE.HOME;
 		}else if (input.equalsIgnoreCase(DONE)) {
