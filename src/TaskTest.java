@@ -75,7 +75,7 @@ public class TaskTest {
 		today = LocalDateTime.now();
 		tomorrow = LocalDateTime.now().plusDays(oneDay);
 		todayTask = new Task(today, TASK_GO_HIKING);
-		tomorrowTask = new Task(tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth(), tomorrow.getHour(), tomorrow.getMinute(), TASK_BUY_APPLE);
+		tomorrowTask = new Task(tomorrow, TASK_BUY_APPLE);
 		floatingTask = new Task(TASK_BUY_ORANGE);
 		dupFloatingTask = new Task(TASK_BUY_ORANGE);
 		earlyTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 19, 0), LocalDateTime.of(2015, 3, 10, 19, 30), TASK_GO_RUNNING);
