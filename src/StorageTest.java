@@ -1,8 +1,9 @@
-
+//Author A0111217
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.junit.After;
@@ -12,9 +13,6 @@ import org.junit.Test;
 
 public class StorageTest {
 	
-	private static final String MESSAGE_TEST_SET_PATH = "test setPath";
-	private static final String MESSAGE_NEW_DIRECTORY_SET = "Directory has been set to D:\\";
-	private static final String MESSAGE_OLD_DIRECTORY_SET = "Directory has been set to " + System.getProperty("user.dir");
 	private static final String DIRECTORY_NEW = "D:\\";
 	private static final String MESSAGE_TEST_WRITING_AND_GETTING_DATA = "test writing and getting data";
 	private static final String MESSAGE_TEST_FILE_EXIST = "check if file is at new location";
@@ -45,10 +43,10 @@ public class StorageTest {
 	@Before
 	public void oneTimeSetUp() throws Exception {
 		floatingTask = new Task(TASK_BUY_ORANGE);
-		earlyTimedTask = new Task(2015, 3, 10, 19, 0, 2015, 3, 10, 19, 30, TASK_GO_RUNNING);
-		lateTimedTask = new Task(2015, 3, 10, 20, 0, 2015, 3, 10, 20, 30, TASK_GO_HOME);
-		earlyDeadlineTask = new Task(2015, 3, 10, 21, 30, TASK_GO_RT);
-		lateDeadlineTask = new Task(2015, 3, 10, 22, 30, TASK_MOP_FLOOR);
+		earlyTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 19, 0), LocalDateTime.of(2015, 3, 10, 19, 30), TASK_GO_RUNNING);
+		lateTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 20, 0), LocalDateTime.of(2015, 3, 10, 20, 30), TASK_GO_HOME);
+		earlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
+		lateDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 22, 30), TASK_MOP_FLOOR);
 		
 		toDo.add(floatingTask);
 		toDo.add(earlyTimedTask);
@@ -73,6 +71,7 @@ public class StorageTest {
 			config.delete();
 		}
 	}
+	
 	@Test
 	public void testGetFilePath(){
 		//Only one partition because file path is always initialized
@@ -80,18 +79,48 @@ public class StorageTest {
 	}
 	
 	@Test
-	public void testWriteToFileAndGetFromFile() {
+	public void testWriteToFileAndGetFromFile() throws IOException {
+		ArrayList<Task> list = null;
 		
 		// Writes file with null arraylist
+		try{
 		storage.writeToFile(null);
-		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, storage.getData(), emptyList);
+		}catch (IOException ex){
+			assert false;
+		}
+		try{
+			list = storage.getData();
+		}catch(IOException ex){
+			assert false;
+		}
+		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, list, emptyList);
+		
 		//Writes file with empty arraylist
-		storage.writeToFile(emptyList);
-		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, storage.getData(), emptyList);
+		try{
+			storage.writeToFile(emptyList);
+		}catch(IOException ex){
+			assert false;
+		}
+		try{
+			list = storage.getData();
+		}catch(IOException ex){
+			assert false;
+		}
+		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, list, emptyList);
+		
 		// Writes file with ArrayList<Task>
-		storage.writeToFile(toDo);
-		assertTrue(MESSAGE_TEST_WRITING_AND_GETTING_DATA, storage.getData().equals(toDo));
-
+		try{
+			storage.writeToFile(toDo);
+		}catch(IOException ex){
+			assert false;
+		}
+		try{
+			list = storage.getData();
+		}catch(IOException ex){
+			assert false;
+		}
+		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, list, toDo);
+		
 	}
 	
 	@Test
@@ -101,6 +130,7 @@ public class StorageTest {
 		filePath = DIRECTORY_NEW + "oneTag.json";
 		File changedLocation = new File(filePath);
 		assertTrue(MESSAGE_TEST_FILE_EXIST, changedLocation.exists());
+		
 		//Partition for location not ending with "/" changed successfully
 		filePath = currentRelativePath;
 		storage.setPath(filePath);
