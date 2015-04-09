@@ -109,7 +109,7 @@ public class Task{
 	}
 	
 	/**
-	 * Sets the task as completed
+	 * Sets the task as boolean isCompleted
 	 */
 	public void setIsCompleted(boolean isCompleted){
 		this.isCompleted = isCompleted;
