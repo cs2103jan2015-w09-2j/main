@@ -1,6 +1,8 @@
 //@author A0112715R
 
 import java.awt.Color;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -57,7 +59,7 @@ public class TodayView extends DateView {
 	protected void getToday() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 12) {
+			if (i < 15) {
 				i++;
 				getTaskInfo(task);
 				if (task.isDeadlineTask()) {
@@ -81,6 +83,7 @@ public class TodayView extends DateView {
 			}
 		}
 	}
+
 
 	private String formatTimeToDisplay() {
 		String timeToDisplay = startTime.format(formatTime).replace("AM", "am")

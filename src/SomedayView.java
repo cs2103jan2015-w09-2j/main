@@ -22,6 +22,7 @@ public class SomedayView extends SingleView implements View {
 	protected void getSomeday() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
+		if(i<15){
 			String tasks = "";
 			i++;
 			String taskNo = "     " + i + ".   ";
@@ -37,8 +38,8 @@ public class SomedayView extends SingleView implements View {
 			appendTasks("#848484", taskNo, 1);
 			appendTasks("#FFFFFF", "!", 2);
 			appendTasks("#0A1B2A", tasks, 5);
-			}
-		
+			}	
+		}
 	}
 	}
 
@@ -56,15 +57,8 @@ public class SomedayView extends SingleView implements View {
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
-		} else if (row == 3) {
-			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
-					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
-		} else if (row == 4) {
-			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
-					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
-		}
-		else if (row == 5) {
-			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+		} else if (row == 5) {
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"4\" color=\""
 					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
 		}
 	}

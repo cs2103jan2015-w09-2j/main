@@ -48,7 +48,7 @@ public class UpcomingView extends SingleView implements View {
 	protected void getUpcoming() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 9) {
+			if (i < 5) {
 				i++;
 				getTaskInfo(task);
 				if (task.isDeadlineTask()) {
