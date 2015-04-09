@@ -29,6 +29,7 @@ public class SaveCmd extends ModifiableCmd {
 
 	@Override
 	public void undo(){
+		/*
 		File config = new File(NAME_CONFIG);
 		if (config.exists()){
 			try {
@@ -36,18 +37,32 @@ public class SaveCmd extends ModifiableCmd {
 			} catch (FileNotFoundException e) {
 				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_SAVE_CONFIG_NOT_FOUND);
 				display.setMessage(MESSAGE_SAVE_CONFIG_NOT_FOUND);
+				return;
 			}
 		}
 		else{
 			previousStorageLocation = storage.getPath();
 		}
 		
+		*/
+		System.out.println(previousStorageLocation);
 		try{
-			storage.setPath(storageLocation);
+			storage.setPath(previousStorageLocation);
 		}catch(IOException ioEx){
+			System.out.println("1");
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 			display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			return;
 		}
+		
+		try{
+			data.set(storage.getData());
+			}catch(IOException ioEx){
+				System.out.println("2");
+				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				return;
+			}
 		
 		display.setMessage(MESSAGE_UNDO_SAVE);
 	}
@@ -56,6 +71,7 @@ public class SaveCmd extends ModifiableCmd {
 	public boolean execute() {
 		
 		try{
+			previousStorageLocation = storage.getFilePath();
 			storage.setPath(storageLocation);
 			}catch(IOException ioEx){
 				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
@@ -65,7 +81,7 @@ public class SaveCmd extends ModifiableCmd {
 		
 		
 		try{
-		data.set(storage.getData());
+			data.set(storage.getData());
 		}catch(IOException ioEx){
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 			display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
