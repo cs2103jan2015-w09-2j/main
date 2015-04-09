@@ -52,25 +52,33 @@ public class UpcomingView extends SingleView implements View {
 				i++;
 				getTaskInfo(task);
 				if (task.isDeadlineTask()) {
-					
+
 					String tasks = taskDes;
 					String taskNo = "     " + i + ".   ";
 					String endDateToDisplay = endDate.format(formatter);
 					String endTimeToDisplay = endTime.format(formatTime);
-					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll("\\]","");
-					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
-					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
+							.replaceAll("\\]", "");
+					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
+							.replaceAll("\\]", "");
+					endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+							.replace("PM", "pm").replace(".00", "");
 
-					String endDateTime = "<p align=\"left\">"+endDateToDisplay+"</p>"+"<p align=\"left\"><font color=\"#1F3D7A\">"+endTimeToDisplay+"</font></p>";
-				
-					if (task.getIsCompleted()) { // coloured green and striked thru
+					String endDateTime = "<p align=\"left\">"
+							+ endDateToDisplay + "</p>"
+							+ "<p align=\"left\"><font color=\"#1F3D7A\">"
+							+ endTimeToDisplay + "</font></p>";
+
+					if (task.getIsCompleted()) { // coloured green and striked
+													// thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#848484", "<p align=\"left\"><strike>"
 								+ endDateToDisplay + "</strike></p>"
-								+ "<strike><p align=\"left\">" + endTimeToDisplay
-								+ "</p></strike>", 3);
-						appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+								+ "<strike><p align=\"left\">"
+								+ endTimeToDisplay + "</p></strike>", 3);
+						appendTasks("#848484",
+								"<strike>" + tasks + "</strike>", 4);
 
 					} else {
 						appendTasks("#848484", taskNo, 1);
@@ -83,35 +91,49 @@ public class UpcomingView extends SingleView implements View {
 				else {
 					String tasks = taskDes;
 					String taskNo = "     " + i + ".   ";
-									
+
 					String startDateToDisplay = startDate.format(formatter);
 					String startTimeToDisplay = startTime.format(formatTime);
-					startDateToDisplay = startDateToDisplay.replaceAll("\\[", "").replaceAll("\\]","");
-					startTimeToDisplay = startTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
-					startTimeToDisplay = startTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+					startDateToDisplay = startDateToDisplay.replaceAll("\\[",
+							"").replaceAll("\\]", "");
+					startTimeToDisplay = startTimeToDisplay.replaceAll("\\[",
+							"").replaceAll("\\]", "");
+					startTimeToDisplay = startTimeToDisplay.replace("AM", "am")
+							.replace("PM", "pm").replace(".00", "");
 
 					String endDateToDisplay = endDate.format(formatter);
 					String endTimeToDisplay = endTime.format(formatTime);
-					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll("\\]","");
-					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
-					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
-					
-					String dateToDisplay = "<p align=\"left\">"+startDateToDisplay+" - "+endDateToDisplay+"</p>";
-					String timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"+startTimeToDisplay+" - "+endTimeToDisplay+"</font></p>";
-						
-					if (task.getIsCompleted()) { // completed tasks are green and striked
+					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
+							.replaceAll("\\]", "");
+					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
+							.replaceAll("\\]", "");
+					endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+							.replace("PM", "pm").replace(".00", "");
+
+					String dateToDisplay = "<p align=\"left\">"
+							+ startDateToDisplay + " - " + endDateToDisplay
+							+ "</p>";
+					String timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"
+							+ startTimeToDisplay
+							+ " - "
+							+ endTimeToDisplay
+							+ "</font></p>";
+
+					if (task.getIsCompleted()) { // completed tasks are green
+													// and striked
 													// thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#848484", "<p align=\"left\"><strike>"
 								+ endDateToDisplay + "</strike></p>"
-								+ "<strike><p align=\"left\">" + endTimeToDisplay
-								+ "</p></strike>", 3);
-						appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+								+ "<strike><p align=\"left\">"
+								+ endTimeToDisplay + "</p></strike>", 3);
+						appendTasks("#848484",
+								"<strike>" + tasks + "</strike>", 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", dateToDisplay+timeToDisplay, 3);
+						appendTasks("#01A9DB", dateToDisplay + timeToDisplay, 3);
 						appendTasks("#0A1B2A", tasks, 4);
 
 					}
@@ -119,7 +141,6 @@ public class UpcomingView extends SingleView implements View {
 			}
 		}
 	}
-
 
 	public void appendTasks(String textColour, String s, int row)
 			throws BadLocationException {
@@ -136,10 +157,7 @@ public class UpcomingView extends SingleView implements View {
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
 			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
-					+ textColour
-					+ "\"><b>"
-					+ s
-					+ "</b></font></td>");
+					+ textColour + "\"><b>" + s + "</b></font></td>");
 		} else if (row == 4) {
 			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
 					+ textColour
