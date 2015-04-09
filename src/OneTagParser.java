@@ -1,30 +1,4 @@
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-//import java.util.Scanner;
-//import java.util.Map;
-import java.lang.String;
-
-import com.joestelmach.natty.*;//CANNOT HAVE .* Must have specific libray
-
-import java.util.Date;
-import java.util.List;
-//import java.util.Scanner;
-//import java.util.Map;
-import java.lang.String;
-
-//@author A0108436H
-public class OneTagParser {
 	//private static final String INVALID_EDIT_COMMAND = "INVALID ERROR COMMAND!";
 	//	private static final int DUMMY_VALUE = -1;
 	private static final int NUM_ZERO = 0;
@@ -269,23 +243,45 @@ public class OneTagParser {
 
 
 	private boolean isValidDateTime(String dateString) {
+	//	System.out.println("String in isValidDateTime : "+dateString);
 		LocalDateTime testDate;
 		String[] words = dateString.split(SPACE);
+		//for(String element: words){
+		//	System.out.println(element + " ");
+		//}
+		//return false;
 		int count = words.length; 
 		for(String element: words){
-			testDate = parseDate(element);
+			System.out.println("Element : "+element);
+			testDate = parseDate(element.trim());
+		//	System.out.println("TestDate : "+testDate.toString());
 			if(testDate != null){
 				count--;
 				continue;
 			}else if(testDate == null){
+				if(checkIfInteger(element)){
+					count--; 
+					continue;
+				}else{
 				return false;
+				}
 			}
 		}
-		if(count == 0){
-			return true;
-		}
-		return false;	
+		return true; 
 	}
+
+	private boolean checkIfInteger(String element) {
+		 try { 
+		        Integer.parseInt(element); 
+		    } catch(NumberFormatException e) { 
+		        return false; 
+		    } catch(NullPointerException e) {
+		        return false;
+		    }
+		    // only got here if we didn't return false
+		    return true;
+	}
+
 
 	private LocalDateTime getDateTimeFormat(String endDateTimeString) {
 		int[] test = getDateAndTime(endDateTimeString);
@@ -300,17 +296,29 @@ public class OneTagParser {
 	 * @return infoDateTime
 	 */
 	private LocalDateTime parseDate(String dateString) {
+		System.out.println("The following date is being parsed : "+dateString);
 		Instant instant = null;
 		Parser dateParser = new Parser();
 		List<DateGroup> listOfDates = dateParser.parse(dateString);
-		for(DateGroup group:listOfDates) {
+	//	System.out.println("ABC : "+listOfDates.size());
+		for(DateGroup group:listOfDates) {	
+	//		System.out.println("We are here1");
 			List<Date> dates = group.getDates();
+		//	System.out.println("We are here2");
 			Date thisDate = dates.get(POS_ZERO);
+		//System.out.println("We are here");
 			instant = Instant.ofEpochMilli(thisDate.getTime());
+			LocalDateTime test = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+			//System.out.println("Test : "+test.toString());
 			break;
 		}
+		if(instant == null){
+			return null;
+		}else{
+		System.out.println("Date is succesfully parsed");
 		LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 	    return dateTime;	
+	}
 	}
 	/**Returns the dateString containing the date to be sent for parsing.
 	 * 
@@ -332,36 +340,156 @@ public class OneTagParser {
 	 * @return	
 	 */
 	private EditCmd parseEditDate(String message) {
+		System.out.println("Entering command");
 		LocalDateTime dateTime;
 		String[] inputArr = message.split(SPACE,INPUT_SPLIT_THIRD);
 		int index = Integer.parseInt(inputArr[0].trim());
 		String userChanges = inputArr[1].trim();
-		System.out.println("userChanges : "+userChanges);
+		//System.out.println("userChanges : "+userChanges);
 		if(userChanges.contains(BY)){
-			System.out.println("userChanges.indexOf(BY) : "+userChanges.indexOf(BY));
-			if(userChanges.indexOf(BY) == 0){
+			mainloop: 
+			if(userChanges.lastIndexOf(BY) == 0){//by something.
+				if(userChanges.contains("to")||userChanges.contains("from")){
+					/*edit 1 by J.K. Rowling from <time> 
+					 * edit 1 by J.K. Rowling to <time>
+					 *edit 1 by J.K. Rowling from <date/time> to <date/time>
+					 */
+					System.out.println("Inside To and From");
+					break mainloop;
+				}
+				/*Sample Cases: edit <index> by <string>
+				 * 1.edit 1 by April 25 2015 (user changes date)
+				 * 2.edit 1 by J.K.Rowling (user changes task name to "by J.K.Rowling")
+				 * 3.edit 1 by  J.K.Rowling someday (2 + change task to someday)
+				 * 4.edit 1 by J.K Rowling by April 25 2015.
+				 */ 
 				String dateTimeString = userChanges.substring(2).trim();
 				if(isValidDateTime(dateTimeString)){
+					//Case 1
 					dateTime = parseDate(dateTimeString);
 					return new EditCmd(index, dateTime, 3);
+				}else{//by task description.
+					//Code not working!!!!. Need to check wth Chun How.
+					String taskDescription = userChanges;
+					if(taskDescription.endsWith("someday")){
+						//Case 3
+						taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+						taskDescription.trim();
+						return new EditCmd(index, taskDescription,true);
+					}
+					//Case 2
+					return new EditCmd(index,taskDescription);
+				}
+			}else{
+				/*Sample Case: (edit <index> <string> by <string>)
+				 * 1. edit 1 pick up Johnson by tomorrow
+				 * 2. edit 1 read CSLR by Thomas Cormen
+				 * 3. edit 1 read CSLR by Thomas Cormen someday 
+				 */
+				//System.out.println("In correct position now");
+				int posLastBy = userChanges.lastIndexOf(BY);
+				String taskDescription = userChanges.substring(0,posLastBy).trim();
+				String dateTimeString = userChanges.substring(posLastBy+2).trim();
+				System.out.println("ABC taskDescription : "+taskDescription);
+				System.out.println("ABC dateTimeString : "+dateTimeString);
+		/*		String[] splitBy = userChanges.split(BY);
+				String taskDescription = splitBy[0].trim();
+				String dateTimeString = splitBy[1].trim();*/
+				
+				/*Code: 
+				 * edit 1 read CLRS by Thomas Cormen from today to tomorrow.
+				 */
+				if(dateTimeString.contains("from")||dateTimeString.contains("to")){
+					System.out.println("CAUTION: SEND THIS TO FROM AND TO METHOD!!!");
+				}
+				System.out.println("isValidDateTime : "+isValidDateTime(dateTimeString));
+				if(isValidDateTime(dateTimeString)){
+					//Case 1 
+					System.out.println("I am here");
+					dateTime = parseDate(dateTimeString);
+					return new EditCmd(index, taskDescription,dateTime,2);	
+				}else{
+					if(userChanges.endsWith("someday")){
+						//Case 3
+						taskDescription = userChanges.substring(0, userChanges.lastIndexOf("someday"));
+						taskDescription.trim();
+						return new EditCmd(index, taskDescription,true);
+					}else{
+						//Case 2.
+						taskDescription = userChanges;
+						return new EditCmd(index,taskDescription);
+					}
+				}	
+			}
+		}else if(userChanges.contains("from")){
+			int posLastFrom = userChanges.lastIndexOf("from");
+			if(posLastFrom == 0){
+				String from = userChanges.substring(0,4);
+				System.out.println("from : "+from);
+				String dateTimeString = userChanges.substring(4).trim();
+				System.out.println("dateTimeString : "+dateTimeString);
+				if(dateTimeString.contains("to")){
+					int posLastTo = dateTimeString.lastIndexOf("to");
+					String stringFrom = dateTimeString.substring(0,posLastTo-1).trim();
+					String stringTo = dateTimeString.substring(posLastTo + 2).trim();
+					System.out.println("stringFrom : "+stringFrom);
+					System.out.println("stringTo : "+stringTo); 
+					if(isValidDateTime(stringFrom) && isValidDateTime(stringTo)){
+						LocalDateTime startDateTime = parseDate(stringFrom);
+						LocalDateTime endDateTime = parseDate(stringTo);
+						return new EditCmd(index,startDateTime,endDateTime);
+					}else if(!isValidDateTime(stringFrom) && !isValidDateTime(stringTo)){
+						return new EditCmd(index, userChanges);
+					}else if(!isValidDateTime(stringFrom) && isValidDateTime(stringTo)){
+						String taskDescription = from + stringFrom; 
+						LocalDateTime endDateTime = parseDate(stringTo);
+						return new EditCmd(index,taskDescription,endDateTime,2);
+					}//Do not worry abt it being a to time. Let it pass to the to.
+				}
+			}else{
+					String taskDescription = userChanges.substring(0,userChanges.lastIndexOf("from")).trim();
+					String dateTimeString = userChanges.substring(userChanges.lastIndexOf("from")+4).trim();
+					if(isValidDateTime(dateTimeString)){
+						LocalDateTime startTimeDate = parseDate(dateTimeString);
+						return new  EditCmd(index,taskDescription,startTimeDate,1);
+					}else{
+						return new EditCmd(index,userChanges);
+					}
 				}
 			}
-			String[] splitBy = userChanges.split(BY);
-			System.out.println("splitBy[0] : "+splitBy[0]);
-			System.out.println("splitBy[1] : "+splitBy[1]);
+		return null;
 		}
-		
-		
-		
-		
-		
-
-		
+	/*		String taskDescription = userChanges.substring(0,posLastFrom).trim();
+			String dateTimeString = userChanges.substring(posLastFrom + 1).trim();
+			if(dateTimeString.contains("to")){
+			  int posLastTo = userChanges.lastIndexOf("to");
+			  String stringFrom = dateTimeString.substring(0,posLastTo).trim();
+			  String stringTo = dateTimeString.substring(posLastTo+1).trim();
+			  if(isValidDateTime(stringFrom) && isValidDateTime(stringTo)){
+				  LocalDateTime startTime = parseDateTime(stringFrom);
+				  LocalDateTime endTime = parseDateTime(stringTo);
+				  return new _________
+						  
+						  
+						  
+						  
+			  }
+			  
+			  '
+			}else if(isValidDateTime(dateTimeString)){
+				dateTime = parseDate(dateTimeString);
+				return new EditCmd(index,parseDate,2);
+			}
+	System.out.println("Code as expected;");*/
+/*	return null;
+		}
 		return null;
 	}
-		
-		
-		
+*/
+
+
+	
+	
 		
 		
 		/*
@@ -760,4 +888,3 @@ public class OneTagParser {
 	private static String getMessage(String input) {
 		return input;
 	}
-}
