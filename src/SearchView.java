@@ -1,4 +1,4 @@
-//@author A0112715
+//@author A0112715R
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,7 +45,7 @@ public class SearchView extends SingleView implements View {
 			isOverdue = true;
 		}
 	}
-	
+
 	protected void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
 		if (!task.isFloatingTask()) {
@@ -55,9 +55,10 @@ public class SearchView extends SingleView implements View {
 			}
 			endDate = task.getEnd().toLocalDate();
 			endTime = task.getEnd().toLocalTime();
-	
+
 		}
 	}
+
 	protected void getSearchResults() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
@@ -74,32 +75,32 @@ public class SearchView extends SingleView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					}
 				}
 
 				else {
 					String tasks = taskDes;
-					if(!task.isFloatingTask() && !task.isDeadlineTask()){
-					t = startDate.format(formatter);
+					if (!task.isFloatingTask() && !task.isDeadlineTask()) {
+						t = startDate.format(formatter);
 					}
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
 					if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					}
 				}
 			}
@@ -110,22 +111,25 @@ public class SearchView extends SingleView implements View {
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >"
-					+ "<td width=\"40px\"><font size=\"4\" color=\""
+					+ "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\""
 					+ textColour + "\"><p align=\"right\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
-			output.append("<td width=\"1px\"><font size=\"5\" color=\""
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"120px\"><font size=\"4\" color=\""
-					+ textColour + "\"><p align=\"left\"><b>" + s
-					+ "</b></p></font></td>");
+			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
+					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
-			output.append("<td width=\"420px\"><font size=\"5\" color=\""
-					+ textColour + "\"><p align=\"left\">" + s
-					+ "</p></font></td></tr>");
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
+		}
+		else if (row == 5) {
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
 		}
 
 	}
@@ -134,12 +138,11 @@ public class SearchView extends SingleView implements View {
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
-		output.append("&nbsp");
-		output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
-		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Search Results </b></p></font></td></tr>");
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Search Results</b></p></font></td></tr>");
 		getSearchResults();
-		output.append("&nbsp");
 		output.append("</table>");
+
 		output.append("</html>");
 
 		return output.toString();

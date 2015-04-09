@@ -1,4 +1,4 @@
-//@author A0112715
+//@author A0112715R
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
@@ -57,15 +57,19 @@ public class UserInterface {
 	private int noOfCommandsEntered;
 	private String message = "";
 
+	
 	public static UserInterface getInstance() {
 		if (UI == null) {
 			UI = new UserInterface();
 		}
 		return UI;
 	}
+	
+	public static void main (String [] args){
+		executeInterface();
+	}
 
-
-	public void executeInterface(){
+	public static void executeInterface(){
 	SwingUtilities.invokeLater(new Runnable(){
 	public void run() {
 		control = Controller.getInstance();
@@ -167,7 +171,7 @@ public class UserInterface {
 		commandFromUser = new JTextPane(doc);
 		commandFromUser.setToolTipText("Enter command here");
 		outerPanel.add(commandFromUser, BorderLayout.SOUTH);
-		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
+		commandFromUser.setFont(new Font("MV Boli", Font.PLAIN, 20));
 		commandFromUser.setBackground(new Color(255, 255, 255));
 		commandFromUser.setBounds(20, 371, 573, 43);
 		commandFromUser.setForeground(new Color(0, 0, 0));
@@ -195,7 +199,7 @@ public class UserInterface {
 	private void initializeFeedback() {
 		feedback = new JTextPane();
 		feedback.setForeground(new Color(153, 0, 153));
-		feedback.setFont(new Font("Lucida Fax", Font.BOLD | Font.ITALIC, 12));
+		feedback.setFont(new Font("Candara", Font.BOLD | Font.ITALIC, 6));
 		feedback.setEditable(false);
 		feedbackPanel.add(feedback, BorderLayout.SOUTH);
 	}
@@ -331,7 +335,7 @@ public class UserInterface {
 		message = Display.getInstance().getMessage();
 		try {
 			if (!message.isEmpty()) {
-				htmlMessage.append("<html><p valign=\"top\" align=\"center\"><font color=\"#660000\" size=\"5\">"+Display.getInstance().getMessage()+"</font></p></html>");
+				htmlMessage.append("<html><p valign=\"top\" align=\"center\"><font face=\"Lucida sans\" color=\"#660000\" size=\"5\">"+Display.getInstance().getMessage()+"</font></p></html>");
 				feedback.setText((htmlMessage.toString()) + "\n");
 			}
 		} catch (NullPointerException nullException) {
@@ -364,7 +368,7 @@ public class UserInterface {
 									.matches("\\W")) {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
-								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|from|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save))")) {
+								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
 							setCharacterAttributes(wordL, wordR - wordL, attr,
 									false);
 						} else {
@@ -387,7 +391,7 @@ public class UserInterface {
 				int after = findFirstNonWordChar(text, offs);
 
 				if (text.substring(before, after).toLowerCase()
-						.matches("(\\W)*(^(add)|delete|edit|search|from|to|by|^(today)|upcoming|someday|help|done)")) {
+						.matches("(\\W)*(^(add)|delete|edit|search|from(?!.*from)|to|by|^(today)|upcoming|someday|help|done|^(save)|^(home))")) {
 					setCharacterAttributes(before, after - before, attr, false);
 				} else {
 					setCharacterAttributes(before, after - before, attrBlack,

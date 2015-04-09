@@ -1,4 +1,4 @@
-//@author A0112715
+//@author A0112715R
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -13,9 +13,6 @@ import javax.swing.text.Style;
 import javax.swing.text.StyledDocument;
 
 public class HomeView implements View {
-	private UserInterface UI;
-	private StyledDocument doc;
-	private Style style;
 	private ArrayList<Task> today;
 	private ArrayList<Task> upcoming;
 	private ArrayList<Task> someday;
@@ -31,9 +28,6 @@ public class HomeView implements View {
 			.ofPattern("EEEE, dd MMMM yyyy");
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
 			Locale.US);
-	private LocalDate nowDate = LocalDate.now();
-	private LocalTime nowTime = LocalTime.now();
-	private String todayDate = LocalDate.now().format(todayFormatter);
 	private StringBuilder output = new StringBuilder();
 	long timeDifference; 
 	String WELCOME_MESSAGE="";
@@ -67,7 +61,7 @@ public class HomeView implements View {
 	protected void getToday() throws BadLocationException {
 		i = 0;
 		for (Task task : today) {
-			if (i < 10) {
+			if(i < 4){
 				i++;
 				getTaskInfo(task);
 				String t = "";
@@ -87,12 +81,12 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#3C7795", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#3C7795", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					}
 
 				} else {
@@ -115,23 +109,23 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#3C7795", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					}  else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#3C7795", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					}
 
 				}
-			}
+		}
 		}
 	}
 
 	protected void getUpcoming() throws BadLocationException {
 
 		for (Task task : upcoming) {
-			if (i < 7) {
+			if(i < 8){
 				i++;
 				getTaskInfo(task);
 				String t = "";
@@ -140,7 +134,7 @@ public class HomeView implements View {
 					String tasks = taskDes;
 					t = endDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-				 if (task.getIsCompleted()) { //coloured green and striked thru
+				 if (task.getIsCompleted()) { 
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#848484", "<strike>"+t+"</strike>", 3);
@@ -150,7 +144,7 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#3C7795", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 					}
 				}
 
@@ -168,18 +162,18 @@ public class HomeView implements View {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
-						appendTasks("#3C7795", tasks, 4);
+						appendTasks("#0A1B2A", tasks, 4);
 						
 					}
 				}
-			}
+		}
 		}
 	}
 
 	protected void getSomeday() throws BadLocationException {
 
 		for (Task task : someday) {
-			if (i < 6) {
+			if(i < 10){
 				String tasks = "";
 				i++;
 				String taskNo = "     " + i + ".   ";
@@ -194,9 +188,9 @@ public class HomeView implements View {
 				} else{
 				appendTasks("#848484", taskNo, 1);
 				appendTasks("#FFFFFF", "!", 2);
-				appendTasks("#3C7795", tasks, 5);
+				appendTasks("#0A1B2A", tasks, 5);
 				}
-			}
+		}
 		}
 	}
 
@@ -214,23 +208,24 @@ public class HomeView implements View {
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >"
-					+ "<td width=\"40px\"><font size=\"4\" color=\""
+					+ "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\""
 					+ textColour + "\"><p align=\"right\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
-			output.append("<td width=\"1px\"><font size=\"5\" color=\""
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
 					+ textColour + "\"><p align=\"center\"><b>" + s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"180px\"><font size=\"4.5\" color=\""
+			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
 					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 4) {
-			output.append("<td width=\"420px\"><font size=\"5\" color=\""
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
 					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
 		}
 		else if (row == 5) {
-			output.append("<td colspan=\"420px\" width=\"420px\"><font size=\"5\" color=\""
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
 					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
 		}
 
@@ -249,28 +244,22 @@ public class HomeView implements View {
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
-		output.append("<table width=\"100%\">");
-		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
+		output.append("<table  STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
 		getToday();
-		
-		output.append("&nbsp");
 		output.append("</table>");
 
-		if (i < 9) {
-			output.append("<table width=\"100%\">");
-			output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
+		
+			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+			output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
 			getUpcoming();
-			output.append("&nbsp");
 			output.append("</table>");
-		}
-
-		if (i < 6) {
-			output.append("<table width=\"100%\">");
-			output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Someday </b></p></font></td></tr>");
+	
+			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+			output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Someday </b></p></font></td></tr>");
 			getSomeday();
-			output.append("&nbsp");
 			output.append("</table>");
-		}
+		
 		output.append("</html>");
 
 		return output.toString();

@@ -1,4 +1,4 @@
-//@author A0112715
+//@author A0112715R
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,12 +20,11 @@ public class UpcomingView extends SingleView implements View {
 	private LocalDate endDate;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private boolean isOverdue;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
 			"EEE, dd MMM yyyy", Locale.US);
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
 			Locale.US);
-	private StringBuilder output = new StringBuilder();
+	private StringBuilder output;
 
 	@Override
 	public void update() {
@@ -46,96 +45,108 @@ public class UpcomingView extends SingleView implements View {
 		}
 	}
 
-	protected void isTaskOverdue(Task task) {
-		isOverdue = false;
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime endDateTime = task.getEnd();
-
-		if (endDateTime.isBefore(now)) {
-			isOverdue = true;
-		}
-	}
-
 	protected void getUpcoming() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
 			if (i < 9) {
 				i++;
 				getTaskInfo(task);
-				String t = "";
-				String endTimeMsg ="";
-				String taskNo = "     " + i + ".   ";
 				if (task.isDeadlineTask()) {
+					String endDateForDisplay = "";
+					String endTimeForDisplay = "";
+					String taskNo = "     " + i + ".   ";
 					String tasks = taskDes;
-					t = endDate.format(formatter);
-					endTimeMsg = endTime.format(formatTime).replace("AM", "am")
+					endDateForDisplay = endDate.format(formatter);
+					endTimeForDisplay = endTime.format(formatTime).replace("AM", "am")
 							.replace("PM", "pm").replace(".00", "");
-					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-				 if (task.getIsCompleted()) { //coloured green and striked thru
+					endDateForDisplay = endDateForDisplay.replaceAll("\\[", "").replaceAll(
+							"\\]", "-");
+					if (task.getIsCompleted()) { // coloured green and striked thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800",  "<p align=\"left\"><strike>"+t+"</strike></p>"+"<strike><p align=\"left\">"+endTimeMsg+"</p></strike>", 3);
-						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+						appendTasks("#848484", "<p align=\"left\"><strike>"
+								+ endDateForDisplay + "</strike></p>"
+								+ "<strike><p align=\"left\">" + endTimeForDisplay
+								+ "</p></strike>", 3);
+						appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
 
-					}  
-					else {
+					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", "<p align=\"left\">"+t+"</p>"+"<p align=\"left\">"+endTimeMsg+"</p>", 3);
-						appendTasks("#4B088A", tasks, 4);
+						appendTasks("#01A9DB", "<p align=\"left\">" + endDateForDisplay
+								+ "</p>" + "<p align=\"left\">" + endTimeForDisplay
+								+ "</p>", 3);
+						appendTasks("#0A1B2A", tasks, 4);
 					}
 				}
 
 				else {
 					String tasks = taskDes;
-
-					t = startDate.format(formatter) +" - " ;
-					String endDateMsg = endDate.format(formatter);
-					endTimeMsg = startTime.format(formatTime).replace("AM", "am")
+					String startDateForDisplay = "";
+					String endTimeForDisplay = "";
+					String taskNo = "     " + i + ".   ";
+					startDateForDisplay = startDate.format(formatter) + " - ";
+					String endDateForDisplay = endDate.format(formatter);
+					endTimeForDisplay = startTime.format(formatTime).replace("AM", "am")
 							.replace("PM", "pm").replace(".00", "")
 							+ " - "
 							+ endTime.format(formatTime).replace("AM", "am")
 									.replace("PM", "pm").replace(".00", "");
-					endTimeMsg = endTimeMsg.toString().replaceAll("\\[", "")
+					endTimeForDisplay = endTimeForDisplay.toString().replaceAll("\\[", "")
 							.replaceAll("\\]", " -");
-					
-					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-					if (task.getIsCompleted()) { //completed tasks are green and striked thru
+
+					startDateForDisplay = startDateForDisplay.replaceAll("\\[", "")
+							.replaceAll("\\]", "-");
+					if (task.getIsCompleted()) { // completed tasks are green and striked
+													// thru
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#00B800", "<p align=\"left\"><strike>"+t+"</strike></p>"+"<p align=\"left\"><strike>"+endDateMsg+"</strike></p>"+"<strike><p align=\"left\">"+endTimeMsg+"</p></strike>", 3);
-						appendTasks("#00B800", "<strike>"+tasks+"</strike>", 4);
+						appendTasks("#848484", "<p align=\"left\"><strike>"
+								+ startDateForDisplay + "</strike></p>"
+								+ "<p align=\"left\"><strike>" + endDateForDisplay
+								+ "</strike></p>" + "<strike><p align=\"left\">"
+								+ endTimeForDisplay + "</p></strike>", 3);
+						appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
 					} else {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", "<p align=\"left\">"+t+"</p>"+"<p align=\"left\">"+endDateMsg+"</p>"+"<p align=\"left\">"+endTimeMsg+"</p>", 3);
-						appendTasks("#4B088A", tasks, 4);
-						
+						appendTasks("#01A9DB", "<p align=\"left\">" + startDateForDisplay
+								+ "</p>" + "<p align=\"left\">" + endDateForDisplay
+								+ "</p>" + "<p align=\"left\">" + endTimeForDisplay
+								+ "</p>", 3);
+						appendTasks("#0A1B2A", tasks, 4);
+
 					}
 				}
 			}
 		}
 	}
 
+
 	public void appendTasks(String textColour, String s, int row)
 			throws BadLocationException {
 		if (row == 1) {
-			output.append("<tr width=\"100px\" >"
-					+ "<td width=\"40px\"><font size=\"4\" color=\""
-					+ textColour + "\"><p align=\"right\"><b>" + s
-					+ "</b></p></font></td>");
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
-			output.append("<td width=\"1px\"><font size=\"5\" color=\""
-					+ textColour + "\"><p align=\"center\"><b>" + s
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
-			output.append("<td width=\"400px\"><font size=\"4\" color=\""
-					+ textColour + "\"><b>" + s
+			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><b>"
+					+ s
 					+ "</b></font></td>");
 		} else if (row == 4) {
-			output.append("<td width=\"420px\"><font size=\"5\" color=\""
-					+ textColour + "\"><p align=\"left\">" + s
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ s
 					+ "</p></font></td></tr>");
 		}
 
@@ -145,12 +156,12 @@ public class UpcomingView extends SingleView implements View {
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
-		output.append("&nbsp");
-		output.append("<table cellspacing=\"2px\" cellpadding=\"3.5px\" width=\"100%\">");
-		output.append("<tr width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
+
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"2px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
 		getUpcoming();
-		output.append("&nbsp");
 		output.append("</table>");
+
 		output.append("</html>");
 
 		return output.toString();
