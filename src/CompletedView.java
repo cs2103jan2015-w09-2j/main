@@ -46,7 +46,7 @@ public class CompletedView extends SingleView implements View {
 	protected void getCompletedTasks() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 10) {
+			if (i < 5) {
 				i++;
 				getTaskInfo(task);
 				String taskNo = "     " + i + ".   ";
@@ -57,8 +57,9 @@ public class CompletedView extends SingleView implements View {
 					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll("\\]","");
 					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
 					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+
+					String endDateTime = "<p align=\"left\">"+endDateToDisplay+"</p>"+"<p align=\"left\"><font color=\"#1F3D7A\">"+endTimeToDisplay+"</font></p>";
 					
-					String endDateTime = "<p align=\"left\">"+endDateToDisplay+"</p>"+"<p align=\"left\">"+endTimeToDisplay+"</p>";
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", endDateTime, 3);
@@ -84,8 +85,8 @@ public class CompletedView extends SingleView implements View {
 					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
 					
 					dateToDisplay = "<p align=\"left\">"+startDateToDisplay+" - "+endDateToDisplay+"</p>";
-					timeToDisplay = "<p align=\"left\">"+startTimeToDisplay+" - "+endTimeToDisplay+"</p>";
-					}
+					timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"+startTimeToDisplay+" - "+endTimeToDisplay+"</font></p>";
+						}
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", dateToDisplay+timeToDisplay, 3);
@@ -128,7 +129,7 @@ public class CompletedView extends SingleView implements View {
 		output = new StringBuilder();
 
 		output.append("<html>");
-			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"5px\" cellspacing=\"3px\" width=\"100%\">");
+			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");
 			output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Completed</b></p></font></td></tr>");
 			getCompletedTasks();
 			output.append("</table>");

@@ -65,7 +65,7 @@ public class SearchView extends SingleView implements View {
 	protected void getSearchResults() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 10) {
+			if (i < 5) {
 				i++;
 				getTaskInfo(task);
 				String taskNo = "     " + i + ".   ";
@@ -78,7 +78,7 @@ public class SearchView extends SingleView implements View {
 					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
 					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
 					
-					String endDateTime = "<p align=\"left\">"+endDateToDisplay+"</p>"+"<p align=\"left\">"+endTimeToDisplay+"</p>";
+					String endDateTime = "<p align=\"left\">"+endDateToDisplay+"</p>"+"<p align=\"left\"><font color=\"#1F3D7A\">"+endTimeToDisplay+"</font></p>";
 				
 					if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
@@ -114,7 +114,7 @@ public class SearchView extends SingleView implements View {
 					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
 					
 					dateToDisplay = "<p align=\"left\">"+startDateToDisplay+" - "+endDateToDisplay+"</p>";
-					timeToDisplay = "<p align=\"left\">"+startTimeToDisplay+" - "+endTimeToDisplay+"</p>";
+					timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"+startTimeToDisplay+" - "+endTimeToDisplay+"</font></p>";
 					}
 					
 					if (task.isOverdue()) {
@@ -164,11 +164,10 @@ public class SearchView extends SingleView implements View {
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
-		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"5px\" cellspacing=\"3px\" width=\"100%\">");
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"8px\" cellspacing=\"0px\" width=\"100%\">");
 		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Search Results</b></p></font></td></tr>");
 		getSearchResults();
 		output.append("</table>");
-
 		output.append("</html>");
 
 		return output.toString();
