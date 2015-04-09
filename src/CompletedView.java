@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -15,6 +16,8 @@ public class CompletedView extends SingleView implements View {
 	private StringBuilder output = new StringBuilder();
 	private DateTimeFormatter formatter = DateTimeFormatter
 			.ofPattern("dd-MM-yyyy");
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
+			Locale.US);
 	private String taskDes;
 	private LocalDate startDate;
 	private LocalDate endDate;
@@ -46,26 +49,46 @@ public class CompletedView extends SingleView implements View {
 			if (i < 10) {
 				i++;
 				getTaskInfo(task);
-				String t = "";
 				String taskNo = "     " + i + ".   ";
 				if (task.isDeadlineTask()) {
 					String tasks = taskDes;
-					t = endDate.format(formatter);
-					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+					String endDateToDisplay = endDate.format(formatter);
+					String endTimeToDisplay = endTime.format(formatTime);
+					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll("\\]","");
+					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
+					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+					
+					String endDateTime = "<p align=\"left\">"+endDateToDisplay+"</p>"+"<p align=\"left\">"+endTimeToDisplay+"</p>";
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", t, 3);
+						appendTasks("#01A9DB", endDateTime, 3);
 						appendTasks("#0A1B2A", tasks, 4);
 				}
 				else {
 					String tasks = taskDes;
+					
+					String dateToDisplay ="---";
+					String timeToDisplay ="---";
+					
 					if(!task.isFloatingTask()){
-					t = startDate.format(formatter);
-					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+					String startDateToDisplay = startDate.format(formatter);
+					String startTimeToDisplay = startTime.format(formatTime);
+					startDateToDisplay = startDateToDisplay.replaceAll("\\[", "").replaceAll("\\]","");
+					startTimeToDisplay = startTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
+					startTimeToDisplay = startTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+
+					String endDateToDisplay = endDate.format(formatter);
+					String endTimeToDisplay = endTime.format(formatTime);
+					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll("\\]","");
+					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll("\\]", "");
+					endTimeToDisplay = endTimeToDisplay.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+					
+					dateToDisplay = "<p align=\"left\">"+startDateToDisplay+" - "+endDateToDisplay+"</p>";
+					timeToDisplay = "<p align=\"left\">"+startTimeToDisplay+" - "+endTimeToDisplay+"</p>";
 					}
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", t, 3);
+						appendTasks("#01A9DB", dateToDisplay+timeToDisplay, 3);
 						appendTasks("#0A1B2A", tasks, 4);
 					
 				}
@@ -88,7 +111,7 @@ public class CompletedView extends SingleView implements View {
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
 			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
-					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
+					+ textColour + "\"><b>" + s + "</b></font></td>");
 		} else if (row == 4) {
 			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
 					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
@@ -105,7 +128,7 @@ public class CompletedView extends SingleView implements View {
 		output = new StringBuilder();
 
 		output.append("<html>");
-			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"5px\" cellspacing=\"3px\" width=\"100%\">");
 			output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Completed</b></p></font></td></tr>");
 			getCompletedTasks();
 			output.append("</table>");
