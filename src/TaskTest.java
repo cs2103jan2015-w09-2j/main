@@ -1,6 +1,6 @@
 
 
-//@author A0111217
+//@author A0111217Y
 /**
  * Assumption: time and date validity are handled by OneTagParser class
  */
@@ -11,9 +11,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDateTime;
 
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 

@@ -1,4 +1,4 @@
-//@author A0111217
+//@author A0111217Y
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -19,20 +19,17 @@ public class Task{
 		
 	}	
 	
-	// To create deadline task
 	public Task(LocalDateTime end, String description){
 		this.end = end;
 		this.description =  description;
 	}
 
-	// To create new timed task
 	public Task(LocalDateTime start, LocalDateTime end, String description){
 		this.start = start;
 		this.end = end;
 		this.description = description;
 	}
 
-	// Floating task
 	public Task(String taskDescription) {
 		description = taskDescription;
 		start = null;
