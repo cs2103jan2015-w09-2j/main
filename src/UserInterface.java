@@ -49,10 +49,12 @@ public class UserInterface {
 	private JTextPane feedback;
 	private JButton closeButton;
 	private JButton minimiseButton;
+	private JButton maximizeButton;
 	private JPanel buttonPanel;
 	private JLabel welcomeLabel;
 	private Point mouseDownCoords;
 	private int noOfCurrentCmd;
+	private boolean isMaximizeFrame= true;
 	private ArrayList<String> commandsEntered = new ArrayList<String>();
 	private int noOfCommandsEntered;
 	private String message = "";
@@ -107,6 +109,7 @@ public class UserInterface {
 		initializeShowToUser();
 		initializeFeedback();
 		initializeCloseButton();
+		initializeMaximizeButton();
 		initializeMinimizeButton();
 		initializeWelcomeLabel();
 		processKeyPressed();
@@ -242,6 +245,30 @@ public class UserInterface {
 			public void mouseClicked(MouseEvent arg0) {
 				// minimizeApplication();
 				frame.setState(frame.ICONIFIED);
+			}
+		});
+	}
+	
+	private void initializeMaximizeButton() {
+		maximizeButton = new JButton("+");
+		buttonPanel.add(maximizeButton, BorderLayout.CENTER);
+		buttonPanel.setBorder(UIManager.getBorder("TextArea.border"));
+		maximizeButton.setFont(new Font("Calibri", Font.BOLD, 15));
+		maximizeButton.setBackground(new Color(255, 255, 255));
+		maximizeButton.setForeground(new Color(0, 0, 128));
+		
+
+		maximizeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if(isMaximizeFrame){
+				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+				isMaximizeFrame = false;
+			}
+				else{
+					frame.setSize(552, 535);
+					isMaximizeFrame = true;
+				}
 			}
 		});
 	}
