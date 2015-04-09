@@ -58,10 +58,22 @@ public class SaveCmd extends ModifiableCmd {
 		try{
 			storage.setPath(storageLocation);
 			}catch(IOException ioEx){
+				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 				display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 				return false;
 			}
+		
+		
+		try{
+		data.set(storage.getData());
+		}catch(IOException ioEx){
+			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			return false;
+		}
+		
 		display.setMessage(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
+		
 		return true;
 	}
 
