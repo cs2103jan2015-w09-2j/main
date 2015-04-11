@@ -1,5 +1,4 @@
 
-
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +22,9 @@ import java.util.List;
 //import java.util.Scanner;
 //import java.util.Map;
 import java.lang.String;
+
+//@author A0108436H
+public class OneTagParser {
 	//private static final String INVALID_EDIT_COMMAND = "INVALID ERROR COMMAND!";
 	//	private static final int DUMMY_VALUE = -1;
 	private static final int NUM_ZERO = 0;
@@ -116,7 +118,7 @@ import java.lang.String;
 	
 	private String input;
 	
-	public OneTagParser(String input){
+	public OneTagParser(String input) throws IllegalArgumentException{
 		this.input = input.trim();
 	}
 
@@ -131,6 +133,9 @@ import java.lang.String;
 
 		if(inputArr.length == NUM_ONE){
 			return parseOneWordCmd();
+		}else if(inputArr.length == 0){
+			return null; 
+		//	throw new IllegalArgumentException("THE USER HAS NOT ENTERED ANYTHING");
 		}else{
 			return parseLongInput();
 		}
@@ -158,7 +163,7 @@ import java.lang.String;
 		case EXIT:
 			System.exit(0);
 		default:
-			throw new ArithmeticException();//test
+			throw new IllegalArgumentException();
 		}
 	}
 
@@ -174,6 +179,9 @@ import java.lang.String;
 		System.out.println("userCommand : "+userCommand);
 		COMMAND_TYPE command = getCommand(userCommand);
 		String message = inputArr[INPUT_SPLIT_SECOND];
+		if(message == " "){
+			throw new IllegalArgumentException("YOU MUST ENTER A VALID MESSAGE");
+		}
 		System.out.println("message : "+message);
 		switch(command){
 		case ADD:
@@ -364,12 +372,10 @@ import java.lang.String;
 	 * @return	
 	 */
 	private EditCmd parseEditDate(String message) {
-		System.out.println("Entering command");
 		LocalDateTime dateTime;
 		String[] inputArr = message.split(SPACE,INPUT_SPLIT_THIRD);
 		int index = Integer.parseInt(inputArr[0].trim());
 		String userChanges = inputArr[1].trim();
-		//System.out.println("userChanges : "+userChanges);
 		if(userChanges.contains(BY)){
 			mainloop: 
 			if(userChanges.lastIndexOf(BY) == 0){//by something.
@@ -378,7 +384,6 @@ import java.lang.String;
 					 * edit 1 by J.K. Rowling to <time>
 					 *edit 1 by J.K. Rowling from <date/time> to <date/time>
 					 */
-					System.out.println("Inside To and From");
 					break mainloop;
 				}
 				/*Sample Cases: edit <index> by <string>
@@ -393,10 +398,8 @@ import java.lang.String;
 					dateTime = parseDate(dateTimeString);
 					return new EditCmd(index, dateTime, 3);
 				}else{//by task description.
-					//Code not working!!!!. Need to check wth Chun How.
 					String taskDescription = userChanges;
 					if(taskDescription.endsWith("someday")){
-						//Case 3
 						taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
 						taskDescription.trim();
 						return new EditCmd(index, taskDescription,true);
@@ -414,8 +417,6 @@ import java.lang.String;
 				int posLastBy = userChanges.lastIndexOf(BY);
 				String taskDescription = userChanges.substring(0,posLastBy).trim();
 				String dateTimeString = userChanges.substring(posLastBy+2).trim();
-				System.out.println("ABC taskDescription : "+taskDescription);
-				System.out.println("ABC dateTimeString : "+dateTimeString);
 		/*		String[] splitBy = userChanges.split(BY);
 				String taskDescription = splitBy[0].trim();
 				String dateTimeString = splitBy[1].trim();*/
@@ -423,13 +424,8 @@ import java.lang.String;
 				/*Code: 
 				 * edit 1 read CLRS by Thomas Cormen from today to tomorrow.
 				 */
-				if(dateTimeString.contains("from")||dateTimeString.contains("to")){
-					System.out.println("CAUTION: SEND THIS TO FROM AND TO METHOD!!!");
-				}
-				System.out.println("isValidDateTime : "+isValidDateTime(dateTimeString));
 				if(isValidDateTime(dateTimeString)){
 					//Case 1 
-					System.out.println("I am here");
 					dateTime = parseDate(dateTimeString);
 					return new EditCmd(index, taskDescription,dateTime,2);	
 				}else{
@@ -449,40 +445,115 @@ import java.lang.String;
 			int posLastFrom = userChanges.lastIndexOf("from");
 			if(posLastFrom == 0){
 				String from = userChanges.substring(0,4);
-				System.out.println("from : "+from);
 				String dateTimeString = userChanges.substring(4).trim();
-				System.out.println("dateTimeString : "+dateTimeString);
 				if(dateTimeString.contains("to")){
 					int posLastTo = dateTimeString.lastIndexOf("to");
 					String stringFrom = dateTimeString.substring(0,posLastTo-1).trim();
-					String stringTo = dateTimeString.substring(posLastTo + 2).trim();
-					System.out.println("stringFrom : "+stringFrom);
-					System.out.println("stringTo : "+stringTo); 
+					String stringTo = dateTimeString.substring(posLastTo + 2).trim(); 
 					if(isValidDateTime(stringFrom) && isValidDateTime(stringTo)){
 						LocalDateTime startDateTime = parseDate(stringFrom);
 						LocalDateTime endDateTime = parseDate(stringTo);
 						return new EditCmd(index,startDateTime,endDateTime);
 					}else if(!isValidDateTime(stringFrom) && !isValidDateTime(stringTo)){
+						String taskDescription = userChanges; 
+						if(taskDescription.endsWith("someday")){
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+							taskDescription.trim();
+							return new EditCmd(index, taskDescription,true);
+						}
 						return new EditCmd(index, userChanges);
 					}else if(!isValidDateTime(stringFrom) && isValidDateTime(stringTo)){
 						String taskDescription = from + stringFrom; 
 						LocalDateTime endDateTime = parseDate(stringTo);
 						return new EditCmd(index,taskDescription,endDateTime,2);
 					}//Do not worry abt it being a to time. Let it pass to the to.
+				}else{
+					if(isValidDateTime(dateTimeString)){
+						LocalDateTime startDateTime = parseDate(dateTimeString);
+						return new EditCmd(index,startDateTime,1);
+					}else{
+						String taskDescription = userChanges; 
+						if(taskDescription.endsWith("someday")){
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+							taskDescription.trim();
+							return new EditCmd(index, taskDescription,true);
+						}
+						return new EditCmd(index, userChanges);
+					}
 				}
 			}else{
 					String taskDescription = userChanges.substring(0,userChanges.lastIndexOf("from")).trim();
 					String dateTimeString = userChanges.substring(userChanges.lastIndexOf("from")+4).trim();
+					if(dateTimeString.contains("to")){
+						int lastPosTo = dateTimeString.lastIndexOf("to");
+						String startDateTimeString = dateTimeString.substring(0,lastPosTo-1).trim();
+						String endDateTimeString = dateTimeString.substring(lastPosTo + 2).trim();
+						if(isValidDateTime(startDateTimeString) && isValidDateTime(endDateTimeString)){
+							LocalDateTime startDateTime = parseDate(startDateTimeString);
+							LocalDateTime endDateTime = parseDate(endDateTimeString);
+							return new EditCmd(index,taskDescription,startDateTime,endDateTime);
+						}else if(!isValidDateTime(startDateTimeString) && isValidDateTime(endDateTimeString)){
+							LocalDateTime endDateTime = parseDate(dateTimeString);
+							taskDescription = userChanges.substring(0,userChanges.lastIndexOf("to")).trim();
+							return new EditCmd(index, taskDescription,endDateTime,2);
+						}
+					}
 					if(isValidDateTime(dateTimeString)){
-						LocalDateTime startTimeDate = parseDate(dateTimeString);
-						return new  EditCmd(index,taskDescription,startTimeDate,1);
+						LocalDateTime startDateTime = parseDate(dateTimeString);
+						return new  EditCmd(index,taskDescription,startDateTime,1);
 					}else{
+						taskDescription = userChanges; 
+						if(taskDescription.endsWith("someday")){
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+							taskDescription.trim();
+							return new EditCmd(index, taskDescription,true);
+						}
 						return new EditCmd(index,userChanges);
 					}
 				}
+			}else if(userChanges.contains("to")){
+				int posLastTo = userChanges.lastIndexOf("to");
+				if(posLastTo == 0){
+					String to = userChanges.substring(0,1);
+					String dateTimeString = userChanges.substring(2).trim();
+					if(isValidDateTime(dateTimeString)){
+						LocalDateTime endDateTime = parseDate(dateTimeString);
+						return new EditCmd(index,endDateTime,2);
+					}else{
+						String taskDescription = userChanges;; 
+						if(taskDescription.endsWith("someday")){
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+							taskDescription.trim();
+							return new EditCmd(index, taskDescription,true);
+						}
+						return new EditCmd(index,taskDescription);
+					}
+				}else{
+					String taskDescription = userChanges.substring(0,posLastTo).trim();
+					String dateTimeString = userChanges.substring(posLastTo + 2).trim();
+					if(isValidDateTime(dateTimeString)){
+						LocalDateTime endDateTime = parseDate(dateTimeString);
+						return new EditCmd(index,taskDescription,endDateTime,2);
+					}else{
+						taskDescription = userChanges;
+						if(taskDescription.endsWith("someday")){
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+							taskDescription.trim();
+							return new EditCmd(index, taskDescription,true);
+						}
+						return new EditCmd(index,taskDescription);
+					}
+				}
 			}
-		return null;
+		String taskDescription = userChanges.trim();
+		if(taskDescription.endsWith("someday")){
+			taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+			taskDescription.trim();
+			return new EditCmd(index, taskDescription,true);
 		}
+		return new EditCmd(index,taskDescription);
+		
+	}
 	/*		String taskDescription = userChanges.substring(0,posLastFrom).trim();
 			String dateTimeString = userChanges.substring(posLastFrom + 1).trim();
 			if(dateTimeString.contains("to")){
@@ -912,3 +983,4 @@ import java.lang.String;
 	private static String getMessage(String input) {
 		return input;
 	}
+}
