@@ -4,14 +4,20 @@ public class Display {
 
 	private static Display display = null;
 	private View view;
-	private String message = "";
-	private int viewIndex = -1;
-	private COMMAND_TYPE command = COMMAND_TYPE.HOME;
+	private String message;
+	private int viewIndex;
+	private COMMAND_TYPE command;
 	
 	private Display(){
-		this.view = new HomeView();		
+		this.view = new HomeView();	
+		this.message = "";
+		this.viewIndex = -1;
+		this.command = COMMAND_TYPE.HOME;
 	}
 	
+	/**
+	 * Returns an instance of this class
+	 */
 	public static Display getInstance() {
 		if (display == null) {
 			display = new Display();
@@ -19,38 +25,73 @@ public class Display {
 		return display;
 	}
 	
+	/**
+	 * Returns the reference of the current view
+	 */
 	public View getView() {
 		return view;
 	}
 
+	/**
+	 * Returns the reference of the current message
+	 */
 	public String getMessage() {
 		return message;
 	}
-		
+	
+	/**
+	 * Returns the reference of the current view index
+	 */
 	public int getViewIndex() {
 		return viewIndex;
 	}
 
+	/**
+	 * Returns the reference of the current command type
+	 */
 	public COMMAND_TYPE getCommand(){
 		return command;
 	}
 	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param view current view shown to user
+	 */
 	public void set(View view) {
 		view.update();
 		this.view = view;
 	}
 	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param message current message to be displayed to user
+	 */
 	public void set(String message) {
 		this.message = message;
 		this.view.update();
 	}
 	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param message current message to be displayed to user
+	 * @param command current command executed
+	 */
 	public void set(String message, COMMAND_TYPE command){
 		this.message = message;
 		this.command = command;
 		this.view.update();
 	}
 	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param message current message to be displayed to user
+	 * @param view current view shown to user
+	 * @param command current command executed
+	 */
 	public void set(String message, int viewIndex, COMMAND_TYPE command){
 		this.message = message;
 		this.viewIndex = viewIndex;
