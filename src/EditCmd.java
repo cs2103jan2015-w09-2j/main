@@ -121,10 +121,32 @@ public class EditCmd extends ModifiableCmd{
 		
 		switch(viewIndex){
 			case 1 :
-				message = EDIT_DES_MESSAGE;
+				message = EDIT_TASK_TO_SOMEDAY_MESSAGE;
 				break;
 			case 2 :
-				
+				message = EDIT_DES_MESSAGE;
+				break;
+			case 3 :
+				message = EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE;
+				break;
+			case 4 :
+				message = EDIT_START_TIME_MESSAGE;
+				break;
+			case 5 :
+				message = EDIT_END_TIME_MESSAGE;
+				break;
+			case 6 :
+				message = EDIT_TIME_MESSAGE;
+				break;
+			case 7 :
+				message = EDIT_DES_START_TIME_MESSAGE;
+				break;				
+			case 8 :
+				message = EDIT_DES_END_TIME_MESSAGE;
+				break;
+			case 9 :
+				message = EDIT_DES_AND_TIME_MESSAGE;
+				break;
 		}
 		
 		return message;
