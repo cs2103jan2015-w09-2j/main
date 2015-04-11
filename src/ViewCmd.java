@@ -1,32 +1,39 @@
 
 public class ViewCmd extends Cmd{
 
-	String currView;
+	COMMAND_TYPE command;
 	View preView;
+	int paging;
 	
-	public ViewCmd(String view) {
-		this.currView = view.toLowerCase();
+	public ViewCmd(COMMAND_TYPE command) {
+		this.command = command;
 		this.preView = display.getView();
+	}
+	
+	public ViewCmd(COMMAND_TYPE command, int paging) {
+		this.command = command;
+		this.preView = display.getView();
+		this.paging = paging;
 	}
 
 	public boolean execute(){
-		switch(currView){
-		case "home" :
-			display.set(new HomeView());
+		switch(command){
+		case HOME :
+			display.set(new HomeView(), paging);
 			break;
-		case "today" :
-			display.set(new TodayView());
+		case TODAY :
+			display.set(new TodayView(), paging);
 			break;
-		case "upcoming" :
-			display.set(new UpcomingView());
+		case UPCOMING :
+			display.set(new UpcomingView(), paging);
 			break;
-		case "someday" :
-			display.set(new SomedayView());
+		case SOMEDAY :
+			display.set(new SomedayView(), paging);
 			break;
-		case "done" :
-			display.set(new CompletedView());
+		case DONE :
+			display.set(new CompletedView(), paging);
 			break;
-		case "help" :
+		case HELP :
 			display.set(new HelpView());
 			break;
 		default :
@@ -44,7 +51,8 @@ public class ViewCmd extends Cmd{
 	public boolean equals(Object o){
 		if(o instanceof ViewCmd){
 			ViewCmd otherViewCmd = (ViewCmd)o;
-			return this.currView.equals(otherViewCmd.currView) && this.preView.equals(otherViewCmd.preView);
+			return this.command.equals(otherViewCmd.command) && this.preView.equals(otherViewCmd.preView)
+					&& this.paging == otherViewCmd.paging;
 		}
 		else{
 			return false;

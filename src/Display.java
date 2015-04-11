@@ -7,12 +7,14 @@ public class Display {
 	private String message;
 	private int viewIndex;
 	private COMMAND_TYPE command;
+	private int paging;
 	
 	private Display(){
 		this.view = new HomeView();	
 		this.message = "";
 		this.viewIndex = -1;
 		this.command = COMMAND_TYPE.HOME;
+		this.paging = 1;
 	}
 	
 	/**
@@ -54,13 +56,31 @@ public class Display {
 	}
 	
 	/**
+	 * Returns the reference of the current command type
+	 */
+	public int getPaging(){
+		return paging;
+	}
+	
+	/**
 	 * Replaces the target field with the specified element.
 	 * 
 	 * @param view current view shown to user
 	 */
 	public void set(View view) {
+		set(view, 1);
+	}
+	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param view current view shown to user
+	 * @param paging current page the user is viewing
+	 */
+	public void set(View view, int paging) {
 		view.update();
 		this.view = view;
+		this.paging = paging;
 	}
 	
 	/**
@@ -80,9 +100,7 @@ public class Display {
 	 * @param command current command executed
 	 */
 	public void set(String message, COMMAND_TYPE command){
-		this.message = message;
-		this.command = command;
-		this.view.update();
+		set(message, -1, command);
 	}
 	
 	/**
