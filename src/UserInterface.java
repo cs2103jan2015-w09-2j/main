@@ -38,8 +38,8 @@ import javax.swing.JLabel;
 public class UserInterface {
 
 	private JFrame frame;
-	private JTextPane commandFromUser;
-	private static JTextPane showToUser;
+	public static JTextPane commandFromUser;
+	public static JTextPane showToUser;
 	private static Controller control;
 	private static JPanel outerPanel;
 	private DefaultStyledDocument doc = new DefaultStyledDocument();
@@ -49,12 +49,10 @@ public class UserInterface {
 	private JTextPane feedback;
 	private JButton closeButton;
 	private JButton minimiseButton;
-	private JButton maximizeButton;
 	private JPanel buttonPanel;
 	private JLabel welcomeLabel;
 	private Point mouseDownCoords;
 	private int noOfCurrentCmd;
-	private boolean isMaximizeFrame= true;
 	private ArrayList<String> commandsEntered = new ArrayList<String>();
 	private int noOfCommandsEntered;
 	private String message = "";
@@ -66,18 +64,17 @@ public class UserInterface {
 		}
 		return UI;
 	}
-	
-	public static void main (String [] args){
-		executeInterface();
-	}
+//	
+//	public static void main (String [] args){
+//		executeInterface();
+//	}
 
-	public static void executeInterface(){
+	public void executeInterface(){
 	SwingUtilities.invokeLater(new Runnable(){
 	public void run() {
 		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
-	//	control.executeCommand("home");
 		showToUser.setContentType("text/html");
 		try {
 			showToUser.setText(Display.getInstance().getView().show());
@@ -94,7 +91,7 @@ public class UserInterface {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	public void initialize() {
 		frame = new JFrame();
 		frame.setResizable(false);
 		frame.setBounds(100, 100, 450, 300);
@@ -109,12 +106,12 @@ public class UserInterface {
 		initializeShowToUser();
 		initializeFeedback();
 		initializeCloseButton();
-		initializeMaximizeButton();
 		initializeMinimizeButton();
 		initializeWelcomeLabel();
 		processKeyPressed();
 	}
 
+	
 	private void makeFrameMovable() {
 		mouseDownCoords = null;
 		frame.addMouseListener(new MouseListener() {
@@ -249,37 +246,13 @@ public class UserInterface {
 		});
 	}
 	
-	private void initializeMaximizeButton() {
-		maximizeButton = new JButton("+");
-		buttonPanel.add(maximizeButton, BorderLayout.CENTER);
-		buttonPanel.setBorder(UIManager.getBorder("TextArea.border"));
-		maximizeButton.setFont(new Font("Calibri", Font.BOLD, 15));
-		maximizeButton.setBackground(new Color(255, 255, 255));
-		maximizeButton.setForeground(new Color(0, 0, 128));
-		
-
-		maximizeButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				if(isMaximizeFrame){
-				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-				isMaximizeFrame = false;
-			}
-				else{
-					frame.setSize(552, 535);
-					isMaximizeFrame = true;
-				}
-			}
-		});
-	}
-
-	private void processKeyPressed() {
+	public void processKeyPressed() {
 		inputBoxChangeColour();
 		commandFromUser.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(java.awt.event.KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					processCommand();
+					setCommand();
 					e.consume();
 					commandFromUser.setText("");
 				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -291,19 +264,28 @@ public class UserInterface {
 			}
 		});
 	}
-
-	private void processCommand() {
+	
+	private void setCommand(){
 		String command = commandFromUser.getText();
 		commandsEntered.add(command);
 		noOfCommandsEntered = commandsEntered.size();
+		processCommand(command);
+	}
+
+	//made public for testing purposes
+	public void processCommand(String command) {
 		showToUser.setContentType("text/html");
+		try{
 		control.executeCommand(command);
+		}catch(ArithmeticException | Error e){
+			JOptionPane.showMessageDialog(null, "Invalid input. Enter \"help\" for assistance.", "Error", JOptionPane.ERROR_MESSAGE);   
+		}
 		showMessageToUser();
 		try {
 			showToUser.setText(Display.getInstance().getView().show());
-		} catch (BadLocationException | IOException e) {
+		} catch (BadLocationException | IOException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
 		}
 			
 		
@@ -395,7 +377,7 @@ public class UserInterface {
 									.matches("\\W")) {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
-								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
+								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
 							setCharacterAttributes(wordL, wordR - wordL, attr,
 									false);
 						} else {
@@ -418,7 +400,7 @@ public class UserInterface {
 				int after = findFirstNonWordChar(text, offs);
 
 				if (text.substring(before, after).toLowerCase()
-						.matches("(\\W)*(^(add)|delete|edit|search|from(?!.*from)|to|by|^(today)|upcoming|someday|help|done|^(save)|^(home))")) {
+						.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
 					setCharacterAttributes(before, after - before, attr, false);
 				} else {
 					setCharacterAttributes(before, after - before, attrBlack,

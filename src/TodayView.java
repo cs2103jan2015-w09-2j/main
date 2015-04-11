@@ -59,6 +59,7 @@ public class TodayView extends DateView {
 	protected void getToday() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
+			//if(pageNo =1){
 			if (i < 15) {
 				i++;
 				getTaskInfo(task);
@@ -82,6 +83,7 @@ public class TodayView extends DateView {
 				}
 			}
 		}
+		//}
 	}
 
 

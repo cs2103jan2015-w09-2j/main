@@ -72,12 +72,27 @@ public class HomeView implements View {
 							.replace("PM", "pm").replace(".00", "");
 					t = t.toString().replaceAll("\\[", "")
 							.replaceAll("\\]", " -");
-					if (task.getIsCompleted()) { //coloured green and striked thru
+					/*if (delete) { 
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#848484", "<strike>"+t+"</strike>", 3);
 						appendTasks("#848484", "<strike>"+tasks+"</strike>", 4);
-					} else if (task.isOverdue()) {
+					}*/
+					
+				/*if (delete) { 
+					appendTasks("#848484", taskNo, 1);
+					appendTasks("#FFFFFF", "!", 2);
+					appendTasks("#D7DF01", "<font size=\"4\">"+t+"</font>", 3);
+					appendTasks("#D7DF01", "<font size=\"4\">"+tasks+"</font>", 4);
+				}*/
+					
+					if (task.getIsCompleted()) { 
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#04B45F", "+t+", 3);
+						appendTasks("#04B45F", "+tasks+", 4);
+					}
+					else if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", t, 3);
