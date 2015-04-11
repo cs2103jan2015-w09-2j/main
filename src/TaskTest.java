@@ -215,9 +215,11 @@ public class TaskTest {
 		
 		// Check if tasks of any other time will fail
 		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isTodayTask());
-		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_TOMORROW_TASK, tomorrowTask.isTodayTask());
 		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTomorrowTask.isTodayTask());
+		
+		// Overdue Task appears under Today
+		assertTrue(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isTodayTask());
 		
 		// check against null task
 		assertFalse(MESSAGE_TEST_NULL_TASK, nullTask.isTodayTask());
