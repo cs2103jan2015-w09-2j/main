@@ -41,6 +41,7 @@ public class Display {
 	
 	public void setMessage(String message) {
 		this.message = message;
+		this.view.update();
 	}
 	
 	public void set(View view, String message) {
@@ -51,12 +52,14 @@ public class Display {
 	public void set(String message, COMMAND_TYPE command){
 		this.message = message;
 		this.command = command;
+		this.view.update();
 	}
 	
 	public void set(String message, int viewIndex, COMMAND_TYPE command){
 		this.message = message;
 		this.viewIndex = viewIndex;
 		this.command = command;
+		this.view.update();
 	}
 	
 	public void set(View view, String message, int viewIndex, COMMAND_TYPE command){

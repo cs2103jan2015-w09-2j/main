@@ -86,26 +86,18 @@ public class Data{
 	//setter
 	public void set(ArrayList<Task> myList){
 		this.myList = myList;
-		display.getView().update();
 	}
 	
 	public boolean add(Task input){
-		Boolean isAdded = myList.add(input);
-		display.getView().update();
-		
-		return isAdded;
+		return myList.add(input);
 	}
 		
 	public boolean remove(Task task){
-		Boolean isRemoved = myList.remove(task);
-		display.getView().update();
-		
-		return isRemoved;
+		return myList.remove(task);
 	}
 	
 	public void update(Task currTask, Boolean isCompleted){
 		currTask.setIsCompleted(isCompleted);
-		display.getView().update();
 	}
 	
 	public void update(Task task, String newDescription){
@@ -114,7 +106,6 @@ public class Data{
 		}
 		task.setStart(null);
 		task.setEnd(null);
-		display.getView().update();
 	}
 	
 	public void update(Task task, String newDescription, LocalDateTime newStart, LocalDateTime newEnd){
@@ -127,7 +118,6 @@ public class Data{
 		if(newEnd != null){
 			task.setEnd(newEnd);
 		}
-		display.getView().update();
 	}
 			
 }
