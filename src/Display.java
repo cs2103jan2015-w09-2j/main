@@ -4,11 +4,12 @@ public class Display {
 
 	private static Display display = null;
 	private View view;
-	private String message;
-
+	private String message = "";
+	private int viewIndex = -1;
+	private COMMAND_TYPE command = COMMAND_TYPE.HOME;
+	
 	private Display(){
-		view = new HomeView();
-		message = "";
+		this.view = new HomeView();		
 	}
 	
 	public static Display getInstance() {
@@ -25,11 +26,18 @@ public class Display {
 	public String getMessage() {
 		return message;
 	}
+		
+	public int getViewIndex() {
+		return viewIndex;
+	}
 
+	public COMMAND_TYPE getCommand(){
+		return command;
+	}
+	
 	public void setView(View view) {
 		view.update();
 		this.view = view;
-		this.message = null;
 	}
 	
 	public void setMessage(String message) {
@@ -41,6 +49,24 @@ public class Display {
 		view.update();
 		this.view = view;
 		this.message = message;
+	}
+	
+	public void set(String message, COMMAND_TYPE command){
+		this.message = message;
+		this.command = command;
+	}
+	
+	public void set(String message, int viewIndex, COMMAND_TYPE command){
+		this.message = message;
+		this.viewIndex = viewIndex;
+		this.command = command;
+	}
+	
+	public void set(View view, String message, int viewIndex, COMMAND_TYPE command){
+		this.view = view;
+		this.message = message;
+		this.viewIndex = viewIndex;
+		this.command = command;
 	}
 
 }

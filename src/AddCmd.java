@@ -13,7 +13,7 @@ public class AddCmd extends ModifiableCmd{
 		writeToFile();
 	     
 		String addMessage = String.format(ADD_TASK_MESSAGE, task.getDescription(), getTaskType(task));
-	    display.setMessage(addMessage);
+	    display.set(addMessage, COMMAND_TYPE.ADD);
 	    
 		return true;
 	}
@@ -24,7 +24,7 @@ public class AddCmd extends ModifiableCmd{
 		writeToFile();
 		
 		String undoMessage = String.format(ADD_TASK_MESSAGE, task.getDescription(), getTaskType(task));
-	    display.setMessage(undoMessage);
+	    display.set(undoMessage, COMMAND_TYPE.DELETE);
 	
 	}
 }
