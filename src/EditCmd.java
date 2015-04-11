@@ -4,21 +4,14 @@ import java.time.LocalDateTime;
 public class EditCmd extends ModifiableCmd{
 	
 	private Task task;
-	private Task editContent; 	//depreciated
 	private int index;
-	private int viewIndex;
+	private int viewIndex = 0;
 	
 	private String description = null;
 	private LocalDateTime start = null;
 	private LocalDateTime end = null;
 	private boolean isSomeday = false;
 	
-	//depreciated
-	public EditCmd(int index, Task editContent){
-		this.index = index;
-		this.editContent = editContent;
-	}
-
 	private EditCmd(int index){
 		this.index = index;
 	}
@@ -43,43 +36,40 @@ public class EditCmd extends ModifiableCmd{
 		this.viewIndex = 3;
 	}
 	
-	//indicate: 1= start, 2= end, 3 = by
+	//indicate: 1= start, 2= end
 	public EditCmd(int index, LocalDateTime time, int indicate){
 		this(index);
 		if(indicate == 1){
 			this.start = time;
 			this.end = null;
-		}
-		else if(indicate == 2){
-			this.start = null;
-			this.end = time;
+			this.viewIndex = 4;
 		}
 		else{
-			assert(indicate == 3);
+			assert(indicate == 2);
 			this.start = null;
 			this.end = time;
+			this.viewIndex = 5;
 		}
-		this.viewIndex = 4;
 	}
 	
 	public EditCmd(int index, LocalDateTime start, LocalDateTime end){
 		this.start = start;
 		this.end = end;
-		this.viewIndex = 5;
+		this.viewIndex = 6;
 	}
 	
 	//indicate: 1= start, 2= end
 	public EditCmd(int index, String description, LocalDateTime time, int indicate){
 		this(index, time, indicate);
 		this.description = description;
-		this.viewIndex = 6;
+		this.viewIndex += 3; //start = 7, end = 8
 	}
 	
 	public EditCmd(int index, String description, LocalDateTime start, LocalDateTime end){
 		this(index, description);
 		this.start = start;
 		this.end = end;
-		this.viewIndex = 7;
+		this.viewIndex = 9;
 	}
 	
 	public boolean execute() throws IndexOutOfBoundsException{
@@ -104,6 +94,7 @@ public class EditCmd extends ModifiableCmd{
 		start = tempStart;
 		end = tempEnd;
 		
+		String editMessage;
 		if(viewIndex == 2){
 			display.setMessage(String.format(EDIT_DES_MESSAGE, description, task.getDescription()));
 		}
@@ -124,15 +115,18 @@ public class EditCmd extends ModifiableCmd{
 		
 		display.setMessage("");
 	}
+	
+	private String getMessage(){
+		String message = "";
 		
-	//depreciated
-	private Task clone(Task task){
-		Task clonedTask = new Task();
-		clonedTask.setDescription(task.getDescription());
-		clonedTask.setStart(task.getStart());
-		clonedTask.setEnd(task.getEnd());
-		clonedTask.setIsCompleted(task.getIsCompleted());
+		switch(viewIndex){
+			case 1 :
+				message = EDIT_DES_MESSAGE;
+				break;
+			case 2 :
+				
+		}
 		
-		return clonedTask;
+		return message;
 	}
 }
