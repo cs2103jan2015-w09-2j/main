@@ -69,5 +69,22 @@ public class SaveCmd extends ModifiableCmd {
 		
 		return true;
 	}
+	
+	public boolean equals(SaveCmd cmd){
+		if (this.getClass() != cmd.getClass()){
+			return false;
+		}
+		else if (!this.storageLocation.equals(cmd.storageLocation)){
+			return false;
+		}
+		else if (!this.previousStorageLocation.equals(cmd.previousStorageLocation)){
+			return false;
+		}
+		else if (!this.storage.equals(cmd.storage)){
+			return false;
+		}
+		
+		return true;
+	}
 
 }
