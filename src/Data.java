@@ -7,8 +7,6 @@ public class Data{
 	private static Data data;
 	private ArrayList<Task> myList;
 	
-	private Display display = Display.getInstance();
-	
 	//Constructor
 	private Data(){
 		myList = new ArrayList<Task>();
