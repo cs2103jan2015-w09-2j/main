@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -22,6 +23,10 @@ public class Storage {
 	private static final String CHARACTER_BACKSLASH = "\\";
 	private static final String CHARACTER_REVERSE_BACKSLASH = "/";
 	private static final String CHARACTER_EMPTY_STRING = "";
+	private static final String CLASS_NAME_STORAGE = "Storage";
+	private static final String LOGGER_DIRECTORY_CHANGED = "Directory changed";
+	private static final String LOGGER_FILE_WRITTEN = "File has been written";
+	private static final String LOGGER_FILE_READ = "File has been read";
 	private static OneTagLogger logger = OneTagLogger.getInstance();
 
 	private String fileName = "oneTag.json"; // default name is oneTag.json
@@ -88,7 +93,9 @@ public class Storage {
 		
 		File oldFile = new File(oldFilePath);
 		oldFile.delete();
-
+		
+		logger.log(Level.FINE, CLASS_NAME_STORAGE, LOGGER_DIRECTORY_CHANGED);
+		
 	}
 
 	/**
@@ -100,7 +107,7 @@ public class Storage {
 		
 		String json = convertTaskToString(tasks);
 		writeStringToFile(json, filePath);
-
+		logger.log(Level.FINE, CLASS_NAME_STORAGE, LOGGER_FILE_WRITTEN);
 	}
 
 	/**
@@ -118,7 +125,7 @@ public class Storage {
 			allTasks = new ArrayList<Task>();
 		}
 
-
+		logger.log(Level.FINEST, CLASS_NAME_STORAGE, LOGGER_FILE_READ);
 		return allTasks;
 
 	}
