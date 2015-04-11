@@ -171,7 +171,7 @@ public class UserInterface {
 		commandFromUser = new JTextPane(doc);
 		commandFromUser.setToolTipText("Enter command here");
 		outerPanel.add(commandFromUser, BorderLayout.SOUTH);
-		commandFromUser.setFont(new Font("MV Boli", Font.PLAIN, 20));
+		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
 		commandFromUser.setBackground(new Color(255, 255, 255));
 		commandFromUser.setBounds(20, 371, 573, 43);
 		commandFromUser.setForeground(new Color(0, 0, 0));
@@ -377,7 +377,7 @@ public class UserInterface {
 									.matches("\\W")) {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
-								.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
+								.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|at|on|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
 							setCharacterAttributes(wordL, wordR - wordL, attr,
 									false);
 						} else {
@@ -400,7 +400,7 @@ public class UserInterface {
 				int after = findFirstNonWordChar(text, offs);
 
 				if (text.substring(before, after).toLowerCase()
-						.matches("(\\W)*(^(add)|^(delete)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
+						.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|at|on|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
 					setCharacterAttributes(before, after - before, attr, false);
 				} else {
 					setCharacterAttributes(before, after - before, attrBlack,

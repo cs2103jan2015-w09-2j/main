@@ -21,7 +21,6 @@ public class SearchView extends SingleView implements View {
 	private LocalDate endDate;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private boolean isOverdue;
 	private DateTimeFormatter formatter = DateTimeFormatter
 			.ofPattern("dd-MM-yyyy");
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
@@ -37,16 +36,6 @@ public class SearchView extends SingleView implements View {
 	@Override
 	public void update() {
 		setList(data.getSearched(searchedText));
-	}
-
-	protected void isTaskOverdue(Task task) {
-		isOverdue = false;
-		LocalDateTime now = LocalDateTime.now();
-		LocalDateTime endDateTime = task.getEnd();
-
-		if (endDateTime.isBefore(now)) {
-			isOverdue = true;
-		}
 	}
 
 	protected void getTaskInfo(Task task) {

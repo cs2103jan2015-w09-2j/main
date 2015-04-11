@@ -23,13 +23,9 @@ public class SomedayView extends SingleView implements View {
 		int i = 0;
 		for (Task task : getList()) {
 		if(i<15){
-			String tasks = "";
 			i++;
 			String taskNo = "     " + i + ".   ";
-			String t = task.toString().replaceAll("-", "to");
-			t = task.toString().replaceAll("\\[", "")
-					.replaceAll("\\]", " -");
-			tasks = t + "\n";
+			String tasks = task.toString() + "\n";
 			if (task.getIsCompleted()) { //completed tasks are green and striked thru
 				appendTasks("#848484", taskNo, 1);
 				appendTasks("#FFFFFF", "!", 2);

@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.swing.JTextPane;
@@ -55,6 +56,10 @@ public class TodayView  extends SingleView implements View{
 	// isOverdue = true;
 	// }
 	// }
+	
+	protected ArrayList<Task> returnTodayList(){
+		return  getList();
+	}
 
 	protected void getToday() throws BadLocationException {
 		int i = 0;
