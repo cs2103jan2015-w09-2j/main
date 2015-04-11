@@ -94,17 +94,7 @@ public class EditCmd extends ModifiableCmd{
 		start = tempStart;
 		end = tempEnd;
 		
-		String editMessage;
-		if(viewIndex == 2){
-			display.setMessage(String.format(EDIT_DES_MESSAGE, description, task.getDescription()));
-		}
-		else if(viewIndex == 4){
-			display.setMessage(String.format(EDIT_END_DATE_MESSAGE, end.toLocalDate() + " " + end.toLocalTime(), 
-					task.getEnd().toLocalDate() + " " + task.getEnd().toLocalTime()));
-		}
-		else{
-			display.setMessage("");
-		}
+		display.setMessage(getMessage());
 		
 		return true;
 	}
