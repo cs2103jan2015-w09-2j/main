@@ -15,7 +15,7 @@ public class CompletedCmd extends ModifiableCmd{
 		writeToFile();
 		
 		String completeMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());
-		display.setMessage(completeMessage);
+		display.set(completeMessage, index, COMMAND_TYPE.DONE);
 
 		return true;
 	}
@@ -25,6 +25,6 @@ public class CompletedCmd extends ModifiableCmd{
 		writeToFile();
 		
 		String undoCompleteMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());
-		display.setMessage(undoCompleteMessage);
+		display.set(undoCompleteMessage, index, COMMAND_TYPE.DONE);
 	}
 }
