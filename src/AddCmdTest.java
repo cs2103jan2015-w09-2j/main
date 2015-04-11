@@ -1,5 +1,6 @@
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.AfterClass;
@@ -53,7 +54,11 @@ public class AddCmdTest {
 	public void testExecute() {
 		addCmd.execute();
 		assertEquals("data", data.getData(), list);
-		assertEquals("file", storage.getData(), list);
+		try {
+			assertEquals("file", storage.getData(), list);
+		} catch (IOException e) {
+			assert false;
+		}
 		assertEquals("message", display.getMessage(), addMessage);
 	}
 
@@ -61,7 +66,11 @@ public class AddCmdTest {
 	public void testUndo() {
 		addCmd.undo();
 		assertEquals("data", data.getData(), emptyList);
-		assertEquals("file", storage.getData(), emptyList);
+		try {
+			assertEquals("file", storage.getData(), emptyList);
+		} catch (IOException e) {
+			assert false;
+		}
 		assertEquals("message", display.getMessage(), undoMessage);
 		
 	}
