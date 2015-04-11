@@ -19,5 +19,10 @@ public class UndoCmd extends Cmd {
 		}
 		return true;
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		return (o instanceof UndoCmd);
+	}
 
 }

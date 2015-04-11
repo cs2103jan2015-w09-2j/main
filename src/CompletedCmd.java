@@ -27,4 +27,15 @@ public class CompletedCmd extends ModifiableCmd{
 		String undoCompleteMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());
 		display.set(undoCompleteMessage, index, COMMAND_TYPE.DONE);
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof CompletedCmd){
+			CompletedCmd otherCompletedCmd = (CompletedCmd)o;
+			return this.task.equals(otherCompletedCmd.task) && this.index == otherCompletedCmd.index;
+		}
+		else{
+			return false;
+		}
+	}
 }

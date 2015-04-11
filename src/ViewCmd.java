@@ -39,5 +39,16 @@ public class ViewCmd extends Cmd{
 	public void undo(){
 		display.setView(preView);
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof ViewCmd){
+			ViewCmd otherViewCmd = (ViewCmd)o;
+			return this.currView.equals(otherViewCmd.currView) && this.preView.equals(otherViewCmd.preView);
+		}
+		else{
+			return false;
+		}
+	}
 
 }

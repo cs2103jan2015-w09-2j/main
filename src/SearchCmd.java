@@ -23,5 +23,16 @@ public class SearchCmd extends Cmd{
 	public void undo(){
 		display.setView(preView);
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof SearchCmd){
+			SearchCmd otherSearchCmd = (SearchCmd)o;
+			return this.searchedText.equals(otherSearchCmd.searchedText) && this.preView.equals(otherSearchCmd.preView);
+		}
+		else{
+			return false;
+		}
+	}
 
 }

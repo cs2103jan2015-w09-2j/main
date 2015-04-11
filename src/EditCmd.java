@@ -116,6 +116,27 @@ public class EditCmd extends ModifiableCmd{
 		display.setMessage("");
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof EditCmd){
+			EditCmd otherEditCmd = (EditCmd)o;
+			
+			Boolean isSameTask = this.task.equals(otherEditCmd.task);
+			Boolean isSameIndex = this.index == otherEditCmd.index;
+			Boolean isSameViewIndex = this.viewIndex == otherEditCmd.viewIndex;
+			Boolean isSameDescription = this.description.equals(otherEditCmd.description);
+			Boolean isSameStart = this.start.equals(otherEditCmd.start);
+			Boolean isSameEnd = this.end.equals(otherEditCmd.end);
+			Boolean isSameIsSomeday = this.isSomeday == otherEditCmd.isSomeday;
+			
+			return isSameTask && isSameIndex && isSameViewIndex && isSameDescription 
+					&& isSameStart && isSameEnd && isSameIsSomeday;
+		}
+		else{
+			return false;
+		}
+	}
+	
 	private String getMessage(){
 		String message = "";
 		

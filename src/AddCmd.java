@@ -1,7 +1,7 @@
 
 public class AddCmd extends ModifiableCmd{
 
-	Task task;
+	private Task task;
 	
 	public AddCmd(Task task){
 		this.task = task;
@@ -26,5 +26,16 @@ public class AddCmd extends ModifiableCmd{
 		String undoMessage = String.format(ADD_TASK_MESSAGE, task.getDescription(), getTaskType(task));
 	    display.set(undoMessage, COMMAND_TYPE.DELETE);
 	
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof AddCmd){
+			AddCmd otherAddCmd = (AddCmd)o;
+			return this.task.equals(otherAddCmd.task);
+		}
+		else{
+			return false;
+		}
 	}
 }

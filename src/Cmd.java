@@ -148,4 +148,6 @@ public abstract class Cmd {
 
 		return taskType;
 	}
+	
+	public abstract boolean equals(Object o);
 }
