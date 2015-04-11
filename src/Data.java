@@ -14,6 +14,9 @@ public class Data{
 		myList = new ArrayList<Task>();
 	}
 	
+	/**
+	 * Returns an instance of this class
+	 */
 	public static Data getInstance(){
 		if(data == null){
 			data = new Data();
@@ -21,11 +24,16 @@ public class Data{
 		return data;
 	}
 		
-	//getter
+	/**
+	 * Returns an arraylist containing all of the task in this list.
+	 */
 	public ArrayList<Task> getData(){
 		return myList;
 	}
 		
+	/**
+	 * Returns an arraylist containing today task in this list.
+	 */
 	public ArrayList<Task> getToday(){
 		ArrayList<Task> todayList = new ArrayList<Task>();
 		
@@ -38,6 +46,9 @@ public class Data{
 		return todayList;
 	}
 	
+	/**
+	 * Returns an arraylist containing upcoming task in this list.
+	 */
 	public ArrayList<Task> getUpcoming(){
 		ArrayList<Task> upcomingList = new ArrayList<Task>();
 		
@@ -50,6 +61,9 @@ public class Data{
 		return upcomingList;
 	}
 	
+	/**
+	 * Returns an arraylist containing someday task in this list.
+	 */
 	public ArrayList<Task> getSomeday(){
 		ArrayList<Task> somedayList = new ArrayList<Task>();
 		
@@ -61,6 +75,9 @@ public class Data{
 		return somedayList;
 	}
 	
+	/**
+	 * Returns an arraylist containing completed task in this list.
+	 */
 	public ArrayList<Task> getCompleted(){
 		ArrayList<Task> completedList = new ArrayList<Task>();
 		
@@ -72,6 +89,11 @@ public class Data{
 		return completedList;
 	}
 	
+	/**
+	 * Returns an arraylist containing task containing text(not case sensitive) in this list.
+	 * 
+	 * @param text String to search for
+	 */
 	public ArrayList<Task> getSearched(String text){
 		ArrayList<Task> searchedList = new ArrayList<Task>();
 
@@ -83,15 +105,29 @@ public class Data{
 		return searchedList;	
 	}
 		
-	//setter
+	/**
+	 * Replace the current list with myList.
+	 * 
+	 * @param myList the arraylist whose task are to be placed into this list
+	 */
 	public void set(ArrayList<Task> myList){
 		this.myList = myList;
 	}
 	
-	public boolean add(Task input){
-		return myList.add(input);
+	/**
+	 * Appends the specified task to the end of this list.
+	 * 
+	 * @param task task to be appended to this list
+	 */
+	public boolean add(Task task){
+		return myList.add(task);
 	}
-		
+	
+	/**
+	 * Removes the task at the specified position in this list.
+	 * 
+	 * @param task task to be remove
+	 */
 	public boolean remove(Task task){
 		return myList.remove(task);
 	}
