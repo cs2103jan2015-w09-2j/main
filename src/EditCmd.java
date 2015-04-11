@@ -121,31 +121,31 @@ public class EditCmd extends ModifiableCmd{
 		
 		switch(viewIndex){
 			case 1 :
-				message = EDIT_TASK_TO_SOMEDAY_MESSAGE;
+				message = String.format(EDIT_TASK_TO_SOMEDAY_MESSAGE,description,getTaskType(task));
 				break;
 			case 2 :
-				message = EDIT_DES_MESSAGE;
+				message = String.format(EDIT_DES_MESSAGE,task.getDescription(),description);
 				break;
 			case 3 :
-				message = EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE;
+				message = String.format(EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE,description,task.getDescription(),getTaskType(task));
 				break;
 			case 4 :
-				message = EDIT_START_TIME_MESSAGE;
+				message = String.format(EDIT_START_MESSAGE,task.getDescription(),task.getStart(),start);
 				break;
 			case 5 :
-				message = EDIT_END_TIME_MESSAGE;
+				message = String.format(EDIT_END_MESSAGE,task.getDescription(),task.getEnd());
 				break;
 			case 6 :
-				message = EDIT_TIME_MESSAGE;
+				message = String.format(EDIT_TIME_MESSAGE,task.getDescription(),task.getStart(),task.getEnd());
 				break;
 			case 7 :
-				message = EDIT_DES_START_TIME_MESSAGE;
+				message = String.format(EDIT_DES_START_MESSAGE,description,task.getDescription(),task.getStart());
 				break;				
 			case 8 :
-				message = EDIT_DES_END_TIME_MESSAGE;
+				message = String.format(EDIT_DES_END_MESSAGE,description,task.getDescription(),task.getEnd());
 				break;
 			case 9 :
-				message = EDIT_DES_AND_TIME_MESSAGE;
+				message = String.format(EDIT_DES_AND_DATETIME_MESSAGE,description,task.getDescription(),task.getStart(),task.getEnd());
 				break;
 		}
 		

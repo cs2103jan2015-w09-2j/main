@@ -12,50 +12,27 @@ public abstract class Cmd {
 	protected static final String EDIT_DES_MESSAGE = "Task description is changed to <font color=\"#CC3300\"><i>%1$s</i></font>";
 	
 	// current task name, start time, first - new time, second- previous time
-	protected static final String EDIT_START_TIME_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will begin on <font color=\"#CC3300\"><i>%2$s</i></font> instead of <font color=\"#CC3300\"><i>%3$s</i></font>";
+	protected static final String EDIT_START_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will begin on <font color=\"#CC3300\"><i>%2$s</i></font> instead of <font color=\"#CC3300\"><i>%3$s</i></font>";
 
 	// task, new end time
-	protected static final String EDIT_DES_END_TIME_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> is moved to <font color=\"#CC3300\"><i>%2$s</i></font>";
-
-	// prev des, new des, end time
-	protected static final String EDIT_DES_AND_DEADLINE_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It is moved to <font color=\"#CC3300\"><i>%3$s</i></font></p>";
+	protected static final String EDIT_DES_END_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>. It is moved to <font color=\"#CC3300\"><i>%3$s</i></font>";
 
 	// prev des, new des, start time, end time
-	protected static final String EDIT_DES_AND_TIME_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%4$s</i></p></font>";
-
-	// prev des, new des, start date, end date
-	protected static final String EDIT_DES_AND_DATE_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%3$s</i></font></p>";
-
-	// prev des, new des, start datetime, end datetime
-	protected static final String EDIT_DES_AND_DATE_TIME_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%4$s</i></font></p>";
+	protected static final String EDIT_DES_AND_DATETIME_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%4$s</i></p></font>";
 
 	// prev des, current task category
 	protected static final String EDIT_TASK_TO_SOMEDAY_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> moved from <font color=\"#CC3300\"><i>%2$s</i></font> to Someday";
 
-		
-	// prev des, new des, new start date
-	protected static final String EDIT_DES_START_DATE_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font>";
-
 	// prev des, new des, new start time
-	protected static final String EDIT_DES_START_TIME_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font>";
-
-	// prev des, new des, new end date
-	protected static final String EDIT_DES_END_DATE_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will end at <font color=\"#CC3300\"><i>%3$s</i></font>";
-
-	// prev des, new start date
-	protected static final String EDIT_START_DATE_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will begin at <font color=\"#CC3300\"><i>%2$s</i></font>";
-
-	// prev des, new end date
-	protected static final String EDIT_END_DATE_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will end at <font color=\"#CC3300\"><i>%2$s</i></font>";
+	protected static final String EDIT_DES_START_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>. It will start <font color=\"#CC3300\"><i>%3$s</i></font>";
 
 	// prev des, new time
-	protected static final String EDIT_END_TIME_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will end at <font color=\"#CC3300\"><i>%2$s</i></font>";
-
+	protected static final String EDIT_END_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will end at <font color=\"#CC3300\"><i>%2$s</i></font>";
 
 	// prev des, new start time, new end time
 	protected static final String EDIT_TIME_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will start at <font color=\"#CC3300\"><i>%2$s</i></font> and will end at <font color=\"#CC3300\"><i>%2$s</i></font>";
 
-	// prev des, new des, new category
+	// prev des, new des, prev category
 	protected static final String EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It is moved from<font color=\"#CC3300\"><i>%3$s</i></font> to Someday.</p>";
 
 	//----------------------------------edit messages-------------------------------------------------------------------
