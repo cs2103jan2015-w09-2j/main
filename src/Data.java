@@ -7,6 +7,8 @@ public class Data{
 	private static Data data;
 	private ArrayList<Task> myList;
 	
+	private Display display = Display.getInstance();
+	
 	//Constructor
 	private Data(){
 		myList = new ArrayList<Task>();
@@ -18,11 +20,7 @@ public class Data{
 		}
 		return data;
 	}
-	
-	public void set(ArrayList<Task> myList){
-		this.myList = myList;
-	}
-	
+		
 	//getter
 	public ArrayList<Task> getData(){
 		return myList;
@@ -86,17 +84,28 @@ public class Data{
 	}
 		
 	//setter
+	public void set(ArrayList<Task> myList){
+		this.myList = myList;
+		display.getView().update();
+	}
+	
 	public boolean add(Task input){
-		return myList.add(input);
-
+		Boolean isAdded = myList.add(input);
+		display.getView().update();
+		
+		return isAdded;
 	}
 		
-	public boolean remove(Task task){		
-		return myList.remove(task);
+	public boolean remove(Task task){
+		Boolean isRemoved = myList.remove(task);
+		display.getView().update();
+		
+		return isRemoved;
 	}
 	
 	public void update(Task currTask, Boolean isCompleted){
 		currTask.setIsCompleted(isCompleted);
+		display.getView().update();
 	}
 	
 	public void update(Task task, String newDescription){
@@ -105,6 +114,7 @@ public class Data{
 		}
 		task.setStart(null);
 		task.setEnd(null);
+		display.getView().update();
 	}
 	
 	public void update(Task task, String newDescription, LocalDateTime newStart, LocalDateTime newEnd){
@@ -117,6 +127,7 @@ public class Data{
 		if(newEnd != null){
 			task.setEnd(newEnd);
 		}
+		display.getView().update();
 	}
 			
 }
