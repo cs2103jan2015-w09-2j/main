@@ -82,10 +82,14 @@ public class EditCmd extends ModifiableCmd{
 		LocalDateTime tempEnd = task.getEnd();
 		
 		if(isSomeday){
-			data.update(task, description);
+			if(description != null){
+				task.setDescription(description);
+			}
+			task.setStart(null);
+			task.setEnd(null);
 		}
 		else{
-			data.update(task, description, start, end);
+			 update();
 		}
 		writeToFile();
 		
@@ -100,10 +104,22 @@ public class EditCmd extends ModifiableCmd{
 	}
 	
 	public void undo(){
-		data.update(task, description, start, end);
+		update();
 		writeToFile();
 		
 		display.set(getMessage());
+	}
+	
+	private void update(){
+		if(description != null){
+			task.setDescription(description);
+		}
+		if(start != null){
+			task.setStart(start);
+		}
+		if(end != null){
+			task.setEnd(end);
+		}
 	}
 	
 	@Override

@@ -11,7 +11,7 @@ public class CompletedCmd extends ModifiableCmd{
 	public boolean execute() throws IndexOutOfBoundsException{	
 		task = getViewTask(index);
 		
-		data.update(task, true);
+		task.setIsCompleted(true);
 		writeToFile();
 		
 		String completeMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());
@@ -21,7 +21,7 @@ public class CompletedCmd extends ModifiableCmd{
 	}
 	
 	public void undo(){
-		data.update(task, false);
+		task.setIsCompleted(false);
 		writeToFile();
 		
 		String undoCompleteMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());

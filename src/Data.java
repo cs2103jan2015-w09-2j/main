@@ -5,7 +5,8 @@ import java.util.Collections;
 public class Data{
 
 	private static Data data;
-	private ArrayList<Task> myList;
+	
+	private ArrayList<Task> myList; //the arraylist whose task are to be placed into this list
 	
 	//Constructor
 	private Data(){
@@ -128,30 +129,6 @@ public class Data{
 	 */
 	public boolean remove(Task task){
 		return myList.remove(task);
-	}
-	
-	public void update(Task currTask, Boolean isCompleted){
-		currTask.setIsCompleted(isCompleted);
-	}
-	
-	public void update(Task task, String newDescription){
-		if(newDescription != null){
-			task.setDescription(newDescription);
-		}
-		task.setStart(null);
-		task.setEnd(null);
-	}
-	
-	public void update(Task task, String newDescription, LocalDateTime newStart, LocalDateTime newEnd){
-		if(newDescription != null){
-			task.setDescription(newDescription);
-		}
-		if(newStart != null){
-			task.setStart(newStart);
-		}
-		if(newEnd != null){
-			task.setEnd(newEnd);
-		}
 	}
 			
 }

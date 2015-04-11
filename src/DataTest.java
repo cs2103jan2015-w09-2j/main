@@ -137,13 +137,4 @@ public class DataTest {
 		assertEquals("search lower case", data.getSearched(TASK_BUY_ORANGE.toLowerCase()), oneItemList);
 	}
 	
-	@Test
-	public void testUpdateCompleted(){
-		data.set(oneItemList);
-		data.update(floatingTask, true);
-		assertTrue("set true", data.getData().get(0).getIsCompleted());
-		data.update(floatingTask, false);
-		assertFalse("set false", data.getData().get(0).getIsCompleted());
-	}
-
 }
