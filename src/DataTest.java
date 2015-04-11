@@ -52,12 +52,12 @@ public class DataTest {
 		today = LocalDateTime.now();
 		tomorrow = LocalDateTime.now().plusDays(oneDay);
 		
-		todayTask = new Task(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), TASK_GO_HIKING);
-		tomorrowTask = new Task(tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth(), tomorrow.getHour(), tomorrow.getMinute(), TASK_BUY_APPLE);
+		todayTask = new Task(LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute()), LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute()), TASK_GO_HIKING);
+		tomorrowTask = new Task(tomorrow, TASK_BUY_APPLE);
 		floatingTask = new Task(TASK_BUY_ORANGE);
-		completedTodayTask = new Task(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute(), TASK_GO_RUNNING);
+		completedTodayTask = new Task(today, TASK_GO_RUNNING);
 		completedTodayTask.setIsCompleted(true);
-		completedTomorrowTask = new Task(tomorrow.getYear(), tomorrow.getMonthValue(), tomorrow.getDayOfMonth(), tomorrow.getHour(), tomorrow.getMinute(), TASK_GO_HOME);
+		completedTomorrowTask = new Task(tomorrow, TASK_GO_HOME);
 		completedTomorrowTask.setIsCompleted(true);
 		completedFloatingTask = new Task(TASK_GO_RT);
 		completedFloatingTask.setIsCompleted(true);
