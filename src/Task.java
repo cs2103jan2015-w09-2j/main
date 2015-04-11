@@ -174,6 +174,9 @@ public class Task{
 	 * @return true if deadline task's end field is today or if timed tasks's start field is today, false otherwise
 	 */
 	public boolean isTodayTask(){
+		if (this.isOverdue()){
+			return true;
+		}
 		
 		LocalDate now = LocalDate.now();
 		
@@ -203,7 +206,7 @@ public class Task{
 	 * Returns true if task is not some day's task and not today's task, false otherwise
 	 * @return true if task is not some day's task and not today's task, false otherwise
 	 */
-	public boolean isUpcomingTask(){	
+	public boolean isUpcomingTask(){
 		if (this.isCompleted){
 			return false;
 		}
