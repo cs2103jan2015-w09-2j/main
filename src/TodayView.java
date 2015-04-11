@@ -18,7 +18,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
-public class TodayView extends DateView {
+public class TodayView  extends SingleView implements View{
 	private String taskDes;
 	private LocalDate endDate;
 	private LocalTime startTime;
