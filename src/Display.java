@@ -35,12 +35,12 @@ public class Display {
 		return command;
 	}
 	
-	public void setView(View view) {
+	public void set(View view) {
 		view.update();
 		this.view = view;
 	}
 	
-	public void setMessage(String message) {
+	public void set(String message) {
 		this.message = message;
 		this.view.update();
 	}

@@ -94,7 +94,7 @@ public class EditCmd extends ModifiableCmd{
 		start = tempStart;
 		end = tempEnd;
 		
-		display.setMessage(getMessage());
+		display.set(getMessage());
 		
 		return true;
 	}
@@ -103,7 +103,7 @@ public class EditCmd extends ModifiableCmd{
 		data.update(task, description, start, end);
 		writeToFile();
 		
-		display.setMessage("");
+		display.set(getMessage());
 	}
 	
 	@Override

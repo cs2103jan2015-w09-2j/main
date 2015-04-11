@@ -22,7 +22,7 @@ public class Controller {
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 		}
 		
-		display.setView(new HomeView());
+		display.set(new HomeView());
 	}
 		
 	public static Controller getInstance(){
@@ -44,7 +44,7 @@ public class Controller {
 			}
 		}
 		catch(IndexOutOfBoundsException ex){
-			display.setMessage(MESSAGE_INVALID_INDEX);
+			display.set(MESSAGE_INVALID_INDEX);
 			return false;
 		}
 		

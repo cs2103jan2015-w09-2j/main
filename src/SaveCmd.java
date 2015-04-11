@@ -17,7 +17,7 @@ public class SaveCmd extends ModifiableCmd {
 		storage = new Storage();
 		}catch(IOException ex){
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-			display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 		}
 		
 	}
@@ -27,21 +27,23 @@ public class SaveCmd extends ModifiableCmd {
 
 		try{
 			storage.setPath(previousStorageLocation);
-		}catch(IOException ioEx){
+		}
+		catch(IOException ioEx){
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-			display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 			return;
 		}
 		
 		try{
 			data.set(storage.getData());
-			}catch(IOException ioEx){
+		}
+		catch(IOException ioEx){
 				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-				display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 				return;
 			}
 		
-		display.setMessage(MESSAGE_UNDO_SAVE);
+		display.set(MESSAGE_UNDO_SAVE);
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class SaveCmd extends ModifiableCmd {
 			storage.setPath(storageLocation);
 			}catch(IOException ioEx){
 				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-				display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 				return false;
 			}
 		
@@ -61,11 +63,11 @@ public class SaveCmd extends ModifiableCmd {
 			data.set(storage.getData());
 		}catch(IOException ioEx){
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-			display.setMessage(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 			return false;
 		}
 		
-		display.setMessage(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
+		display.set(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
 		
 		return true;
 	}

@@ -12,32 +12,32 @@ public class ViewCmd extends Cmd{
 	public boolean execute(){
 		switch(currView){
 		case "home" :
-			display.setView(new HomeView());
+			display.set(new HomeView());
 			break;
 		case "today" :
-			display.setView(new TodayView());
+			display.set(new TodayView());
 			break;
 		case "upcoming" :
-			display.setView(new UpcomingView());
+			display.set(new UpcomingView());
 			break;
 		case "someday" :
-			display.setView(new SomedayView());
+			display.set(new SomedayView());
 			break;
 		case "done" :
-			display.setView(new CompletedView());
+			display.set(new CompletedView());
 			break;
 		case "help" :
-			display.setView(new HelpView());
+			display.set(new HelpView());
 			break;
 		default :
-			display.setView(new HomeView());
+			display.set(new HomeView());
 			break;
 	}	
 	    return true;
 	}
 	
 	public void undo(){
-		display.setView(preView);
+		display.set(preView);
 	}
 	
 	@Override
