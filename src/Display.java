@@ -2,19 +2,24 @@
 
 public class Display {
 
-	private static Display display = null;
-	private View view;
-	private String message;
-	private int viewIndex;
-	private COMMAND_TYPE command;
-	private int paging;
+	final static int DEFAULT_PAGE = 1;
+	final static int INVALID_INDEX = -1;
 	
+	private static Display display = null;
+	
+	private View view; 	           //current view shown to user
+	private String message;        //current message to be displayed to user
+	private int viewIndex;         //index of task modified 
+	private COMMAND_TYPE command;  //current command executed
+	private int paging;            //current page the user is viewing   
+
+	//Constructor
 	private Display(){
 		this.view = new HomeView();	
 		this.message = "";
-		this.viewIndex = -1;
+		this.viewIndex = INVALID_INDEX;
 		this.command = COMMAND_TYPE.HOME;
-		this.paging = 1;
+		this.paging = DEFAULT_PAGE;
 	}
 	
 	/**
@@ -56,7 +61,7 @@ public class Display {
 	}
 	
 	/**
-	 * Returns the reference of the current command type
+	 * Returns the reference of the current paging
 	 */
 	public int getPaging(){
 		return paging;
@@ -107,7 +112,7 @@ public class Display {
 	 * Replaces the target field with the specified element.
 	 * 
 	 * @param message current message to be displayed to user
-	 * @param view current view shown to user
+	 * @param viewIndex index of task modified 
 	 * @param command current command executed
 	 */
 	public void set(String message, int viewIndex, COMMAND_TYPE command){
