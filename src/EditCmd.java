@@ -3,8 +3,8 @@ import java.time.LocalDateTime;
 //@author A0111867A
 public class EditCmd extends ModifiableCmd{
 	
-	private Task task;
-	private int index;
+	private Task task = new Task("");
+	private int index = -1;
 	private int viewIndex = 0;
 	
 	private String description = null;
@@ -142,8 +142,8 @@ public class EditCmd extends ModifiableCmd{
 			Boolean isSameIndex = this.index == otherEditCmd.index;
 			Boolean isSameViewIndex = this.viewIndex == otherEditCmd.viewIndex;
 			Boolean isSameDescription = this.description.equals(otherEditCmd.description);
-			Boolean isSameStart = this.start.equals(otherEditCmd.start);
-			Boolean isSameEnd = this.end.equals(otherEditCmd.end);
+			Boolean isSameStart = this.start == otherEditCmd.start;
+			Boolean isSameEnd = this.end == otherEditCmd.end;
 			Boolean isSameIsSomeday = this.isSomeday == otherEditCmd.isSomeday;
 			
 			return isSameTask && isSameIndex && isSameViewIndex && isSameDescription 
@@ -154,6 +154,7 @@ public class EditCmd extends ModifiableCmd{
 		}
 	}
 	
+	//@author A0112715
 	private String getMessage(){
 		String message = "";
 		
