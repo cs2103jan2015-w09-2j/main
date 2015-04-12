@@ -1,4 +1,4 @@
-
+//@author A0111867A
 public class CompletedCmd extends ModifiableCmd{
 	
 	private Task task;
@@ -6,6 +6,7 @@ public class CompletedCmd extends ModifiableCmd{
 	
 	public CompletedCmd(int index){		
 		this.index = index;
+		this.task = new Task();
 	}
 	
 	public boolean execute() throws IndexOutOfBoundsException{	
@@ -21,10 +22,11 @@ public class CompletedCmd extends ModifiableCmd{
 	}
 	
 	public void undo(){
+		System.out.println(task);
 		task.setIsCompleted(false);
 		writeToFile();
 		
-		String undoCompleteMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());
+		String undoCompleteMessage = String.format(UNDO_COMPLETED_MESSAGE, task.getDescription());
 		display.set(undoCompleteMessage, index, COMMAND_TYPE.DONE);
 	}
 	
