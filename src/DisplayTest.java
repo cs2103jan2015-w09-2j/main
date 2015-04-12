@@ -16,6 +16,7 @@ public class DisplayTest {
 	@Before
 	public void setUp() throws Exception {
 		display = Display.getInstance();
+		display.set(ADD_TASK_MESSAGE, -1, COMMAND_TYPE.HOME);
 		homeView = new HomeView();
 		todayView = new TodayView();
 		
@@ -28,7 +29,7 @@ public class DisplayTest {
 	
 	@Test
 	public void testGetMessage() {
-		assertEquals(display.getMessage(), "");
+		assertEquals(ADD_TASK_MESSAGE, display.getMessage());
 	}
 	
 	@Test
@@ -38,7 +39,7 @@ public class DisplayTest {
 	
 	@Test
 	public void testGetCommand() {
-		assertEquals(display.getCommand(), COMMAND_TYPE.HOME);
+		assertEquals(COMMAND_TYPE.HOME, display.getCommand());
 	}
 	
 	@Test
