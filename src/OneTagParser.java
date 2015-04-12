@@ -96,8 +96,9 @@ public class OneTagParser {
 			return new HelpCmd();
 		case HOME: 
 		case UPCOMING:
-		case SOMEDAY:
-		case TODAY:
+		case SOMEDAY :
+		case TODAY :
+		case DONE:
 			return new ViewCmd(command);
 		case EXIT:
 			System.exit(0);
