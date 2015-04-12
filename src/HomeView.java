@@ -23,7 +23,7 @@ public class HomeView implements View {
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
 			Locale.US);
 	private StringBuilder output = new StringBuilder();
-	private static int todayLimit = 4;
+	private static int todayLimit =6;
 	private static int upcomingLimit = 8;
 	private static int somedayLimit = 10;
 
