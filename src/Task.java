@@ -9,7 +9,7 @@ public class Task{
 	private static final String DEADLINE_TASK = "[%1$s] " + "%2$s";
 	private static final String NORMAL_TASK = "[%1$s - %2$s] %3$s";
 	
-	private String description;
+	private String description = "";
 	private LocalDateTime start = null;
 	private LocalDateTime end = null;
 	private boolean isCompleted = false;
