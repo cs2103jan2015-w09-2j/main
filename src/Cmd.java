@@ -124,18 +124,34 @@ public abstract class Cmd {
 	protected OneTagLogger logger = OneTagLogger.getInstance();
 
 	//@author A0111867A
+	/**
+	 * Execute the command specified in this class
+	 */
 	public abstract void execute();
 
+	/**
+	 * Undo the command previously executed by this class
+	 */
 	public void undo() {
 		execute();
 	}
 
+	/**
+	 * Returns the task specified by index
+	 * 
+	 * @param index reference of the task
+	 */
 	protected Task getViewTask(int index) throws IndexOutOfBoundsException {
 		View view = display.getView();
 
 		return view.getTask(index);
 	}
 
+	/**
+	 * Returns the task type of the specified task
+	 * 
+	 * @param task object representation of user's task
+	 */
 	protected static String getTaskType(Task task) {
 		String taskType = "";
 
@@ -151,5 +167,10 @@ public abstract class Cmd {
 		return taskType;
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	public abstract boolean equals(Object o);
 }
