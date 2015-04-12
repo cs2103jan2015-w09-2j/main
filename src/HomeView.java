@@ -23,11 +23,15 @@ public class HomeView implements View {
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
 			Locale.US);
 	private StringBuilder output = new StringBuilder();
+	private static int todayLimit = 4;
+	private static int upcomingLimit = 8;
+	private static int somedayLimit = 10;
 
 	public HomeView() {
 		update();
 	}
 
+	//updates the view with the latest list
 	public void update() {
 		Data data = Data.getInstance();
 		this.today = data.getToday();
@@ -35,6 +39,7 @@ public class HomeView implements View {
 		this.someday = data.getSomeday();
 	}
 
+	//gets the task information, such as start time, date and etc
 	protected void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
 		if (!task.isFloatingTask()) {
@@ -48,15 +53,17 @@ public class HomeView implements View {
 		}
 	}
 
+	//show calls this method to get the tasks categorized under today
 	protected void getToday() throws BadLocationException {
 		i = 0;
 		for (Task task : today) {
-			getTasksForToday(task);
+		 formatTasksForToday(task);
 		}
 	}
 
-	private void getTasksForToday(Task task) throws BadLocationException {
-		if (i < 4) {
+	//pass the task to methods depending on their type. Different way of displaying for each type of task
+	private void formatTasksForToday(Task task) throws BadLocationException {
+		if (i < todayLimit) {
 			i++;
 			getTaskInfo(task);
 			String taskNo = "" + i + ".   ";
@@ -70,70 +77,55 @@ public class HomeView implements View {
 		}
 	}
 
+	//timed task is formatted here for displaying. 
 	private void formatTimedTaskToday(Task task, String taskNo) throws BadLocationException {
-		String startDateTime="";
-		String tasks = taskDes;
-		startDateTime= startTime.format(formatTime).replace("AM", "am")
-				.replace("PM", "pm").replace(".00", "")
-				+ " - "
-				+ endTime.format(formatTime).replace("AM", "am")
-						.replace("PM", "pm").replace(".00", "");
-		startDateTime = startDateTime.toString().replaceAll("\\[", "")
-				.replaceAll("\\]", " -");
 
-		if (task.isOverdue()) {
-			if (!(endDate.equals(LocalDate.now()))) {
-				startDateTime = endDate.format(formatter);
-				startDateTime= startDateTime.replaceAll("\\[", "").replaceAll("\\]", "-");
-			}
-			appendTasks("#848484", taskNo, 1);
-			appendTasks("#FF0000", "!", 2);
-			appendTasks("#01A9DB", startDateTime, 3);
-			appendTasks("#0A1B2A", tasks, 4);
-		} else {
-			appendTasks("#848484", taskNo, 1);
-			appendTasks("#FFFFFF", "!", 2);
-			appendTasks("#01A9DB", startDateTime, 3);
-			appendTasks("#0A1B2A", tasks, 4);
-		}
-		
-	}
-
-	private void formatDeadlineTaskToday(Task task, String taskNo) throws BadLocationException {
-		String endDateTime = "";
 		String tasks = taskDes;
-		endDateTime = endTime.format(formatTime).replace("AM", "am")
+		String startTimeFormatted= startTime.format(formatTime).replace("AM", "am")
 				.replace("PM", "pm").replace(".00", "");
-		endDateTime = endDateTime.toString().replaceAll("\\[", "")
+		String endTimeFormatted = endTime.format(formatTime).replace("AM", "am")
+						.replace("PM", "pm").replace(".00", "");
+		String startEndTime =startTimeFormatted+"-"+endTimeFormatted;
+		
+		startEndTime = startEndTime.toString().replaceAll("\\[", "")
 				.replaceAll("\\]", " -");
 
 		if (task.isOverdue()) {
-			if (!(endDate.equals(LocalDate.now()))) {
-				endDateTime = endDate.format(formatter);
-				endDateTime = endDateTime.replaceAll("\\[", "").replaceAll("\\]", "-");
-			}
-			appendTasks("#848484", taskNo, 1);
-			appendTasks("#FF0000", "!", 2);
-			appendTasks("#01A9DB", endDateTime, 3);
-			appendTasks("#0A1B2A", tasks, 4);
+			formatOverdueTasks(taskNo,tasks);
 		} else {
-			appendTasks("#848484", taskNo, 1);
-			appendTasks("#FFFFFF", "!", 2);
-			appendTasks("#01A9DB", endDateTime, 3);
-			appendTasks("#0A1B2A", tasks, 4);
+			formatTasks(taskNo,startEndTime,tasks);
 		}
 		
 	}
 
+	//deadline task is formatted here for displaying
+	private void formatDeadlineTaskToday(Task task, String taskNo) throws BadLocationException {
+		String endTimeFormatted = "";
+		String tasks = taskDes;
+		endTimeFormatted = endTime.format(formatTime).replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+		
+		endTimeFormatted = endTimeFormatted.toString().replaceAll("\\[", "")
+				.replaceAll("\\]", " -");
+		if (task.isOverdue()) {
+			formatOverdueTasks(taskNo,tasks);
+		} else {
+			formatTasks(taskNo,endTimeFormatted,tasks);
+		}
+		
+	}
+	
+	//upcoming tasks are sent for formatting here
 	protected void getUpcoming() throws BadLocationException {
 
 		for (Task task : upcoming) {
-			if (i < 8) {
+			if (i < upcomingLimit) {
 				getTasksForUpcoming(task);
 			}
 		}
 	}
 
+	//tasks are categorized into deadline task and timedtask and sent for formatting
 	private void getTasksForUpcoming(Task task) throws BadLocationException {
 		i++;
 		getTaskInfo(task);
@@ -144,67 +136,77 @@ public class HomeView implements View {
 
 		else {
 			formatTimedTaskUpcoming(task,taskNo);
-
 		}
 		
 	}
 
+	
+	//the startdate is formatted here and formatTasks is called to append the tasks to the pane
 	private void formatTimedTaskUpcoming(Task task, String taskNo) throws BadLocationException {
 		String tasks = taskDes;
-		String startDateTime = "";
-		startDateTime = startDate.format(formatter);
-		startDateTime = startDateTime.replaceAll("\\[", "").replaceAll("\\]", "-");
-	
-			appendTasks("#848484", taskNo, 1);
-			appendTasks("#FFFFFF", "!", 2);
-			appendTasks("#01A9DB", startDateTime, 3);
-			appendTasks("#0A1B2A", tasks, 4);
+		String startDateFormatted = "";
+		startDateFormatted = startDate.format(formatter);
+		startDateFormatted = startDateFormatted.replaceAll("\\[", "").replaceAll("\\]", "-");
+		formatTasks(taskNo, startDateFormatted,tasks);
 		
 	}
 
+	//the endDate is formatted here and formatTasks is called to append the tasks to the pane
 	private void formatDeadlineTaskUpcoming(Task task, String taskNo) throws BadLocationException {
 		String tasks = taskDes;
-		String endDateTime ="";
-		 endDateTime= endDate.format(formatter);
-		 endDateTime = endDateTime.replaceAll("\\[", "").replaceAll("\\]", "-");
+		String endDateFormatted ="";
+		 endDateFormatted= endDate.format(formatter);
+		 endDateFormatted = endDateFormatted.replaceAll("\\[", "").replaceAll("\\]", "-");
 
-			appendTasks("#848484", taskNo, 1);
-			appendTasks("#FFFFFF", "!", 2);
-			appendTasks("#01A9DB", endDateTime, 3);
-			appendTasks("#0A1B2A", tasks, 4);
+			formatTasks(taskNo, endDateFormatted,tasks);
 		
 	}
+	
+	//normal tasks (non-overdue) are given colour and are sent to be appended to the pane here
+	private void formatTasks(String taskNo, String dateTimeFormatted, String tasks) throws BadLocationException {
 
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#01A9DB", dateTimeFormatted, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	//overdue tasks are given colour and are sent to be appended to the pane here
+	private void formatOverdueTasks(String taskNo, String tasks) throws BadLocationException {
+
+		String endDateFormatted="";
+		if (!(endDate.equals(LocalDate.now()))) {
+			endDateFormatted = endDate.format(formatter);
+			endDateFormatted= endDateFormatted.replaceAll("\\[", "").replaceAll("\\]", "-");
+		}
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "!", 2);
+		appendTasks("#01A9DB", endDateFormatted, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	
+	//tasks under someday are sent for coloring here
 	protected void getSomeday() throws BadLocationException {
 		for (Task task : someday) {
-			if (i < 10) {
+			if (i<somedayLimit) {
 				i++;
 				String taskNo = "     " + i + ".   ";
 				String tasks = task.toString() + "\n";
-				if (task.getIsCompleted()) {
-					appendTasks("#848484", taskNo, 1);
-					appendTasks("#FFFFFF", "!", 2);
-					appendTasks("#04B45F", tasks, 5);
-				} else {
-					appendTasks("#848484", taskNo, 1);
-					appendTasks("#FFFFFF", "!", 2);
-					appendTasks("#0A1B2A", tasks, 5);
-				}
+				formatSomedayTasks(taskNo,tasks);
 			}
 		}
 	}
 
+	//someday tasks are coloured and sent to be appended to the pane
+	private void formatSomedayTasks(String taskNo, String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#0A1B2A", tasks, 5);
+		
+	}
 
-	// protected void isTaskOverdue(Task task) {
-	// isOverdue = false;
-	// LocalDateTime now = LocalDateTime.now();
-	// LocalDateTime endDateTime = task.getEnd();
-	//
-	// if (endDateTime.isBefore(now)) {
-	// isOverdue = true;
-	// }
-	// }
-
+	//tasks are appended to the string output
 	public void appendTasks(String textColour, String s, int row)
 			throws BadLocationException {
 		if (row == 1) {
@@ -212,7 +214,6 @@ public class HomeView implements View {
 					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
 					+ "\"><p align=\"right\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 2) {
-			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"center\"><b>"
@@ -240,6 +241,7 @@ public class HomeView implements View {
 
 	}
 
+	//called by UI to show the tasks under home
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
