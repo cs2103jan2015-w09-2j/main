@@ -1,6 +1,7 @@
 
 public class ViewCmd extends Cmd{
 
+	final static int PAGE_ONE = 1;
 	COMMAND_TYPE command;
 	View preView;
 	int paging;
@@ -8,6 +9,7 @@ public class ViewCmd extends Cmd{
 	public ViewCmd(COMMAND_TYPE command) {
 		this.command = command;
 		this.preView = display.getView();
+		this.paging = PAGE_ONE;
 	}
 	
 	public ViewCmd(COMMAND_TYPE command, int paging) {
@@ -17,34 +19,36 @@ public class ViewCmd extends Cmd{
 	}
 
 	public boolean execute(){
+		this.preView = display.getView();
+
 		switch(command){
-		case HOME :
-			display.set(new HomeView(), paging);
-			break;
-		case TODAY :
-			display.set(new TodayView(), paging);
-			break;
-		case UPCOMING :
-			display.set(new UpcomingView(), paging);
-			break;
-		case SOMEDAY :
-			display.set(new SomedayView(), paging);
-			break;
-		case DONE :
-			display.set(new CompletedView(), paging);
-			break;
-		case HELP :
-			display.set(new HelpView());
-			break;
-		default :
-			display.set(new HomeView());
-			break;
-	}	
+			case HOME :
+				display.set(new HomeView(), paging); 
+				break;
+			case TODAY :
+				display.set(new TodayView(), paging);
+				break;
+			case UPCOMING :
+				display.set(new UpcomingView(), paging);
+				break;
+			case SOMEDAY :
+				display.set(new SomedayView(), paging);
+				break;
+			case DONE :
+				display.set(new CompletedView(), paging);
+				break;
+			case HELP :
+				display.set(new HelpView());
+				break;
+			default :
+				display.set(new HomeView());
+				break;
+		}	
 	    return true;
 	}
 	
 	public void undo(){
-		display.set(preView);
+		display.set(preView, paging);
 	}
 	
 	@Override
