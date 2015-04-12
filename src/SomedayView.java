@@ -9,7 +9,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 public class SomedayView extends SingleView implements View {
-	private StringBuilder output = new StringBuilder();
+	private StringBuilder output;
+	private int i = 0;
+	private int page =1;
 
 	@Override
 	public void update() {
@@ -18,11 +20,33 @@ public class SomedayView extends SingleView implements View {
 		setList(data.getSomeday());
 
 	}
+	protected ArrayList<Task> getTasksForPage() {
+		ArrayList<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+		if (page != 1) {
+			startTaskNo = (page - 1) * 15;
+		}
+		i = startTaskNo;
+		int endTaskNo = startTaskNo + 15;
+		if (getList().size() > 14) {
+			try {
+				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
+					tasksForPage.add(task);
+				}
+			} catch (IndexOutOfBoundsException e) {
+				for (Task task : getList().subList(startTaskNo,
+						getList().size())) {
+					tasksForPage.add(task);
+				}
+			}
+		} else {
+			tasksForPage = getList();
+		}
+		return tasksForPage;
+	}
 
 	protected void getSomeday() throws BadLocationException {
-		int i = 0;
-		for (Task task : getList()) {
-		if(i<15){
+		for (Task task : getTasksForPage()) {
 			i++;
 			String taskNo = "     " + i + ".   ";
 			String tasks = task.toString() + "\n";
@@ -35,7 +59,6 @@ public class SomedayView extends SingleView implements View {
 			appendTasks("#FFFFFF", "!", 2);
 			appendTasks("#0A1B2A", tasks, 5);
 			}	
-		}
 	}
 	}
 
@@ -62,6 +85,8 @@ public class SomedayView extends SingleView implements View {
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
+		Display display = Display.getInstance();
+		page = display.getPaging();
 		output.append("<html>");
 
 		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");

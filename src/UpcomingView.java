@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.swing.JTextPane;
@@ -25,6 +26,8 @@ public class UpcomingView extends SingleView implements View {
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
 			Locale.US);
 	private StringBuilder output;
+	private int page = 1;
+	private int i;
 
 	@Override
 	public void update() {
@@ -33,6 +36,31 @@ public class UpcomingView extends SingleView implements View {
 		setList(data.getUpcoming());
 	}
 
+	protected ArrayList<Task> getTasksForPage() {
+		ArrayList<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+		if (page != 1) {
+			startTaskNo = (page - 1) * 5;
+		}
+		i = startTaskNo;
+		int endTaskNo = startTaskNo + 5;
+		if (getList().size() > 5) {
+			try {
+				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
+					tasksForPage.add(task);
+				}
+			} catch (IndexOutOfBoundsException e) {
+				for (Task task : getList().subList(startTaskNo,
+						getList().size())) {
+					tasksForPage.add(task);
+				}
+			}
+		} else {
+			tasksForPage = getList();
+		}
+		return tasksForPage;
+	}
+	
 	protected void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
 		if (!task.isFloatingTask()) {
@@ -46,9 +74,7 @@ public class UpcomingView extends SingleView implements View {
 	}
 
 	protected void getUpcoming() throws BadLocationException {
-		int i = 0;
-		for (Task task : getList()) {
-			if (i < 5) {
+		for (Task task :getTasksForPage()) {
 				i++;
 				getTaskInfo(task);
 				if (task.isDeadlineTask()) {
@@ -138,7 +164,6 @@ public class UpcomingView extends SingleView implements View {
 
 					}
 				}
-			}
 		}
 	}
 
@@ -171,6 +196,8 @@ public class UpcomingView extends SingleView implements View {
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
+		Display display = Display.getInstance();
+		page = display.getPaging();
 		output.append("<html>");
 
 		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");

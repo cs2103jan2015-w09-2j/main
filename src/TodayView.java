@@ -1,23 +1,13 @@
 //@author A0112715R
 
-import java.awt.Color;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import javax.swing.JTextPane;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
+
 
 public class TodayView  extends SingleView implements View{
 	private String taskDes;
@@ -29,7 +19,9 @@ public class TodayView  extends SingleView implements View{
 	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern(
 			"h:mm a", Locale.US);
 	private StringBuilder output = new StringBuilder();
-
+	private int page = 1;
+	private int i;
+	
 	@Override
 	public void update() {
 		setList(data.getToday());
@@ -46,6 +38,30 @@ public class TodayView  extends SingleView implements View{
 		}
 	}
 
+	protected ArrayList<Task> getTasksForPage() {
+		ArrayList<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+		if (page != 1) {
+			startTaskNo = (page - 1) * 15;
+		}
+		i = startTaskNo;
+		int endTaskNo = startTaskNo + 15;
+		if (getList().size() > 15) {
+			try {
+				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
+					tasksForPage.add(task);
+				}
+			} catch (IndexOutOfBoundsException e) {
+				for (Task task : getList().subList(startTaskNo,
+						getList().size())) {
+					tasksForPage.add(task);
+				}
+			}
+		} else {
+			tasksForPage = getList();
+		}
+		return tasksForPage;
+	}
 	//
 	// protected void isTaskOverdue(Task task) {
 	// isOverdue = false;
@@ -56,14 +72,9 @@ public class TodayView  extends SingleView implements View{
 	// isOverdue = true;
 	// }
 	// }
-	
-	protected ArrayList<Task> returnTodayList(){
-		return  getList();
-	}
 
 	protected void getToday() throws BadLocationException {
-		int i = 0;
-		for (Task task : getList()) {
+		for (Task task : getTasksForPage()) {
 			//if(pageNo =1){
 			if (i < 15) {
 				i++;
@@ -77,9 +88,15 @@ public class TodayView  extends SingleView implements View{
 					String timeToDisplay = formatTimeToDisplay();
 
 					if (task.getIsCompleted()) {
+						
 						formatCompletedTasks(taskNo, timeToDisplay, tasks);
 
 					} else if (task.isOverdue()) {
+						if (!(endDate.equals(LocalDate.now()))) {
+							timeToDisplay = endDate.format(formatter);
+							timeToDisplay = timeToDisplay.replaceAll("\\[", "")
+									.replaceAll("\\]", "-");
+						}
 						formatOverdueTasks(taskNo, timeToDisplay, tasks);
 					} else {
 						formatTasks(taskNo, timeToDisplay, tasks);
@@ -118,6 +135,12 @@ public class TodayView  extends SingleView implements View{
 		if (task.getIsCompleted()) {
 			formatCompletedTasks(taskNo, endTimeToDisplay, tasks);
 		} else if (task.isOverdue()) {
+			
+			if (!(endDate.equals(LocalDate.now()))) {
+				endTimeToDisplay = endDate.format(formatter);
+				endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
+						.replaceAll("\\]", "-");
+			}
 			formatOverdueTasks(taskNo, endTimeToDisplay, tasks);
 		} else {
 			formatTasks(taskNo, endTimeToDisplay, tasks);
@@ -178,7 +201,9 @@ public class TodayView  extends SingleView implements View{
 	public String show() throws BadLocationException {
 		// TODO Auto-generated method stub
 		output = new StringBuilder();
-
+		Display display = Display.getInstance();
+		page = display.getPaging();
+		
 		output.append("<html>");
 		output.append("<table  STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
 		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");

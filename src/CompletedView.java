@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.swing.JTextPane;
@@ -12,7 +14,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 public class CompletedView extends SingleView implements View {
-	private int i;
 	private StringBuilder output = new StringBuilder();
 	private DateTimeFormatter formatter = DateTimeFormatter
 			.ofPattern("dd-MM-yyyy");
@@ -23,12 +24,39 @@ public class CompletedView extends SingleView implements View {
 	private LocalDate endDate;
 	private LocalTime startTime;
 	private LocalTime endTime;
+	private int i=0;
+	private int page=1;
 	
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
 
 		setList(data.getCompleted());
+	}
+	
+	protected ArrayList<Task> getTasksForPage() {
+		ArrayList<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+		if (page != 1) {
+			startTaskNo = (page - 1) * 5;
+		}
+		i = startTaskNo;
+		int endTaskNo = startTaskNo + 5;
+		if (getList().size() > 14) {
+			try {
+				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
+					tasksForPage.add(task);
+				}
+			} catch (IndexOutOfBoundsException e) {
+				for (Task task : getList().subList(startTaskNo,
+						getList().size())) {
+					tasksForPage.add(task);
+				}
+			}
+		} else {
+			tasksForPage = getList();
+		}
+		return tasksForPage;
 	}
 	
 	protected void getTaskInfo(Task task) {
@@ -44,9 +72,8 @@ public class CompletedView extends SingleView implements View {
 	}
 
 	protected void getCompletedTasks() throws BadLocationException {
-		int i = 0;
+		
 		for (Task task : getList()) {
-			if (i < 5) {
 				i++;
 				getTaskInfo(task);
 				String taskNo = "     " + i + ".   ";
@@ -93,7 +120,6 @@ public class CompletedView extends SingleView implements View {
 						appendTasks("#0A1B2A", tasks, 4);
 					
 				}
-			}
 		}
 	}
 
@@ -127,7 +153,8 @@ public class CompletedView extends SingleView implements View {
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
-
+		Display display = Display.getInstance();
+		//page = display.getPaging();
 		output.append("<html>");
 			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");
 			output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Completed</b></p></font></td></tr>");
@@ -140,5 +167,9 @@ public class CompletedView extends SingleView implements View {
 
 
 	}
-
+	
+	public ArrayList<Task> getCompletedList(){
+		return data.getCompleted();
+	}
+	
 }

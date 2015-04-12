@@ -54,7 +54,7 @@ public class SearchView extends SingleView implements View {
 	protected void getSearchResults() throws BadLocationException {
 		int i = 0;
 		for (Task task : getList()) {
-			if (i < 5) {
+			if (i < 15) {
 				i++;
 				getTaskInfo(task);
 				String taskNo = "     " + i + ".   ";
@@ -69,7 +69,13 @@ public class SearchView extends SingleView implements View {
 					
 					String endDateTime = "<p align=\"left\">"+endDateToDisplay+"</p>"+"<p align=\"left\"><font color=\"#1F3D7A\">"+endTimeToDisplay+"</font></p>";
 				
-					if (task.isOverdue()) {
+					if (task.getIsCompleted()) {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#01A9DB", endDateTime, 3);
+						appendTasks("#74DF00", tasks, 4);
+
+					} else if(task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", endDateTime, 3);
@@ -106,7 +112,13 @@ public class SearchView extends SingleView implements View {
 					timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"+startTimeToDisplay+" - "+endTimeToDisplay+"</font></p>";
 					}
 					
-					if (task.isOverdue()) {
+					if (task.getIsCompleted()) {
+						appendTasks("#848484", taskNo, 1);
+						appendTasks("#FFFFFF", "!", 2);
+						appendTasks("#01A9DB", dateToDisplay+timeToDisplay, 3);
+						appendTasks("#74DF00", tasks, 4);
+
+					} else if (task.isOverdue()) {
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
 						appendTasks("#01A9DB", dateToDisplay+timeToDisplay, 3);
@@ -153,8 +165,8 @@ public class SearchView extends SingleView implements View {
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
-		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"8px\" cellspacing=\"0px\" width=\"100%\">");
-		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Search Results</b></p></font></td></tr>");
+		output.append("<table  STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Search Results</b></p></font></td></tr>");
 		getSearchResults();
 		output.append("</table>");
 		output.append("</html>");

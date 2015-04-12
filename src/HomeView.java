@@ -34,7 +34,6 @@ public class HomeView implements View {
 
 	public void update() {
 		Data data = Data.getInstance();
-
 		this.today = data.getToday();
 		this.upcoming = data.getUpcoming();
 		this.someday = data.getSomeday();
@@ -53,7 +52,6 @@ public class HomeView implements View {
 		}
 	}
 
-
 	protected void getToday() throws BadLocationException {
 		i = 0;
 		for (Task task : today) {
@@ -68,11 +66,11 @@ public class HomeView implements View {
 							.replace("PM", "pm").replace(".00", "");
 					t = t.toString().replaceAll("\\[", "")
 							.replaceAll("\\]", " -");
-					
-				 if (task.isOverdue()) {
-						if(!(endDate.equals(LocalDate.now()))){
-						t = endDate.format(formatter);
-						t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+
+					if (task.isOverdue()) {
+						if (!(endDate.equals(LocalDate.now()))) {
+							t = endDate.format(formatter);
+							t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
 						}
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
@@ -95,8 +93,8 @@ public class HomeView implements View {
 					t = t.toString().replaceAll("\\[", "")
 							.replaceAll("\\]", " -");
 
-					if (task.getIsCompleted()) { 
-						
+					if (task.getIsCompleted()) {
+
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#848484", "<strike>" + t + "</strike>", 3);
@@ -104,9 +102,9 @@ public class HomeView implements View {
 								"<strike>" + tasks + "</strike>", 4);
 
 					} else if (task.isOverdue()) {
-						if(!(endDate.equals(LocalDate.now()))){
-						t = endDate.format(formatter);
-						t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
+						if (!(endDate.equals(LocalDate.now()))) {
+							t = endDate.format(formatter);
+							t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
 						}
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FF0000", "!", 2);
@@ -133,21 +131,15 @@ public class HomeView implements View {
 				String t = "";
 				String taskNo = "     " + i + ".   ";
 				if (task.isDeadlineTask()) {
+
 					String tasks = taskDes;
 					t = endDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-					if (task.getIsCompleted()) {
-						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#848484", "<strike>" + t + "</strike>", 3);
-						appendTasks("#848484",
-								"<strike>" + tasks + "</strike>", 4);
-					} else {
+
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#01A9DB", t, 3);
 						appendTasks("#0A1B2A", tasks, 4);
-					}
 				}
 
 				else {
@@ -155,8 +147,8 @@ public class HomeView implements View {
 
 					t = startDate.format(formatter);
 					t = t.replaceAll("\\[", "").replaceAll("\\]", "-");
-					if (task.getIsCompleted()) { 
-						
+					if (task.getIsCompleted()) {
+
 						appendTasks("#848484", taskNo, 1);
 						appendTasks("#FFFFFF", "!", 2);
 						appendTasks("#848484", "<strike>" + t + "</strike>", 3);
@@ -175,17 +167,15 @@ public class HomeView implements View {
 	}
 
 	protected void getSomeday() throws BadLocationException {
-
 		for (Task task : someday) {
 			if (i < 10) {
 				i++;
 				String taskNo = "     " + i + ".   ";
 				String tasks = task.toString() + "\n";
-				if (task.getIsCompleted()) { // completed tasks are green and
-												// striked thru
+				if (task.getIsCompleted()) {
 					appendTasks("#848484", taskNo, 1);
 					appendTasks("#FFFFFF", "!", 2);
-					appendTasks("#848484", "<strike>" + tasks + "</strike>", 5);
+					appendTasks("#04B45F", tasks, 5);
 				} else {
 					appendTasks("#848484", taskNo, 1);
 					appendTasks("#FFFFFF", "!", 2);
@@ -194,6 +184,7 @@ public class HomeView implements View {
 			}
 		}
 	}
+
 
 	// protected void isTaskOverdue(Task task) {
 	// isOverdue = false;
@@ -238,16 +229,6 @@ public class HomeView implements View {
 					+ "</p></font></td></tr>");
 		}
 
-		// StyleConstants.setBold(style, isBold);
-		// StyleConstants.setFontSize(style, 14);
-		// StyleConstants.setBackground(style, bg);
-		// StyleConstants.setForeground(style, c);
-		// StyledDocument doc = showToUser.getStyledDocument();
-		// SimpleAttributeSet center = new SimpleAttributeSet();
-		// StyleConstants.setAlignment(center, StyleConstants.ALIGN_LEFT);
-		// doc.setParagraphAttributes(0, doc.getLength(), center, false);
-		// doc.insertString(doc.getLength(), s, style);
-
 	}
 
 	public String show() throws BadLocationException {
@@ -271,39 +252,6 @@ public class HomeView implements View {
 		output.append("</html>");
 
 		return output.toString();
-
-		/*
-		 * StyleConstants.setFontSize(style, 7);
-		 * StyleConstants.setForeground(style, Color.WHITE);
-		 * StyleConstants.setBold(style, true);
-		 * StyleConstants.setBackground(style, new Color(84, 121, 163));
-		 * doc.insertString( doc.getLength(),
-		 * "\n			    Today                         	                      \n",
-		 * style); doc.insertString(doc.getLength(), "\n", style);
-		 * StyleConstants.setBackground(style, Color.WHITE); getToday();
-		 * 
-		 * StyleConstants.setBold(style, true);
-		 * StyleConstants.setFontSize(style, 15);
-		 * StyleConstants.setForeground(style, Color.WHITE);
-		 * doc.insertString(doc.getLength(), "\n", style);
-		 * StyleConstants.setBackground(style, new Color(84, 121, 163));
-		 * doc.insertString(doc.getLength(),
-		 * "			 Upcoming                                   	        \n", style);
-		 * StyleConstants.setForeground(style, Color.BLACK);
-		 * StyleConstants.setBackground(style, Color.WHITE);
-		 * doc.insertString(doc.getLength(), "\n", style); getUpcoming();
-		 * 
-		 * StyleConstants.setFontSize(style, 15); StyleConstants.setBold(style,
-		 * true); StyleConstants.setForeground(style, Color.WHITE);
-		 * doc.insertString(doc.getLength(), "\n", style);
-		 * StyleConstants.setBackground(style, new Color(84, 121, 163));
-		 * doc.insertString(doc.getLength(),
-		 * "			  Someday                                   	        \n", style);
-		 * StyleConstants.setForeground(style, Color.BLACK);
-		 * StyleConstants.setBackground(style, Color.WHITE);
-		 * doc.insertString(doc.getLength(), "\n", style); getSomeday();
-		 * StyleConstants.setForeground(style, Color.BLUE.brighter());
-		 */
 
 	}
 
