@@ -342,7 +342,7 @@ public class UserInterface {
 		message = Display.getInstance().getMessage();
 		try {
 			if (!message.isEmpty()) {
-				htmlMessage.append("<html><p valign=\"top\" align=\"center\"><font face=\"Lucida sans\" color=\"#660000\" size=\"5\">"+Display.getInstance().getMessage()+"</font></p></html>");
+				htmlMessage.append("<html><p valign=\"top\" align=\"center\"><font face=\"Lucida sans\" color=\"#660000\" size=\"4.5\"><b>"+Display.getInstance().getMessage()+"</b></font></p></html>");
 				feedback.setText((htmlMessage.toString()) + "\n");
 			}
 		} catch (NullPointerException nullException) {
