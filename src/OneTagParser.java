@@ -92,6 +92,10 @@ public class OneTagParser {
 		switch (command) {
 		case UNDO:
 			return new UndoCmd();
+		case HELP:
+			return new HelpCmd();
+		case UPCOMING: 
+			return new ViewCmd(command);
 		case EXIT:
 			System.exit(0);
 		default:
@@ -122,11 +126,9 @@ public class OneTagParser {
 		case SAVE : 
 			return new SaveCmd(message);
 		case HOME: 
-		case DONE:
 		case TODAY:
 		case UPCOMING:
 		case SOMEDAY:
-		case HELP:
 			return new ViewCmd(command,numForView(message));
 		default:
 			throw new Error(INVALID_MSG);
