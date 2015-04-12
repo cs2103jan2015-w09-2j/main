@@ -541,7 +541,7 @@ public class OneTagParser {
 		int num;
 		 try { 
 		        num = Integer.parseInt(element); 
-		        if(num = 0){
+		        if(num == 0){
 		        	return 1;
 		        }
 		        else{
