@@ -1,18 +1,12 @@
 //@author A0112715R
-import java.awt.Color;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
-import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 public class UpcomingView extends SingleView implements View {
 
@@ -27,45 +21,59 @@ public class UpcomingView extends SingleView implements View {
 			Locale.US);
 	private StringBuilder output;
 	private int page = 1;
-	private int i=0;
+	private int i = 0;
+	private int taskLimit = 5;
 
+	/**
+	 * Updates the list of tasks 
+	 */
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
 
 		setList(data.getUpcoming());
 	}
-
-	protected ArrayList<Task> getTasksForPage() {
-		ArrayList<Task> tasksForPage = new ArrayList<Task>();
-		int startTaskNo = 0;
-		if (page != 1) {
-			startTaskNo = (page - 1) * 5;
+	
+	/**
+	 * Supports paging. Sets the tasks to be shown for each "page"
+	 * 
+	 * @return List<Task>
+	 */
+	private List<Task> getTasksForPage() {
+		
+		if (page == 0) {
+			page = 1;
 		}
-		i = startTaskNo;
-		int endTaskNo = startTaskNo + 5;
-		if (getList().size() >= 5) {
+		
+		List<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+
+		if (getList().size() >= taskLimit) {
+			startTaskNo = (page - 1) * taskLimit;
+			int endTaskNo = startTaskNo + taskLimit;
 			try {
-				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
-					tasksForPage.add(task);
-				}
+				tasksForPage = getList().subList(startTaskNo, endTaskNo);
 			} catch (IndexOutOfBoundsException e) {
 				try {
-					for (Task task : getList().subList(startTaskNo,
-							getList().size())) {
-						tasksForPage.add(task);
-					}
+					tasksForPage = getList().subList(startTaskNo,
+							getList().size());
 				} catch (IllegalArgumentException e1) {
 					page = 1;
+					getTasksForPage();
 				}
 			}
 		} else {
 			tasksForPage = getList();
 		}
+		i = startTaskNo;
 		return tasksForPage;
 	}
 	
-	protected void getTaskInfo(Task task) {
+	/**
+	 * Gets the information of each task
+	 * @param task
+	 */
+	private void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
 		if (!task.isFloatingTask()) {
 			if (!task.isDeadlineTask()) {
@@ -77,133 +85,128 @@ public class UpcomingView extends SingleView implements View {
 		}
 	}
 
-	protected void getUpcoming() throws BadLocationException {
-		for (Task task :getTasksForPage()) {
-				i++;
-				getTaskInfo(task);
-				if (task.isDeadlineTask()) {
-					String tasks = taskDes;
-					String taskNo = "     " + i + ".   ";
-					String endDateToDisplay = endDate.format(formatter);
-					String endTimeToDisplay = endTime.format(formatTime);
-					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
-							.replaceAll("\\]", "");
-					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
-							.replaceAll("\\]", "");
-					endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
-							.replace("PM", "pm").replace(".00", "");
+	/**
+	 * Gets list of upcoming task and sends for formatting
+	 */
+	private void getUpcoming() throws BadLocationException {
+		for (Task task : getTasksForPage()) {
+			i++;
+			getTaskInfo(task);
+			if (task.isDeadlineTask()) {
+				String tasks = taskDes;
+				String taskNo = "     " + i + ".   ";
+				String endDateTime = formatTimeDate();
+				
+				formatTasks(taskNo,endDateTime,tasks);
+			}
 
-					String endDateTime = "<p align=\"left\">"
-							+ endDateToDisplay + "</p>"
-							+ "<p align=\"left\"><font color=\"#1F3D7A\">"
-							+ endTimeToDisplay + "</font></p>";
-
-					if (task.getIsCompleted()) { // coloured green and striked
-													// thru
-						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#848484", "<p align=\"left\"><strike>"
-								+ endDateToDisplay + "</strike></p>"
-								+ "<strike><p align=\"left\">"
-								+ endTimeToDisplay + "</p></strike>", 3);
-						appendTasks("#848484",
-								"<strike>" + tasks + "</strike>", 4);
-
-					} else {
-						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", endDateTime, 3);
-						appendTasks("#0A1B2A", tasks, 4);
-					}
-				}
-
-				else {
-					String tasks = taskDes;
-					String taskNo = "     " + i + ".   ";
-
-					String startDateToDisplay = startDate.format(formatter);
-					String startTimeToDisplay = startTime.format(formatTime);
-					startDateToDisplay = startDateToDisplay.replaceAll("\\[",
-							"").replaceAll("\\]", "");
-					startTimeToDisplay = startTimeToDisplay.replaceAll("\\[",
-							"").replaceAll("\\]", "");
-					startTimeToDisplay = startTimeToDisplay.replace("AM", "am")
-							.replace("PM", "pm").replace(".00", "");
-
-					String endDateToDisplay = endDate.format(formatter);
-					String endTimeToDisplay = endTime.format(formatTime);
-					endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
-							.replaceAll("\\]", "");
-					endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
-							.replaceAll("\\]", "");
-					endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
-							.replace("PM", "pm").replace(".00", "");
-
-					String dateToDisplay = "<p align=\"left\">"
-							+ startDateToDisplay + " - " + endDateToDisplay
-							+ "</p>";
-					String timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"
-							+ startTimeToDisplay
-							+ " - "
-							+ endTimeToDisplay
-							+ "</font></p>";
-
-					if (task.getIsCompleted()) { // completed tasks are green
-													// and striked
-													// thru
-						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#848484", "<p align=\"left\"><strike>"
-								+ endDateToDisplay + "</strike></p>"
-								+ "<strike><p align=\"left\">"
-								+ endTimeToDisplay + "</p></strike>", 3);
-						appendTasks("#848484",
-								"<strike>" + tasks + "</strike>", 4);
-					} else {
-						appendTasks("#848484", taskNo, 1);
-						appendTasks("#FFFFFF", "!", 2);
-						appendTasks("#01A9DB", dateToDisplay + timeToDisplay, 3);
-						appendTasks("#0A1B2A", tasks, 4);
-
-					}
-				}
+			else {
+				String tasks = taskDes;
+				String taskNo = "     " + i + ".   ";
+				String dateToDisplay = formatStartEndDate();
+				String timeToDisplay = formatStartEndTime(); 
+				String dateTimeToDisplay = dateToDisplay+timeToDisplay;
+				
+				formatTasks(taskNo,dateTimeToDisplay,tasks);
+			}
 		}
 	}
+	
+	private void formatTasks(String taskNo, String dateTimeToDisplay, String tasks) throws BadLocationException{
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#01A9DB", dateTimeToDisplay, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
 
-	public void appendTasks(String textColour, String s, int row)
+	private String formatStartEndTime() {
+		String startTimeToDisplay = startTime.format(formatTime);
+		startTimeToDisplay = startTimeToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		startTimeToDisplay = startTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+		
+		String endTimeToDisplay = endTime.format(formatTime);
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+		
+		String timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"+ startTimeToDisplay+ " - "+ endTimeToDisplay + "</font></p>";
+		
+		return timeToDisplay;
+	}
+
+	private String formatStartEndDate() {
+		String startDateToDisplay = startDate.format(formatter);
+		startDateToDisplay = startDateToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		
+		String endDateToDisplay = endDate.format(formatter);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		
+		String dateToDisplay = "<p align=\"left\">"+ startDateToDisplay + " - " + endDateToDisplay+ "</p>";
+		return dateToDisplay;
+	}
+
+	private String formatTimeDate() {
+		String endDateToDisplay = endDate.format(formatter);
+		String endTimeToDisplay = endTime.format(formatTime);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String endDateTime = "<p align=\"left\">" + endDateToDisplay
+				+ "</p>" + "<p align=\"left\"><font color=\"#1F3D7A\">"
+				+ endTimeToDisplay + "</font></p>";
+		return endDateTime;
+	}
+
+	/**
+	 * Appends to Stringbuilder output
+	 * @param textColour,text,row
+	 */
+	public void appendTasks(String textColour, String text, int row)
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
 					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
-					+ "\"><p align=\"right\"><b>" + s + "</b></p></font></td>");
+					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"center\"><b>"
-					+ s
+					+ text
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
 			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
-					+ textColour + "\"><b>" + s + "</b></font></td>");
+					+ textColour + "\"><b>" + text + "</b></font></td>");
 		} else if (row == 4) {
 			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"left\">"
-					+ s
+					+ text
 					+ "</p></font></td></tr>");
 		}
 
 	}
 
+	/**
+	 * Table created using Html code to append to JTextpane
+	 * 
+	 * @return String
+	 */
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		Display display = Display.getInstance();
 		page = display.getPaging();
-		if(page ==0){
-			page=1;
-		}
+
 		output.append("<html>");
 
 		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");
@@ -215,6 +218,16 @@ public class UpcomingView extends SingleView implements View {
 
 		return output.toString();
 
+	}
+
+	/**
+	 * This is used for Testing
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getUpcomingList() {
+		ArrayList<Task> upcomingList = data.getUpcoming();
+		return upcomingList;
 	}
 
 }

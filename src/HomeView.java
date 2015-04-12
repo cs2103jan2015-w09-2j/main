@@ -27,11 +27,16 @@ public class HomeView implements View {
 	private static int upcomingLimit = 8;
 	private static int somedayLimit = 10;
 
+	/**
+	 * Updates the view with the latest list
+	 */
 	public HomeView() {
 		update();
 	}
 
-	//updates the view with the latest list
+	/**
+	 * Sets the list of tasks for each category
+	 */
 	public void update() {
 		Data data = Data.getInstance();
 		this.today = data.getToday();
@@ -39,8 +44,12 @@ public class HomeView implements View {
 		this.someday = data.getSomeday();
 	}
 
-	//gets the task information, such as start time, date and etc
-	protected void getTaskInfo(Task task) {
+	/**
+	 * Gets the task information and initializes the variables
+	 * @param task
+	 */
+	
+	private void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
 		if (!task.isFloatingTask()) {
 			if (!task.isDeadlineTask()) {
@@ -53,15 +62,20 @@ public class HomeView implements View {
 		}
 	}
 
-	//show calls this method to get the tasks categorized under today
-	protected void getToday() throws BadLocationException {
+	/**
+	 * Gets the list of tasks under today and sends it for formatting
+	 */
+	private void getToday() throws BadLocationException {
 		i = 0;
 		for (Task task : today) {
 		 formatTasksForToday(task);
 		}
 	}
 
-	//pass the task to methods depending on their type. Different way of displaying for each type of task
+	/**
+	 * Sends the different types of tasks under today for formatting
+	 * @param task
+	 */
 	private void formatTasksForToday(Task task) throws BadLocationException {
 		if (i < todayLimit) {
 			i++;
@@ -76,8 +90,11 @@ public class HomeView implements View {
 			}
 		}
 	}
-
-	//timed task is formatted here for displaying. 
+	
+	/**
+	 * Formats timed task under today category
+	 * @param task, taskNo : the number of the task
+	 */
 	private void formatTimedTaskToday(Task task, String taskNo) throws BadLocationException {
 
 		String tasks = taskDes;
@@ -98,7 +115,10 @@ public class HomeView implements View {
 		
 	}
 
-	//deadline task is formatted here for displaying
+	/**
+	 * Gets the list of tasks from file, puts them into an ArrayList
+	 * @param task, taskNo
+	 */
 	private void formatDeadlineTaskToday(Task task, String taskNo) throws BadLocationException {
 		String endTimeFormatted = "";
 		String tasks = taskDes;
@@ -115,8 +135,10 @@ public class HomeView implements View {
 		
 	}
 	
-	//upcoming tasks are sent for formatting here
-	protected void getUpcoming() throws BadLocationException {
+	/**
+	 * Gets the list of upcoming tasks and sends them for formatting
+	 */
+	private void getUpcoming() throws BadLocationException {
 
 		for (Task task : upcoming) {
 			if (i < upcomingLimit) {
@@ -125,7 +147,10 @@ public class HomeView implements View {
 		}
 	}
 
-	//tasks are categorized into deadline task and timedtask and sent for formatting
+	/**
+	 * Different types of tasks are sent for formatting
+	 * @param task
+	 */
 	private void getTasksForUpcoming(Task task) throws BadLocationException {
 		i++;
 		getTaskInfo(task);
@@ -140,9 +165,11 @@ public class HomeView implements View {
 		
 	}
 
-	
-	//the startdate is formatted here and formatTasks is called to append the tasks to the pane
-	private void formatTimedTaskUpcoming(Task task, String taskNo) throws BadLocationException {
+	/**
+	 * Formats Timed Tasks under the upcoming category
+	 * @param task, taskNo
+	 */
+		private void formatTimedTaskUpcoming(Task task, String taskNo) throws BadLocationException {
 		String tasks = taskDes;
 		String startDateFormatted = "";
 		startDateFormatted = startDate.format(formatter);
@@ -151,7 +178,10 @@ public class HomeView implements View {
 		
 	}
 
-	//the endDate is formatted here and formatTasks is called to append the tasks to the pane
+		/**
+		 * Formats deadline tasks under upcoming category
+		 * @param task, taskNo
+		 */
 	private void formatDeadlineTaskUpcoming(Task task, String taskNo) throws BadLocationException {
 		String tasks = taskDes;
 		String endDateFormatted ="";
@@ -161,8 +191,10 @@ public class HomeView implements View {
 			formatTasks(taskNo, endDateFormatted,tasks);
 		
 	}
-	
-	//normal tasks (non-overdue) are given colour and are sent to be appended to the pane here
+	/**
+	 * Format Non-overdue tasks
+	 * @param taskNo, dateTimeFormatted, tasks
+	 */
 	private void formatTasks(String taskNo, String dateTimeFormatted, String tasks) throws BadLocationException {
 
 		appendTasks("#848484", taskNo, 1);
@@ -171,7 +203,10 @@ public class HomeView implements View {
 		appendTasks("#0A1B2A", tasks, 4);
 	}
 
-	//overdue tasks are given colour and are sent to be appended to the pane here
+	/**
+	 * Format overdue tasks
+	 * @param
+	 */
 	private void formatOverdueTasks(String taskNo, String tasks) throws BadLocationException {
 
 		String endDateFormatted="";
@@ -185,9 +220,10 @@ public class HomeView implements View {
 		appendTasks("#0A1B2A", tasks, 4);
 	}
 
-	
-	//tasks under someday are sent for coloring here
-	protected void getSomeday() throws BadLocationException {
+	/**
+	 * Gets the list of tasks from someday list and sends them for formatting
+	 */
+	private void getSomeday() throws BadLocationException {
 		for (Task task : someday) {
 			if (i<somedayLimit) {
 				i++;
@@ -198,7 +234,10 @@ public class HomeView implements View {
 		}
 	}
 
-	//someday tasks are coloured and sent to be appended to the pane
+	/**
+	 * Format tasks under someday 
+	 * @param taskNo, tasks
+	 */
 	private void formatSomedayTasks(String taskNo, String tasks) throws BadLocationException {
 		appendTasks("#848484", taskNo, 1);
 		appendTasks("#FFFFFF", "!", 2);
@@ -206,42 +245,49 @@ public class HomeView implements View {
 		
 	}
 
-	//tasks are appended to the string output
-	public void appendTasks(String textColour, String s, int row)
+	/**
+	 * Gets the list of tasks from file, puts them into an ArrayList
+	 * @param textColour, text, row : row number for table
+	 */
+	public void appendTasks(String textColour, String text, int row)
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
 					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
-					+ "\"><p align=\"right\"><b>" + s + "</b></p></font></td>");
+					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
 		} else if (row == 2) {
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"center\"><b>"
-					+ s
+					+ text
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
 			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"left\"><b>"
-					+ s
+					+ text
 					+ "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"left\">"
-					+ s
+					+ text
 					+ "</p></font></td></tr>");
 		} else if (row == 5) {
 			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"left\">"
-					+ s
+					+ text
 					+ "</p></font></td></tr>");
 		}
 
 	}
-
-	//called by UI to show the tasks under home
+	
+	/**
+	 * Forms the html to show on the JTextPane in UserInterface class
+	 * 
+	 * @return String
+	 */
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
@@ -266,6 +312,11 @@ public class HomeView implements View {
 
 	}
 
+	/**
+	 * Gets the task based on the number
+	 * @param numbering
+	 * @return Task
+	 */
 	public Task getTask(int numbering) throws IndexOutOfBoundsException {
 		int index = numbering - 1;
 
@@ -284,6 +335,11 @@ public class HomeView implements View {
 		}
 	}
 
+	/**
+	 * Sets the combined list. Used for testing.
+	 * 
+	 * @return ArrayList<Task>
+	 */
 	@Override
 	public ArrayList<Task> getList() {
 		List<Task> combinedList = new ArrayList<Task>();
