@@ -17,7 +17,7 @@ public class SearchCmd extends Cmd{
 		if(data.getSearched(searchedText).isEmpty()){
 			display.set(SEARCH_KEYWORD_IS_EMPTY);
 		}
-		
+		preView = display.getView();
 		display.set(new SearchView(searchedText));
 	}
 	
