@@ -1,4 +1,5 @@
 
+//@author A0111867A
 public class ViewCmd extends Cmd{
 
 	final static int PAGE_ONE = 1;

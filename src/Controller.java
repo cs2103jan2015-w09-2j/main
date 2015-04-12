@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.logging.Level;
 
+//@author A0111867A
 public class Controller {
 	
 	protected static final String MESSAGE_INVALID_INDEX = "The number you enter is invalid";
@@ -24,7 +25,10 @@ public class Controller {
 		
 		display.set(new HomeView());
 	}
-		
+	
+	/**
+	 * Returns an instance of this class
+	 */
 	public static Controller getInstance(){
 		if(controller == null){
 			controller = new Controller();
@@ -32,7 +36,12 @@ public class Controller {
 		return controller;
 	}
 	
-	public boolean executeCommand(String input) {
+	/**
+	 * Parse the input and update file and display.
+	 * 
+	 * @param input raw string input by user
+	 */
+	public void executeCommand(String input) {
 		
 		try{
 			OneTagParser oneTagParser = new OneTagParser(input);
@@ -45,10 +54,7 @@ public class Controller {
 		}
 		catch(IndexOutOfBoundsException ex){
 			display.set(MESSAGE_INVALID_INDEX);
-			return false;
 		}
-		
-		return true;
 	}
 
 }

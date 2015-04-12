@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+//@author A0111867A
 public abstract class SingleView implements View{
 
 	protected Data data = Data.getInstance();

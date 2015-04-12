@@ -1,6 +1,7 @@
-
+//@author A0111867A
 public abstract class Cmd {
 
+	//@author A0112715
 	// the task and the category
 	protected static final String ADD_TASK_MESSAGE = "Added <font color=\"#CC3300\"><i>%1$s</i></font> to <font color=\"#CC3300\"><i>%2$s</i></font>";
 
@@ -122,6 +123,7 @@ public abstract class Cmd {
 	protected Display display = Display.getInstance();
 	protected OneTagLogger logger = OneTagLogger.getInstance();
 
+	//@author A0111867A
 	public abstract void execute();
 
 	public void undo() {
