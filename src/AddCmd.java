@@ -1,3 +1,4 @@
+//@author A0111867A
 
 public class AddCmd extends ModifiableCmd{
 
@@ -7,8 +8,7 @@ public class AddCmd extends ModifiableCmd{
 		this.task = task;
 	}
 	
-	public boolean execute(){
-		
+	public boolean execute(){	
 		data.add(task);
 		writeToFile();
 	     
@@ -19,13 +19,11 @@ public class AddCmd extends ModifiableCmd{
 	}
 	
 	public void undo(){
-	
 		data.remove(task);
 		writeToFile();
 		
-		String undoMessage = String.format(ADD_TASK_MESSAGE, task.getDescription(), getTaskType(task));
+		String undoMessage = String.format(UNDO_ADD_MESSAGE, task.getDescription());
 	    display.set(undoMessage, COMMAND_TYPE.DELETE);
-	
 	}
 	
 	@Override
