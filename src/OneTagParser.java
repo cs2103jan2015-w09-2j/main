@@ -630,8 +630,6 @@ public class OneTagParser {
 			return COMMAND_TYPE.HELP;
 		} else if (input.equalsIgnoreCase(DELETE)) {
 			return COMMAND_TYPE.DELETE;
-		} else if (input.equalsIgnoreCase(UPCOMING)) {
-			return COMMAND_TYPE.UPCOMING;
 		} else {
 			return COMMAND_TYPE.INVALID;
 		}
