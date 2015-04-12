@@ -1,17 +1,11 @@
 //@author A0112715R
-import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
-import javax.swing.JTextPane;
+import java.util.Locale;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 public class CompletedView extends SingleView implements View {
 	private StringBuilder output = new StringBuilder();
@@ -153,7 +147,7 @@ public class CompletedView extends SingleView implements View {
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
-		Display display = Display.getInstance();
+	//	Display display = Display.getInstance();
 		//page = display.getPaging();
 		output.append("<html>");
 			output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");

@@ -27,7 +27,7 @@ public class UpcomingView extends SingleView implements View {
 			Locale.US);
 	private StringBuilder output;
 	private int page = 1;
-	private int i;
+	private int i=0;
 
 	@Override
 	public void update() {
@@ -36,7 +36,7 @@ public class UpcomingView extends SingleView implements View {
 		setList(data.getUpcoming());
 	}
 
-	protected ArrayList<Task> getTasksForPage()  {
+	protected ArrayList<Task> getTasksForPage() {
 		ArrayList<Task> tasksForPage = new ArrayList<Task>();
 		int startTaskNo = 0;
 		if (page != 1) {
@@ -44,19 +44,19 @@ public class UpcomingView extends SingleView implements View {
 		}
 		i = startTaskNo;
 		int endTaskNo = startTaskNo + 5;
-		if (getList().size() > 5) {
+		if (getList().size() >= 5) {
 			try {
 				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
 					tasksForPage.add(task);
 				}
 			} catch (IndexOutOfBoundsException e) {
-				try{
-				for (Task task : getList().subList(startTaskNo,
-						getList().size())) {
-					tasksForPage.add(task);
-				}
-				}catch(IllegalArgumentException e1){
-					page=1;
+				try {
+					for (Task task : getList().subList(startTaskNo,
+							getList().size())) {
+						tasksForPage.add(task);
+					}
+				} catch (IllegalArgumentException e1) {
+					page = 1;
 				}
 			}
 		} else {
@@ -82,7 +82,6 @@ public class UpcomingView extends SingleView implements View {
 				i++;
 				getTaskInfo(task);
 				if (task.isDeadlineTask()) {
-
 					String tasks = taskDes;
 					String taskNo = "     " + i + ".   ";
 					String endDateToDisplay = endDate.format(formatter);
@@ -202,6 +201,9 @@ public class UpcomingView extends SingleView implements View {
 		output = new StringBuilder();
 		Display display = Display.getInstance();
 		page = display.getPaging();
+		if(page ==0){
+			page=1;
+		}
 		output.append("<html>");
 
 		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");

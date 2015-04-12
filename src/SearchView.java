@@ -1,21 +1,12 @@
 //@author A0112715R
-import java.awt.Color;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
-
-import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 public class SearchView extends SingleView implements View {
-	private UserInterface UI = UserInterface.getInstance();
-
 	private String searchedText = "";
 	private String taskDes;
 	private LocalDate startDate;

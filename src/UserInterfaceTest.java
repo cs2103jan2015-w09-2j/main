@@ -55,8 +55,15 @@ public class UserInterfaceTest {
 	
 	@After
 	public void clearAfterTesting(){
+		UserInterface UI = UserInterface.getInstance();
+		assertNotNull(UI);
+		UI.executeInterface();
+		UI.initialize();
+		
 		File file = new File("oneTag.json");
 		file.delete();
+		
+		
 	}
 	
 	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating tasks

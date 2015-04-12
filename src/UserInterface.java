@@ -1,6 +1,7 @@
 //@author A0112715R
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Point;
 
 import javax.swing.BorderFactory;
@@ -21,10 +22,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
-import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
-import javax.swing.text.StyledDocument;
 import javax.swing.JButton;
 
 import java.awt.event.MouseAdapter;
@@ -241,7 +240,7 @@ public class UserInterface {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				// minimizeApplication();
-				frame.setState(frame.ICONIFIED);
+				frame.setState(Frame.ICONIFIED);
 			}
 		});
 	}
@@ -276,7 +275,7 @@ public class UserInterface {
 		showToUser.setContentType("text/html");
 		try{
 		control.executeCommand(command);
-		}catch(ArithmeticException | Error e ){
+		}catch(ArithmeticException | Error e){
 			JOptionPane.showMessageDialog(null, "Invalid input. Enter \"help\" for assistance.", "Error", JOptionPane.ERROR_MESSAGE);   
 		}
 		showMessageToUser();

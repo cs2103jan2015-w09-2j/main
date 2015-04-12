@@ -1,12 +1,6 @@
 //@author A0112715R
-import java.awt.Color;
 import java.util.ArrayList;
-
-import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 public class SomedayView extends SingleView implements View {
 	private StringBuilder output;
@@ -28,7 +22,7 @@ public class SomedayView extends SingleView implements View {
 		}
 		i = startTaskNo;
 		int endTaskNo = startTaskNo + 15;
-		if (getList().size() > 14) {
+		if (getList().size() >= 15) {
 			try {
 				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
 					tasksForPage.add(task);
@@ -91,6 +85,9 @@ public class SomedayView extends SingleView implements View {
 		output = new StringBuilder();
 		Display display = Display.getInstance();
 		page = display.getPaging();
+		if(page ==0){
+			page=1;
+		}
 		output.append("<html>");
 
 		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");

@@ -8,8 +8,7 @@ import java.util.Locale;
 
 import javax.swing.text.BadLocationException;
 
-
-public class TodayView  extends SingleView implements View{
+public class TodayView extends SingleView implements View {
 	private String taskDes;
 	private LocalDate endDate;
 	private LocalTime startTime;
@@ -21,7 +20,7 @@ public class TodayView  extends SingleView implements View{
 	private StringBuilder output = new StringBuilder();
 	private int page = 1;
 	private int i;
-	
+
 	@Override
 	public void update() {
 		setList(data.getToday());
@@ -46,26 +45,27 @@ public class TodayView  extends SingleView implements View{
 		}
 		i = startTaskNo;
 		int endTaskNo = startTaskNo + 15;
-		if (getList().size() > 15) {
+		if (getList().size() >= 15) {
 			try {
 				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
 					tasksForPage.add(task);
 				}
 			} catch (IndexOutOfBoundsException e) {
-				try{
+				try {
 					for (Task task : getList().subList(startTaskNo,
 							getList().size())) {
 						tasksForPage.add(task);
 					}
-					}catch(IllegalArgumentException e1){
-						page=1;
-					}
+				} catch (IllegalArgumentException e1) {
+					page = 1;
+				}
 			}
 		} else {
 			tasksForPage = getList();
 		}
 		return tasksForPage;
 	}
+
 	//
 	// protected void isTaskOverdue(Task task) {
 	// isOverdue = false;
@@ -79,39 +79,34 @@ public class TodayView  extends SingleView implements View{
 
 	protected void getToday() throws BadLocationException {
 		for (Task task : getTasksForPage()) {
-			//if(pageNo =1){
-			if (i < 15) {
-				i++;
-				getTaskInfo(task);
-				if (task.isDeadlineTask()) {
-					formatDeadlineTask(task, i);
+			i++;
+			getTaskInfo(task);
+			if (task.isDeadlineTask()) {
+				formatDeadlineTask(task, i);
 
-				} else {
-					String taskNo = "" + i + ".   ";
-					String tasks = taskDes;
-					String timeToDisplay = formatTimeToDisplay();
+			} else {
+				String taskNo = "" + i + ".   ";
+				String tasks = taskDes;
+				String timeToDisplay = formatTimeToDisplay();
 
-					if (task.getIsCompleted()) {
-						
-						formatCompletedTasks(taskNo, timeToDisplay, tasks);
+				if (task.getIsCompleted()) {
 
-					} else if (task.isOverdue()) {
-						if (!(endDate.equals(LocalDate.now()))) {
-							timeToDisplay = endDate.format(formatter);
-							timeToDisplay = timeToDisplay.replaceAll("\\[", "")
-									.replaceAll("\\]", "-");
-						}
-						formatOverdueTasks(taskNo, timeToDisplay, tasks);
-					} else {
-						formatTasks(taskNo, timeToDisplay, tasks);
+					formatCompletedTasks(taskNo, timeToDisplay, tasks);
+
+				} else if (task.isOverdue()) {
+					if (!(endDate.equals(LocalDate.now()))) {
+						timeToDisplay = endDate.format(formatter);
+						timeToDisplay = timeToDisplay.replaceAll("\\[", "")
+								.replaceAll("\\]", "-");
 					}
-
+					formatOverdueTasks(taskNo, timeToDisplay, tasks);
+				} else {
+					formatTasks(taskNo, timeToDisplay, tasks);
 				}
+
 			}
 		}
-		//}
 	}
-
 
 	private String formatTimeToDisplay() {
 		String timeToDisplay = startTime.format(formatTime).replace("AM", "am")
@@ -139,7 +134,7 @@ public class TodayView  extends SingleView implements View{
 		if (task.getIsCompleted()) {
 			formatCompletedTasks(taskNo, endTimeToDisplay, tasks);
 		} else if (task.isOverdue()) {
-			
+
 			if (!(endDate.equals(LocalDate.now()))) {
 				endTimeToDisplay = endDate.format(formatter);
 				endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
@@ -164,9 +159,8 @@ public class TodayView  extends SingleView implements View{
 			String tasks) throws BadLocationException {
 		appendTasks("#848484", taskNo, 1);
 		appendTasks("#FFFFFF", "!", 2);
-		appendTasks("#848484", "<strike>"+timeToDisplay+"</strike>", 3);
-		appendTasks("#848484", "<strike>"+tasks+"</strike>", 4);
-
+		appendTasks("#848484", "<strike>" + timeToDisplay + "</strike>", 3);
+		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
 
 	}
 
@@ -181,22 +175,28 @@ public class TodayView  extends SingleView implements View{
 	public void appendTasks(String textColour, String s, int row)
 			throws BadLocationException {
 		if (row == 1) {
-			output.append("<tr width=\"100px\" >"
-					+ "<td valign=\"top\""
-					+ " width=\"40px\"><font size=\"4\" color=\""
-					+ textColour + "\"><p align=\"right\"><b>" + s
-					+ "</b></p></font></td>");
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + s + "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
-					+ textColour + "\"><p align=\"center\"><b>" + s
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ s
 					+ "</b></p></font></td>");
 		} else if (row == 3) {
 			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
-					+ textColour + "\"><p align=\"left\"><b>" + s + "</b></p></font></td>");
+					+ textColour
+					+ "\"><p align=\"left\"><b>"
+					+ s
+					+ "</b></p></font></td>");
 		} else if (row == 4) {
 			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
-					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ s
+					+ "</p></font></td></tr>");
 		}
 
 	}
@@ -207,7 +207,10 @@ public class TodayView  extends SingleView implements View{
 		output = new StringBuilder();
 		Display display = Display.getInstance();
 		page = display.getPaging();
-		
+		if(page ==0){
+			page=1;
+		}
+
 		output.append("<html>");
 		output.append("<table  STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
 		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
