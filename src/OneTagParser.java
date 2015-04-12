@@ -96,8 +96,7 @@ public class OneTagParser {
 		case UPCOMING:
 		case SOMEDAY:
 		case HELP:
-			String view = input;
-			return new ViewCmd(view);
+			return new ViewCmd(command);
 		case UNDO:
 			return new UndoCmd();
 		case EXIT:
