@@ -94,7 +94,10 @@ public class OneTagParser {
 			return new UndoCmd();
 		case HELP:
 			return new HelpCmd();
-		case UPCOMING: 
+		case HOME: 
+		case UPCOMING:
+		case SOMEDAY:
+		case TODAY:
 			return new ViewCmd(command);
 		case EXIT:
 			System.exit(0);
@@ -125,7 +128,6 @@ public class OneTagParser {
 			return new SearchCmd(message);
 		case SAVE : 
 			return new SaveCmd(message);
-		case HOME: 
 		case TODAY:
 		case UPCOMING:
 		case SOMEDAY:
@@ -440,6 +442,8 @@ public class OneTagParser {
 			taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
 			taskDescription.trim();
 			return new EditCmd(index, taskDescription,true);
+		}else if(taskDescription == "someday"){
+			return new EditCmd(index,true);
 		}
 		return new EditCmd(index,taskDescription);
 		
