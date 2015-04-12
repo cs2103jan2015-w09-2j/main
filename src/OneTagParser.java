@@ -90,13 +90,6 @@ public class OneTagParser {
 		COMMAND_TYPE command = getCommand(input);
 		//This can be re-factored further.
 		switch (command) {
-		case HOME: 
-		case DONE:
-		case TODAY:
-		case UPCOMING:
-		case SOMEDAY:
-		case HELP:
-			return new ViewCmd(command);
 		case UNDO:
 			return new UndoCmd();
 		case EXIT:
@@ -128,6 +121,13 @@ public class OneTagParser {
 			return new SearchCmd(message);
 		case SAVE : 
 			return new SaveCmd(message);
+		case HOME: 
+		case DONE:
+		case TODAY:
+		case UPCOMING:
+		case SOMEDAY:
+		case HELP:
+			return new ViewCmd(command,numForView(message));
 		default:
 			throw new Error(INVALID_MSG);
 		}		
@@ -518,9 +518,6 @@ public class OneTagParser {
 		}
 		return parseDate;
 	}	
-
-
-
 	/**This method converts the integer of String type to integer of Int type
 	 * 
 	 * @param message (type String)
@@ -533,8 +530,29 @@ public class OneTagParser {
 			return -1; 
 		}
 	}
-
-
+	/**This method converts the integer of String type to integer of Int type for ViewCmd
+	 * 
+	 * @param message (type String)
+	 * @return integer value of the string
+	 */
+	
+	
+	private int numForView(String element) {
+		int num;
+		 try { 
+		        num = Integer.parseInt(element); 
+		        if(num = 0){
+		        	return 1;
+		        }
+		        else{
+		        	return num;
+		        }
+		    } catch(NumberFormatException e) { 
+		        return -1;
+		    } catch(NullPointerException e) {
+		        return -1;
+		    }
+	}
 	/**Returns the number of words that the user has typed it.
 	 * 
 	 * @param input
@@ -553,7 +571,6 @@ public class OneTagParser {
 	private static boolean isTimedTask(String testWord) {
 		return testWord.equalsIgnoreCase(FROM)|| testWord.equalsIgnoreCase(TO);
 	}
-
 	/**Returns true if testWord is "BY","AT","ON","IN" for deadlined task.
 	 * 
 	 * @param testWord
