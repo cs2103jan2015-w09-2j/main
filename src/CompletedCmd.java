@@ -6,7 +6,7 @@ public class CompletedCmd extends ModifiableCmd{
 	
 	public CompletedCmd(int index){		
 		this.index = index;
-		this.task = new Task();
+		this.task = new Task("");
 	}
 	
 	public boolean execute() throws IndexOutOfBoundsException{	
