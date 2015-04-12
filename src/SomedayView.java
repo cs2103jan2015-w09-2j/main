@@ -34,10 +34,14 @@ public class SomedayView extends SingleView implements View {
 					tasksForPage.add(task);
 				}
 			} catch (IndexOutOfBoundsException e) {
-				for (Task task : getList().subList(startTaskNo,
-						getList().size())) {
-					tasksForPage.add(task);
-				}
+				try{
+					for (Task task : getList().subList(startTaskNo,
+							getList().size())) {
+						tasksForPage.add(task);
+					}
+					}catch(IllegalArgumentException e1){
+						page=1;
+					}
 			}
 		} else {
 			tasksForPage = getList();

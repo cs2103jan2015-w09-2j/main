@@ -36,7 +36,7 @@ public class UpcomingView extends SingleView implements View {
 		setList(data.getUpcoming());
 	}
 
-	protected ArrayList<Task> getTasksForPage() {
+	protected ArrayList<Task> getTasksForPage()  {
 		ArrayList<Task> tasksForPage = new ArrayList<Task>();
 		int startTaskNo = 0;
 		if (page != 1) {
@@ -50,9 +50,13 @@ public class UpcomingView extends SingleView implements View {
 					tasksForPage.add(task);
 				}
 			} catch (IndexOutOfBoundsException e) {
+				try{
 				for (Task task : getList().subList(startTaskNo,
 						getList().size())) {
 					tasksForPage.add(task);
+				}
+				}catch(IllegalArgumentException e1){
+					page=1;
 				}
 			}
 		} else {
