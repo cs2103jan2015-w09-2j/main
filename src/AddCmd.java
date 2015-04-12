@@ -8,6 +8,9 @@ public class AddCmd extends ModifiableCmd{
 		this.task = task;
 	}
 	
+	/**
+	 * Execute the command specified in this class
+	 */
 	public void execute(){	
 		data.add(task);
 		writeToFile();
@@ -16,6 +19,10 @@ public class AddCmd extends ModifiableCmd{
 	    display.set(addMessage, COMMAND_TYPE.ADD);
 	}
 	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
 	public void undo(){
 		data.remove(task);
 		writeToFile();
@@ -24,6 +31,11 @@ public class AddCmd extends ModifiableCmd{
 	    display.set(undoMessage, COMMAND_TYPE.DELETE);
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof AddCmd){

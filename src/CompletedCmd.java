@@ -9,6 +9,9 @@ public class CompletedCmd extends ModifiableCmd{
 		this.task = new Task("");
 	}
 	
+	/**
+	 * Execute the command specified in this class
+	 */
 	public void execute() throws IndexOutOfBoundsException{	
 		task = getViewTask(index);
 		
@@ -19,6 +22,10 @@ public class CompletedCmd extends ModifiableCmd{
 		display.set(completeMessage, index, COMMAND_TYPE.DONE);
 	}
 	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
 	public void undo(){
 		System.out.println(task);
 		task.setIsCompleted(false);
@@ -28,6 +35,11 @@ public class CompletedCmd extends ModifiableCmd{
 		display.set(undoCompleteMessage, index, COMMAND_TYPE.DONE);
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof CompletedCmd){

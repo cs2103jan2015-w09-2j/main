@@ -18,6 +18,9 @@ public class ViewCmd extends Cmd{
 		this.paging = paging;
 	}
 
+	/**
+	 * Execute the command specified in this class
+	 */
 	public void execute(){
 		this.preView = display.getView();
 
@@ -46,10 +49,19 @@ public class ViewCmd extends Cmd{
 		}	
 	}
 	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
 	public void undo(){
 		display.set(preView, paging);
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof ViewCmd){

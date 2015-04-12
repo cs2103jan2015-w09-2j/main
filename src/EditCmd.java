@@ -72,6 +72,9 @@ public class EditCmd extends ModifiableCmd{
 		this.viewIndex = 9;
 	}
 	
+	/**
+	 * Execute the command specified in this class
+	 */
 	public void execute() throws IndexOutOfBoundsException{
 		
 		task = getViewTask(index);
@@ -101,6 +104,10 @@ public class EditCmd extends ModifiableCmd{
 		display.set(getMessage());
 	}
 	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
 	public void undo(){
 		update();
 		writeToFile();
@@ -108,6 +115,7 @@ public class EditCmd extends ModifiableCmd{
 		display.set(getMessage());
 	}
 	
+	//update the field of task if it is not null
 	private void update(){
 		if(description != null){
 			task.setDescription(description);
@@ -120,6 +128,11 @@ public class EditCmd extends ModifiableCmd{
 		}
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof EditCmd){

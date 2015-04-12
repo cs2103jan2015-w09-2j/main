@@ -22,6 +22,9 @@ public class SaveCmd extends ModifiableCmd {
 		
 	}
 
+	/**
+	 * Undo the command previously executed by this class
+	 */
 	@Override
 	public void undo(){
 
@@ -46,6 +49,9 @@ public class SaveCmd extends ModifiableCmd {
 		display.set(MESSAGE_UNDO_SAVE);
 	}
 
+	/**
+	 * Execute the command specified in this class
+	 */
 	public void execute() {
 		
 		try{
@@ -69,6 +75,11 @@ public class SaveCmd extends ModifiableCmd {
 		display.set(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
 	}
 
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this.getClass() != o.getClass()){
