@@ -1,4 +1,5 @@
 
+//@author A0111867A
 public class DeleteCmd extends ModifiableCmd{
 
 	private Task task;
@@ -6,6 +7,7 @@ public class DeleteCmd extends ModifiableCmd{
 	
 	public DeleteCmd(int index){
 		this.index = index;
+		this.task = new Task("");
 	}
 	
 	public boolean execute(){
