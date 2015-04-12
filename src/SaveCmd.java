@@ -46,8 +46,7 @@ public class SaveCmd extends ModifiableCmd {
 		display.set(MESSAGE_UNDO_SAVE);
 	}
 
-	@Override
-	public boolean execute() {
+	public void execute() {
 		
 		try{
 			previousStorageLocation = storage.getFilePath();
@@ -55,7 +54,7 @@ public class SaveCmd extends ModifiableCmd {
 			}catch(IOException ioEx){
 				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 				display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-				return false;
+				return;
 			}
 		
 		
@@ -64,12 +63,10 @@ public class SaveCmd extends ModifiableCmd {
 		}catch(IOException ioEx){
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-			return false;
+			return;
 		}
 		
 		display.set(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
-		
-		return true;
 	}
 
 	@Override

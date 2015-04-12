@@ -7,7 +7,7 @@ public class UndoCmd extends Cmd {
 	}
 	
 	@Override
-	public boolean execute() {
+	public void execute() {
 		History history = History.getInstance();
 		
 		try{
@@ -17,7 +17,6 @@ public class UndoCmd extends Cmd {
 		catch(EmptyStackException ex){
 			display.set(UNDO_EMPTY_MESSAGE);
 		}
-		return true;
 	}
 	
 	@Override

@@ -72,7 +72,7 @@ public class EditCmd extends ModifiableCmd{
 		this.viewIndex = 9;
 	}
 	
-	public boolean execute() throws IndexOutOfBoundsException{
+	public void execute() throws IndexOutOfBoundsException{
 		
 		task = getViewTask(index);
 		
@@ -99,8 +99,6 @@ public class EditCmd extends ModifiableCmd{
 		end = tempEnd;
 		
 		display.set(getMessage());
-		
-		return true;
 	}
 	
 	public void undo(){

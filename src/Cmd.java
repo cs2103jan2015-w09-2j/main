@@ -122,7 +122,7 @@ public abstract class Cmd {
 	protected Display display = Display.getInstance();
 	protected OneTagLogger logger = OneTagLogger.getInstance();
 
-	public abstract boolean execute();
+	public abstract void execute();
 
 	public void undo() {
 		execute();

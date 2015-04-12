@@ -9,7 +9,7 @@ public class CompletedCmd extends ModifiableCmd{
 		this.task = new Task("");
 	}
 	
-	public boolean execute() throws IndexOutOfBoundsException{	
+	public void execute() throws IndexOutOfBoundsException{	
 		task = getViewTask(index);
 		
 		task.setIsCompleted(true);
@@ -17,8 +17,6 @@ public class CompletedCmd extends ModifiableCmd{
 		
 		String completeMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());
 		display.set(completeMessage, index, COMMAND_TYPE.DONE);
-
-		return true;
 	}
 	
 	public void undo(){

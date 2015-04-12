@@ -18,7 +18,7 @@ public class ViewCmd extends Cmd{
 		this.paging = paging;
 	}
 
-	public boolean execute(){
+	public void execute(){
 		this.preView = display.getView();
 
 		switch(command){
@@ -44,7 +44,6 @@ public class ViewCmd extends Cmd{
 				display.set(new HomeView());
 				break;
 		}	
-	    return true;
 	}
 	
 	public void undo(){

@@ -10,14 +10,12 @@ public class SearchCmd extends Cmd{
 		this.preView = display.getView();
 	}
 	
-	public boolean execute(){	
+	public void execute(){	
 		if(data.getSearched(searchedText).isEmpty()){
 			display.set(SEARCH_KEYWORD_IS_EMPTY);
 		}
 		
 		display.set(new SearchView(searchedText));
-		
-		return true;
 	}
 	
 	public void undo(){

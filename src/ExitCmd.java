@@ -4,11 +4,9 @@ public class ExitCmd extends ModifiableCmd{
 	private static final int EXIT_CODE = 0;
 
 	@Override
-	public boolean execute() {
+	public void execute() {
 		logger.close();
 		System.exit(EXIT_CODE);
-		
-		return true;
 	}
 
 	@Override
