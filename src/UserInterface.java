@@ -265,19 +265,18 @@ public class UserInterface {
 		});
 	}
 	
-	private void setCommand(){
+	public void setCommand(){
 		String command = commandFromUser.getText();
 		commandsEntered.add(command);
 		noOfCommandsEntered = commandsEntered.size();
 		processCommand(command);
 	}
 
-	//made public for testing purposes
-	public void processCommand(String command) {
+	private void processCommand(String command) {
 		showToUser.setContentType("text/html");
 		try{
 		control.executeCommand(command);
-		}catch(ArithmeticException | Error e){
+		}catch(ArithmeticException | Error e ){
 			JOptionPane.showMessageDialog(null, "Invalid input. Enter \"help\" for assistance.", "Error", JOptionPane.ERROR_MESSAGE);   
 		}
 		showMessageToUser();

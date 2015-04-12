@@ -4,15 +4,18 @@ import static org.junit.Assert.*;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class UserInterfaceTest {
 
-	private String addTodayTask1 = "add Submit report by 10am";
+	private String addTodayTask1 = "add Submit developer guide by 10am";
 	private String addTodayTask2 = "add Lecture from 11am to 1pm";
 	
 	private String addUpcomingTask1 = "add Birthday celebration from 06 July 2pm to 06 July 7pm";
@@ -36,10 +39,27 @@ public class UserInterfaceTest {
 	private String editTaskEndDate = "";
 	private String editTaskStartDate = "";
 	
-	private String searchTask = "search task";
-	private String expectedOutputDeadline="";
+	private String keyword = "report";
+	
+	private String addSearchTask1 = "add Submit report by 11pm\"";
+	private String addSearchTask2 = "add Write section 1 to section 3 of report from 19 June 3pm to 20 June 5pm\"";
+	private String addSearchTask3 = "add Edit the report";
 
 	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating task
+	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating task
+	@Before
+	public void beforeTesting(){
+		File file = new File("oneTag.json");
+		file.delete();
+	}
+	
+	@After
+	public void clearAfterTesting(){
+		File file = new File("oneTag.json");
+		file.delete();
+	}
+	
+	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating tasks
 	@Test
 	public void addTask() throws BadLocationException {
 		UserInterface UI = new UserInterface();
@@ -80,7 +100,7 @@ public class UserInterfaceTest {
 		
 		HomeView home = new HomeView();
 		String actualResult = home.getList().toString();
-		String expectedResult = "[[10:00] Submit report , [11:00 - 13:00] Lecture , [18:00 - 10:00] Holiday with Family , [14:00 - 19:00] Birthday celebration , Learn French , Read \"The Great Gatsby\" ]";
+		String expectedResult = "[[10:00] Submit developer guide , [11:00 - 13:00] Lecture , [18:00 - 10:00] Holiday with Family , [14:00 - 19:00] Birthday celebration , Learn French , Read \"The Great Gatsby\" ]";
 		assertEquals(actualResult,expectedResult);
 		
 		//clear the tasks from file for next testing
@@ -236,6 +256,73 @@ public class UserInterfaceTest {
 			
 			//clear the tasks from file for next testing
 			for(int i =0; i<6; i++){
+				input = UserInterface.commandFromUser;
+				assertNotNull(input);
+				input.setText(deleteTask1);
+				UI.setCommand();
+			}	
+		}
+		
+//		search for the keyword "report"
+		@Test
+		public void searchTask() throws BadLocationException {
+			UserInterface UI = new UserInterface();
+			assertNotNull(UI);
+			UI.executeInterface();
+			UI.initialize();
+			
+			JTextPane input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask1);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask2);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask1);
+			UI.setCommand();
+				
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask2);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask1);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask2);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addSearchTask1);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addSearchTask2);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addSearchTask3);
+			UI.setCommand();
+			
+			SearchView search = new SearchView(keyword);		
+			String actualResult = search.getList().toString();
+			String expectedResult = "[[23:00] Submit report , [15:00 - 17:00] Write section 1 to section 3 of report , Edit the report ]";
+			assertEquals(actualResult,expectedResult);
+			
+			//clear the tasks from file for next testing
+			for(int i =0; i<10; i++){
 				input = UserInterface.commandFromUser;
 				assertNotNull(input);
 				input.setText(deleteTask1);

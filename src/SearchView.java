@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.swing.JTextPane;
@@ -175,4 +176,7 @@ public class SearchView extends SingleView implements View {
 
 	}
 
+	public ArrayList<Task> getList(){
+		return data.getSearched(searchedText);
+	}
 }
