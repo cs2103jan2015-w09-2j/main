@@ -93,8 +93,7 @@ public class OneTagParser {
 		case UNDO:
 			return new UndoCmd();
 		case HELP:
-			return new HelpCmd();
-		case HOME: 
+		case HOME:
 		case UPCOMING:
 		case SOMEDAY :
 		case TODAY :
@@ -105,6 +104,9 @@ public class OneTagParser {
 		default:
 			throw new IllegalArgumentException();
 		}
+		
+		
+		
 	}
 	/**Separates the command from the message and sends the information for parsing.
 	 * 
