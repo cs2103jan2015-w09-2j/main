@@ -62,7 +62,7 @@ public class UserInterfaceTest {
 	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating tasks
 	@Test
 	public void addTask() throws BadLocationException {
-		UserInterface UI = new UserInterface();
+		UserInterface UI = UserInterface.getInstance();
 		assertNotNull(UI);
 		UI.executeInterface();
 		UI.initialize();
@@ -115,7 +115,7 @@ public class UserInterfaceTest {
 	//testing deleting tasks
 		@Test
 		public void deleteTask() throws BadLocationException {
-			UserInterface UI = new UserInterface();
+			UserInterface UI = UserInterface.getInstance();
 			assertNotNull(UI);
 			UI.executeInterface();
 			UI.initialize();
@@ -191,7 +191,7 @@ public class UserInterfaceTest {
 //		testing marking task as done
 		@Test
 		public void markTask() throws BadLocationException {
-			UserInterface UI = new UserInterface();
+			UserInterface UI = UserInterface.getInstance();
 			assertNotNull(UI);
 			UI.executeInterface();
 			UI.initialize();
@@ -266,7 +266,7 @@ public class UserInterfaceTest {
 //		search for the keyword "report"
 		@Test
 		public void searchTask() throws BadLocationException {
-			UserInterface UI = new UserInterface();
+			UserInterface UI = UserInterface.getInstance();
 			assertNotNull(UI);
 			UI.executeInterface();
 			UI.initialize();
@@ -278,29 +278,14 @@ public class UserInterfaceTest {
 			
 			input = UserInterface.commandFromUser;
 			assertNotNull(input);
-			input.setText(addTodayTask2);
-			UI.setCommand();
-			
-			input = UserInterface.commandFromUser;
-			assertNotNull(input);
 			input.setText(addUpcomingTask1);
-			UI.setCommand();
-				
-			input = UserInterface.commandFromUser;
-			assertNotNull(input);
-			input.setText(addUpcomingTask2);	
-			UI.setCommand();
+			UI.setCommand();	
 			
 			input = UserInterface.commandFromUser;
 			assertNotNull(input);
 			input.setText(addFloatingTask1);	
 			UI.setCommand();
-			
-			input = UserInterface.commandFromUser;
-			assertNotNull(input);
-			input.setText(addFloatingTask2);
-			UI.setCommand();
-			
+
 			input = UserInterface.commandFromUser;
 			assertNotNull(input);
 			input.setText(addSearchTask1);	
