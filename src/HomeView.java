@@ -27,6 +27,7 @@ public class HomeView implements View {
 	private static int upcomingLimit = 8;
 	private static int somedayLimit = 10;
 
+	//@author A0111867A
 	public HomeView() {
 		update();
 	}
@@ -39,6 +40,39 @@ public class HomeView implements View {
 		this.someday = data.getSomeday();
 	}
 
+	public Task getTask(int numbering) throws IndexOutOfBoundsException {
+		int index = numbering - 1;
+
+		int todaySize = Math.min(today.size(), todayLimit);
+		int dateSize = Math.min(todaySize + upcoming.size(), upcomingLimit);
+		int allSize = Math.min(dateSize + someday.size(), somedayLimit);
+
+		if (index > -1 && index < todaySize) {
+			return today.get(index);
+		} 
+		else if (index < dateSize) {
+			int upcomingIndex = index - todaySize;
+			return upcoming.get(upcomingIndex);
+		} 
+		else if(index < allSize){
+			int somedayIndex = index - dateSize;
+			return someday.get(somedayIndex);
+		}
+		else{
+			throw new IndexOutOfBoundsException();
+		}
+	}
+
+	public ArrayList<Task> getList() {
+		List<Task> combinedList = new ArrayList<Task>();
+		combinedList.addAll(today);
+		combinedList.addAll(upcoming);
+		combinedList.addAll(someday);
+
+		return (ArrayList<Task>) combinedList;
+	}
+
+	//@author A0112715R
 	//gets the task information, such as start time, date and etc
 	protected void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
@@ -264,34 +298,6 @@ public class HomeView implements View {
 
 		return output.toString();
 
-	}
-
-	public Task getTask(int numbering) throws IndexOutOfBoundsException {
-		int index = numbering - 1;
-
-		int todaySize = today.size();
-		int dateSize = todaySize + upcoming.size();
-	//	int allSize = dateSize + someday.size();
-
-		if (index > -1 && index < todaySize) {
-			return today.get(index);
-		} else if (index < dateSize) {
-			int upcomingIndex = index - todaySize;
-			return upcoming.get(upcomingIndex);
-		} else { // index < allSize
-			int somedayIndex = index - dateSize;
-			return someday.get(somedayIndex);
-		}
-	}
-
-	@Override
-	public ArrayList<Task> getList() {
-		List<Task> combinedList = new ArrayList<Task>();
-		combinedList.addAll(today);
-		combinedList.addAll(upcoming);
-		combinedList.addAll(someday);
-
-		return (ArrayList<Task>) combinedList;
 	}
 
 }
