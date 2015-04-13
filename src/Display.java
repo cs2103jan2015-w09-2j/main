@@ -74,6 +74,7 @@ public class Display {
 	 */
 	public void set(View view) {
 		set(view, 1);
+		this.command = COMMAND_TYPE.HOME;
 	}
 	
 	/**
@@ -86,6 +87,7 @@ public class Display {
 		view.update();
 		this.view = view;
 		this.paging = paging;
+		this.command = COMMAND_TYPE.HOME;
 	}
 	
 	/**
@@ -96,6 +98,7 @@ public class Display {
 	public void set(String message) {
 		this.message = message;
 		this.view.update();
+		this.command = COMMAND_TYPE.HOME;
 	}
 	
 	/**
