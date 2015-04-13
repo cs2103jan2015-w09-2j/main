@@ -1,12 +1,12 @@
+//@author A0108436H
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-
-
-import java.time.LocalDateTime;
-
 import org.junit.Before;
 import org.junit.Test;
+
+
+
 
 
 public class OneTagParserTest {
@@ -131,7 +131,7 @@ public class OneTagParserTest {
 		assertFalse(addCmd_FLOATING.equals(testParser_add_FLOATING.toCmd()));
 		assertFalse(addCmd_TIMED.equals(testParser_add_TIMED.toCmd()));
 		assertFalse(addCmd_DEADLINE.equals(testParser_add_DEADLINE.toCmd()));
-//		assertTrue(editCmd_SOMEDAY.equals(testParser_edit_SOMEDAY.toCmd()));
+		assertTrue(editCmd_SOMEDAY.equals(testParser_edit_SOMEDAY.toCmd()));
 //		assertFalse(editCmd_TASK_DESCRIPTION.equals(testParser_edit_TASK_DESCRIPTION.toCmd()));
 		assertFalse(editCmd_TD_SOMEDAY.equals(testParser_edit_TD_SOMEDAY.toCmd()));
 	//	assertFalse(editCmd_TIME_1.equals(testParser_edit_TIME_1.toCmd()));
@@ -145,6 +145,6 @@ public class OneTagParserTest {
 		assertTrue(view.equals(testParser_view.toCmd()));
 		assertTrue(undo.equals(testParser_undo.toCmd()));
 		assertTrue(done.equals(testParser_done.toCmd()));
-//		assertTrue(save.equals(testParser_save.toCmd()));
+	//	assertTrue(save.equals(testParser_save.toCmd()));
 	}
 }
