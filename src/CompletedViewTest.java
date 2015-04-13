@@ -1,9 +1,12 @@
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
@@ -24,20 +27,26 @@ public class CompletedViewTest {
 	
 	private String deleteTask1="delete 1";
 
-	@Before
-	public void beforeTesting() {
+	@BeforeClass
+	public static void beforeTesting() {
 		File file = new File("oneTag.json");
 		File file2 = new File("config.json");
 		file.delete();
 		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 	}
 
-	@After
-	public void clearAfterTesting() {
+	@AfterClass
+	public static void clearAfterTesting() {
 		File file = new File("oneTag.json");
 		File file2 = new File("config.json");
 		file.delete();
 		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 
 	}
 

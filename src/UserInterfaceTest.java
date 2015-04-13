@@ -2,9 +2,8 @@
 
 import static org.junit.Assert.*;
 
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -13,7 +12,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+
+
 public class UserInterfaceTest {
+	
 
 	private String addTodayTask1 = "add Submit developer guide by 10am";
 	private String addTodayTask2 = "add Lecture from 11am to 1pm";
@@ -45,12 +47,15 @@ public class UserInterfaceTest {
 	private String addSearchTask2 = "add Write section 1 to section 3 of report from 19 June 3pm to 20 June 5pm\"";
 	private String addSearchTask3 = "add Edit the report";
 
-	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating task
-	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating task
 	@Before
 	public void beforeTesting(){
 		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
 		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 	}
 	
 	@After
@@ -61,7 +66,12 @@ public class UserInterfaceTest {
 		UI.initialize();
 		
 		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
 		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 		
 		
 	}

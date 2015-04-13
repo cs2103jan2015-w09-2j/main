@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,13 +24,11 @@ public class HomeViewTest {
 	
 	private String deleteTask3 = "delete 3";
 	private String deleteTask5 = "delete 5";
-	private String deleteTask7 = "delete 7";
 	
 	private String editDesTask2 = "edit 2 Software Engineering Lecture";
 
 	private String markDoneTask1 = "done 1";
 	private String markDoneTask5 = "done 5";
-	private String markDoneTask6 = "done 6";
 	
 	private String deleteTask1="delete 1";
 
@@ -39,6 +38,9 @@ public class HomeViewTest {
 		File file2 = new File("config.json");
 		file.delete();
 		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 	}
 
 	@After
@@ -47,6 +49,9 @@ public class HomeViewTest {
 		File file2 = new File("config.json");
 		file.delete();
 		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 
 	}
 
@@ -94,14 +99,17 @@ public class HomeViewTest {
 		control.executeCommand(addUpcomingTask4);
 		
 		control.executeCommand(deleteTask3);
-		control.executeCommand(deleteTask5);
-		control.executeCommand(deleteTask7);
-		
 		HomeView home = new HomeView();
 		String actualResult = home.getList().toString();
-		String expectedResult = "[[10:00] Essay , [11:00 - 13:00] Maths Lecture , [16:00 - 17:00] Read The Great Gatsby from page 30 to page 40 , [18:00] Submit assignment , [14:00 - 19:00] Birthday Celebration , [15:00] Dental appointment , Go Skydiving ]";	
+		String expectedResult = "[[10:00] Essay , [11:00 - 13:00] Maths Lecture , [16:00 - 17:00] Read The Great Gatsby from page 30 to page 40 , [18:00] Submit assignment , [11:00 - 13:00] Holiday with family in Rome , [14:00 - 19:00] Birthday Celebration , [15:00] Dental appointment , Buy belated birthday gifts , Go Skydiving ]";
 		assertEquals(actualResult, expectedResult);
-
+		
+		control.executeCommand(deleteTask5);
+		home = new HomeView();
+		actualResult = home.getList().toString();
+		expectedResult = "[[10:00] Essay , [11:00 - 13:00] Maths Lecture , [16:00 - 17:00] Read The Great Gatsby from page 30 to page 40 , [18:00] Submit assignment , [14:00 - 19:00] Birthday Celebration , [15:00] Dental appointment , Buy belated birthday gifts , Go Skydiving ]";
+		assertEquals(actualResult, expectedResult);
+			
 		// clear the tasks from file for next testing
 		for (int i = 0; i < 10; i++) {
 			control.executeCommand(deleteTask1);
@@ -155,17 +163,17 @@ public class HomeViewTest {
 		control.executeCommand(addUpcomingTask4);
 		
 		control.executeCommand(markDoneTask1);
-		control.executeCommand(markDoneTask5);
-		control.executeCommand(markDoneTask6);
-		
 		HomeView home = new HomeView();
 		String actualResult = home.getList().toString();
-		String expectedResult = "[[11:00 - 13:00] Maths Lecture , [14:00] Lunch with Friends , [16:00 - 17:00] Read The Great Gatsby from page 30 to page 40 , [18:00] Submit assignment , [14:00 - 19:00] Birthday Celebration , Buy belated birthday gifts , Go Skydiving ]";
+		String expectedResult = "[[11:00 - 13:00] Maths Lecture , [14:00] Lunch with Friends , [16:00 - 17:00] Read The Great Gatsby from page 30 to page 40 , [18:00] Submit assignment , [11:00 - 13:00] Holiday with family in Rome , [14:00 - 19:00] Birthday Celebration , [15:00] Dental appointment , Buy belated birthday gifts , Go Skydiving ]";
 		assertEquals(actualResult, expectedResult);
 
-		// clear the tasks from file for next testing
-		for (int i = 0; i < 10; i++) {
-			control.executeCommand(deleteTask1);
-		}
+		
+		control.executeCommand(markDoneTask5);
+		home = new HomeView();
+		actualResult = home.getList().toString();
+		expectedResult = "[[11:00 - 13:00] Maths Lecture , [14:00] Lunch with Friends , [16:00 - 17:00] Read The Great Gatsby from page 30 to page 40 , [18:00] Submit assignment , [14:00 - 19:00] Birthday Celebration , [15:00] Dental appointment , Buy belated birthday gifts , Go Skydiving ]";
+		assertEquals(actualResult, expectedResult);
+	
 	}
 }
