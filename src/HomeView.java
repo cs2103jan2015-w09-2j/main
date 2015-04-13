@@ -30,6 +30,7 @@ public class HomeView implements View {
 	/**
 	 * Updates the view with the latest list
 	 */
+	//@author A0111867A
 	public HomeView() {
 		update();
 	}
@@ -37,6 +38,7 @@ public class HomeView implements View {
 	/**
 	 * Sets the list of tasks for each category
 	 */
+	//@author A0111867A
 	public void update() {
 		Data data = Data.getInstance();
 		this.today = data.getToday();
@@ -48,7 +50,7 @@ public class HomeView implements View {
 	 * Gets the task information and initializes the variables
 	 * @param task
 	 */
-	
+	//@author A0112715R
 	private void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
 		if (!task.isFloatingTask()) {
@@ -65,6 +67,7 @@ public class HomeView implements View {
 	/**
 	 * Gets the list of tasks under today and sends it for formatting
 	 */
+	//@author A0112715R
 	private void getToday() throws BadLocationException {
 		i = 0;
 		for (Task task : today) {
@@ -76,6 +79,7 @@ public class HomeView implements View {
 	 * Sends the different types of tasks under today for formatting
 	 * @param task
 	 */
+	//@author A0112715R
 	private void formatTasksForToday(Task task) throws BadLocationException {
 		if (i < todayLimit) {
 			i++;
@@ -95,6 +99,7 @@ public class HomeView implements View {
 	 * Formats timed task under today category
 	 * @param task, taskNo : the number of the task
 	 */
+	//@author A0112715R
 	private void formatTimedTaskToday(Task task, String taskNo) throws BadLocationException {
 
 		String tasks = taskDes;
@@ -106,9 +111,10 @@ public class HomeView implements View {
 		
 		startEndTime = startEndTime.toString().replaceAll("\\[", "")
 				.replaceAll("\\]", " -");
+		
 
 		if (task.isOverdue()) {
-			formatOverdueTasks(taskNo,tasks);
+			formatOverdueTasks(taskNo,tasks,startEndTime);
 		} else {
 			formatTasks(taskNo,startEndTime,tasks);
 		}
@@ -119,6 +125,7 @@ public class HomeView implements View {
 	 * Gets the list of tasks from file, puts them into an ArrayList
 	 * @param task, taskNo
 	 */
+	//@author A0112715R
 	private void formatDeadlineTaskToday(Task task, String taskNo) throws BadLocationException {
 		String endTimeFormatted = "";
 		String tasks = taskDes;
@@ -128,7 +135,7 @@ public class HomeView implements View {
 		endTimeFormatted = endTimeFormatted.toString().replaceAll("\\[", "")
 				.replaceAll("\\]", " -");
 		if (task.isOverdue()) {
-			formatOverdueTasks(taskNo,tasks);
+			formatOverdueTasks(taskNo,tasks,endTimeFormatted);
 		} else {
 			formatTasks(taskNo,endTimeFormatted,tasks);
 		}
@@ -151,6 +158,7 @@ public class HomeView implements View {
 	 * Different types of tasks are sent for formatting
 	 * @param task
 	 */
+	//@author A0112715R
 	private void getTasksForUpcoming(Task task) throws BadLocationException {
 		i++;
 		getTaskInfo(task);
@@ -169,6 +177,7 @@ public class HomeView implements View {
 	 * Formats Timed Tasks under the upcoming category
 	 * @param task, taskNo
 	 */
+	//@author A0112715R
 		private void formatTimedTaskUpcoming(Task task, String taskNo) throws BadLocationException {
 		String tasks = taskDes;
 		String startDateFormatted = "";
@@ -182,6 +191,7 @@ public class HomeView implements View {
 		 * Formats deadline tasks under upcoming category
 		 * @param task, taskNo
 		 */
+		//@author A0112715R
 	private void formatDeadlineTaskUpcoming(Task task, String taskNo) throws BadLocationException {
 		String tasks = taskDes;
 		String endDateFormatted ="";
@@ -195,6 +205,7 @@ public class HomeView implements View {
 	 * Format Non-overdue tasks
 	 * @param taskNo, dateTimeFormatted, tasks
 	 */
+	//@author A0112715R
 	private void formatTasks(String taskNo, String dateTimeFormatted, String tasks) throws BadLocationException {
 
 		appendTasks("#848484", taskNo, 1);
@@ -205,24 +216,27 @@ public class HomeView implements View {
 
 	/**
 	 * Format overdue tasks
+	 * @param endTimeFormatted2 
 	 * @param
 	 */
-	private void formatOverdueTasks(String taskNo, String tasks) throws BadLocationException {
-
-		String endDateFormatted="";
+	//@author A0112715R
+	private void formatOverdueTasks(String taskNo, String tasks, String endTimeFormatted) throws BadLocationException {
+		String endDateTimeFormatted=endTimeFormatted;
+		
 		if (!(endDate.equals(LocalDate.now()))) {
-			endDateFormatted = endDate.format(formatter);
-			endDateFormatted= endDateFormatted.replaceAll("\\[", "").replaceAll("\\]", "-");
+			endDateTimeFormatted = endDate.format(formatter);
+			endDateTimeFormatted= endDateTimeFormatted.replaceAll("\\[", "").replaceAll("\\]", "-");
 		}
 		appendTasks("#848484", taskNo, 1);
 		appendTasks("#FF0000", "!", 2);
-		appendTasks("#01A9DB", endDateFormatted, 3);
+		appendTasks("#01A9DB", endDateTimeFormatted, 3);
 		appendTasks("#0A1B2A", tasks, 4);
 	}
 
 	/**
 	 * Gets the list of tasks from someday list and sends them for formatting
 	 */
+	//@author A0112715R
 	private void getSomeday() throws BadLocationException {
 		for (Task task : someday) {
 			if (i<somedayLimit) {
@@ -238,6 +252,7 @@ public class HomeView implements View {
 	 * Format tasks under someday 
 	 * @param taskNo, tasks
 	 */
+	//@author A0112715R
 	private void formatSomedayTasks(String taskNo, String tasks) throws BadLocationException {
 		appendTasks("#848484", taskNo, 1);
 		appendTasks("#FFFFFF", "!", 2);
@@ -249,6 +264,7 @@ public class HomeView implements View {
 	 * Gets the list of tasks from file, puts them into an ArrayList
 	 * @param textColour, text, row : row number for table
 	 */
+	//@author A0112715R
 	public void appendTasks(String textColour, String text, int row)
 			throws BadLocationException {
 		if (row == 1) {
@@ -288,6 +304,7 @@ public class HomeView implements View {
 	 * 
 	 * @return String
 	 */
+	//@author A0112715R
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		output.append("<html>");
@@ -317,6 +334,7 @@ public class HomeView implements View {
 	 * @param numbering
 	 * @return Task
 	 */
+	//@author A0111867A
 	public Task getTask(int numbering) throws IndexOutOfBoundsException {
 		int index = numbering - 1;
 
@@ -341,6 +359,7 @@ public class HomeView implements View {
 	 * @return ArrayList<Task>
 	 */
 	@Override
+	//@author A0111867A
 	public ArrayList<Task> getList() {
 		List<Task> combinedList = new ArrayList<Task>();
 		combinedList.addAll(today);
