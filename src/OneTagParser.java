@@ -145,7 +145,6 @@ public class OneTagParser {
 	 * @return Task object to Logic.
 	 */	
 	private Task parseMsgforAddCmd(String message) {
-		System.out.println("Message into parseMsgforAddCMd");
 		String[] word = message.split(SPACE);
 		String testWord = "" , dateString = null,taskDescription = null;	
 		LocalDateTime endDateTime = null, startDateTime = null , deadlineDateTime = null; 
