@@ -1,3 +1,4 @@
+//@author A0111217Y
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -16,10 +17,4 @@ public class ExitCmdTest {
 		assertFalse(saveCmd.equals(exitObject1));
 	}
 	
-	@Test
-	public void testExecute() {
-		fail("Not Implemented");
-		
-	}
-
 }
