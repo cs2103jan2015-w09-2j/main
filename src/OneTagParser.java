@@ -231,7 +231,7 @@ public class OneTagParser {
 	 * @param dateParser
 	 * @return infoDateTime
 	 */
-	private LocalDateTime parseDate(String dateString) {
+	public LocalDateTime parseDate(String dateString) {
 		Instant instant = null;
 		Parser dateParser = new Parser();
 		List<DateGroup> listOfDates = dateParser.parse(dateString);
@@ -609,7 +609,7 @@ public class OneTagParser {
 	 * @param input
 	 * @return COMMAND_TYPE
 	 */
-	private static COMMAND_TYPE getCommand(String input) {
+	public static COMMAND_TYPE getCommand(String input) {
 		assert(input == null);
 		if (input.equalsIgnoreCase(HOME)) {
 			return COMMAND_TYPE.HOME;
