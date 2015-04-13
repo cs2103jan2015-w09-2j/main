@@ -154,7 +154,7 @@ public class EditCmd extends ModifiableCmd{
 		}
 	}
 	
-	//@author A0112715
+	//@author A0112715R
 	private String getMessage(){
 		String message = "";
 		
@@ -185,6 +185,43 @@ public class EditCmd extends ModifiableCmd{
 				break;
 			case 9 :
 				message = String.format(EDIT_DES_AND_DATETIME_MESSAGE,description,task.getDescription(),task.getStart(),task.getEnd());
+				break;
+		}
+		
+		return message;
+	}
+	
+	//@author A0112715R
+	private String getUndoMessage(){
+		String message = "";
+		
+		switch(viewIndex){
+			case 1 :
+				message = String.format(UNDO_EDIT_TASK_TO_SOMEDAY_MESSAGE,description,getTaskType(task));
+				break;
+			case 2 :
+				message = String.format(UNDO_EDIT_DES_MESSAGE,task.getDescription(),description);
+				break;
+			case 3 :
+				message = String.format(UNDO_EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE,description,task.getDescription(),getTaskType(task));
+				break;
+			case 4 :
+				message = String.format(UNDO_EDIT_START_MESSAGE,task.getDescription(),task.getStart(),start);
+				break;
+			case 5 :
+				message = String.format(UNDO_EDIT_END_MESSAGE,task.getDescription(),task.getEnd());
+				break;
+			case 6 :
+				message = String.format(UNDO_EDIT_TIME_MESSAGE,task.getDescription(),task.getStart(),task.getEnd());
+				break;
+			case 7 :
+				message = String.format(UNDO_EDIT_DES_START_MESSAGE,description,task.getDescription(),task.getStart());
+				break;				
+			case 8 :
+				message = String.format(UNDO_EDIT_DES_END_MESSAGE,description,task.getDescription(),task.getEnd());
+				break;
+			case 9 :
+				message = String.format(UNDO_EDIT_DES_AND_DATETIME_MESSAGE,description,task.getDescription(),task.getStart(),task.getEnd());
 				break;
 		}
 		
