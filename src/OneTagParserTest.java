@@ -5,10 +5,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-
-
-
-
 public class OneTagParserTest {
 	private static final int TEST_INDEX = 1;
 	private static final String ADD_FLOATING ="add 123";
