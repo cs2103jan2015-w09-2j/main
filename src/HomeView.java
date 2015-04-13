@@ -30,6 +30,7 @@ public class HomeView implements View {
 	/**
 	 * Updates the view with the latest list
 	 */
+
 	//@author A0111867A
 	public HomeView() {
 		update();
@@ -46,6 +47,50 @@ public class HomeView implements View {
 		this.someday = data.getSomeday();
 	}
 
+	/**
+	 * Gets the task based on the number
+	 * @param numbering
+	 * @return Task
+	 */
+	public Task getTask(int numbering) throws IndexOutOfBoundsException {
+		int index = numbering - 1;
+
+		int todaySize = Math.min(today.size(), todayLimit);
+		int dateSize = Math.min(todaySize + upcoming.size(), upcomingLimit);
+		int allSize = Math.min(dateSize + someday.size(), somedayLimit);
+
+		if (index > -1 && index < todaySize) {
+			return today.get(index);
+		} 
+		else if (index < dateSize) {
+			int upcomingIndex = index - todaySize;
+			return upcoming.get(upcomingIndex);
+		} 
+		else if(index < allSize){
+			int somedayIndex = index - dateSize;
+			return someday.get(somedayIndex);
+		}
+		else{
+			throw new IndexOutOfBoundsException();
+		}
+	}
+
+	/**
+	 * Sets the combined list. Used for testing.
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	@Override
+	public ArrayList<Task> getList() {
+		List<Task> combinedList = new ArrayList<Task>();
+		combinedList.addAll(today);
+		combinedList.addAll(upcoming);
+		combinedList.addAll(someday);
+
+		return (ArrayList<Task>) combinedList;
+	}
+	
+	//@author A0112715R
 	/**
 	 * Gets the task information and initializes the variables
 	 * @param task
@@ -327,46 +372,6 @@ public class HomeView implements View {
 
 		return output.toString();
 
-	}
-
-	/**
-	 * Gets the task based on the number
-	 * @param numbering
-	 * @return Task
-	 */
-	//@author A0111867A
-	public Task getTask(int numbering) throws IndexOutOfBoundsException {
-		int index = numbering - 1;
-
-		int todaySize = today.size();
-		int dateSize = todaySize + upcoming.size();
-	//	int allSize = dateSize + someday.size();
-
-		if (index > -1 && index < todaySize) {
-			return today.get(index);
-		} else if (index < dateSize) {
-			int upcomingIndex = index - todaySize;
-			return upcoming.get(upcomingIndex);
-		} else { // index < allSize
-			int somedayIndex = index - dateSize;
-			return someday.get(somedayIndex);
-		}
-	}
-
-	/**
-	 * Sets the combined list. Used for testing.
-	 * 
-	 * @return ArrayList<Task>
-	 */
-	@Override
-	//@author A0111867A
-	public ArrayList<Task> getList() {
-		List<Task> combinedList = new ArrayList<Task>();
-		combinedList.addAll(today);
-		combinedList.addAll(upcoming);
-		combinedList.addAll(someday);
-
-		return (ArrayList<Task>) combinedList;
 	}
 
 }
