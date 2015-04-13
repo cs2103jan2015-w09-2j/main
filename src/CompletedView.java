@@ -18,7 +18,6 @@ public class CompletedView extends SingleView implements View {
 	private LocalDate endDate;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	private int i = 0;
 	private int taskLimit = 10;
 
 	@Override
@@ -50,7 +49,7 @@ public class CompletedView extends SingleView implements View {
 	 * 
 	 */
 	private void getCompletedTasks() throws BadLocationException {
-
+		int i=0;
 		for (Task task : getList()) {
 			if (i < taskLimit) {
 				i++;
