@@ -46,7 +46,7 @@ public class DeleteCmdTest {
 		undoMessage = String.format(UNDO_DELETE_MESSAGE, task.getDescription());
 		
 		data.set(beforeList);
-		display.set("");
+		display.getView().update();
 	}
 	
 	@Test
@@ -54,7 +54,7 @@ public class DeleteCmdTest {
 		deleteCmd.execute();
 		assertEquals("data", data.getData(), afterList);
 		try {
-			assertEquals("file", storage.getData(), afterList);
+			assertEquals("file", afterList, storage.getData());
 		} catch (IOException e) {
 			assert false;
 		}

@@ -44,8 +44,7 @@ public class HelpView extends SingleView implements View {
 	public String show() throws BadLocationException {
 
 		output.append("<html>");
-		output.append("&nbsp");
-		output.append("<table border=\"\" cellspacing=\"2px\" cellpadding=\"3px\" width=\"100%\">");
+		output.append("<table height=\"100%\" border=\"\" cellspacing=\"2px\" cellpadding=\"3px\" width=\"100%\">");
 		output.append("<tr width=\"100px\" bgcolor=\"#5C5E5C\"><td height =\"10px\" width=\"100px\"colspan=\"4\"><font size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Help is always here! </b></p></font></td></tr>");
 		output.append("<tr width=\"100%\"><td bgcolor=\"#CC00CC\" width=\"50%\"><font size=\"4\" color=\"#FFFFFF\"><p align=\"center\">So you wanna <b>ADD</b> tasks?</p></font></td><td bgcolor=\"#6B006B\" width=\"50%\"><font size=\"4\" color=\"#FFFFFF\"><p align=\"center\">So you wanna <b>EDIT</b> tasks?</p></td></font></tr>");
 		;

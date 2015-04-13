@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.logging.Level;
 
 import javax.swing.text.BadLocationException;
 
@@ -23,9 +24,13 @@ public class UpcomingView extends SingleView implements View {
 	private int page = 1;
 	private int i = 0;
 	private int taskLimit = 5;
+	private String INVALID_PAGE_MESSAGE = "The page number entered is invalid";
+	private String CLASS_MESSAGE = "UpcomingView";
+	Display display = Display.getInstance();
+	OneTagLogger logger = OneTagLogger.getInstance();
 
 	/**
-	 * Updates the list of tasks 
+	 * Updates the list of tasks
 	 */
 	@Override
 	public void update() {
@@ -33,18 +38,13 @@ public class UpcomingView extends SingleView implements View {
 
 		setList(data.getUpcoming());
 	}
-	
+
 	/**
 	 * Supports paging. Sets the tasks to be shown for each "page"
 	 * 
 	 * @return List<Task>
 	 */
 	private List<Task> getTasksForPage() {
-		
-		if (page == 0) {
-			page = 1;
-		}
-		
 		List<Task> tasksForPage = new ArrayList<Task>();
 		int startTaskNo = 0;
 
@@ -58,8 +58,8 @@ public class UpcomingView extends SingleView implements View {
 					tasksForPage = getList().subList(startTaskNo,
 							getList().size());
 				} catch (IllegalArgumentException e1) {
-					page = 1;
-					getTasksForPage();
+					logger.log(Level.WARNING, CLASS_MESSAGE,
+							INVALID_PAGE_MESSAGE);
 				}
 			}
 		} else {
@@ -68,9 +68,10 @@ public class UpcomingView extends SingleView implements View {
 		i = startTaskNo;
 		return tasksForPage;
 	}
-	
+
 	/**
 	 * Gets the information of each task
+	 * 
 	 * @param task
 	 */
 	private void getTaskInfo(Task task) {
@@ -94,28 +95,95 @@ public class UpcomingView extends SingleView implements View {
 			getTaskInfo(task);
 			if (task.isDeadlineTask()) {
 				String tasks = taskDes;
-				String taskNo = "     " + i + ".   ";
+				String taskNoFormatted = "     " + i + ".   ";
 				String endDateTime = formatTimeDate();
-				
-				formatTasks(taskNo,endDateTime,tasks);
+
+				boolean isCommandExecuted = (display.getCommand().equals(
+						COMMAND_TYPE.DELETE)
+						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+						.getCommand().equals(COMMAND_TYPE.EDIT));
+
+				if (isCommandExecuted && i == display.getViewIndex()) {
+					formatTaskAccdCommand(taskNoFormatted, endDateTime,"", tasks);
+				} else {
+					formatTasks(taskNoFormatted, endDateTime,"", tasks);
+				}
 			}
 
 			else {
 				String tasks = taskDes;
-				String taskNo = "     " + i + ".   ";
+				String taskNoFormatted = "     " + i + ".   ";
 				String dateToDisplay = formatStartEndDate();
-				String timeToDisplay = formatStartEndTime(); 
-				String dateTimeToDisplay = dateToDisplay+timeToDisplay;
-				
-				formatTasks(taskNo,dateTimeToDisplay,tasks);
+				String timeToDisplay = formatStartEndTime();
+	
+				boolean isCommandExecuted = (display.getCommand().equals(
+						COMMAND_TYPE.DELETE)
+						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+						.getCommand().equals(COMMAND_TYPE.EDIT));
+
+				if (isCommandExecuted && i == display.getViewIndex()) {
+					formatTaskAccdCommand(taskNoFormatted, dateToDisplay, timeToDisplay,
+							tasks);
+				} else {
+					formatTasks(taskNoFormatted, dateToDisplay, timeToDisplay,
+							tasks);
+				}
 			}
 		}
 	}
-	
-	private void formatTasks(String taskNo, String dateTimeToDisplay, String tasks) throws BadLocationException{
+
+	private void formatTaskAccdCommand(String taskNo, String dateToDisplay,
+			String timeToDisplay, String tasks) throws BadLocationException {
+		if (display.getCommand().equals(COMMAND_TYPE.DELETE)) {
+			formatDeletedTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+		} else if (display.getCommand().equals(COMMAND_TYPE.ADD)) {
+			formatAddTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+		} else if (display.getCommand().equals(COMMAND_TYPE.DONE)) {
+			formatDoneTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+		} else if (display.getCommand().equals(COMMAND_TYPE.EDIT)) {
+			formatEditTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+		}
+	}
+
+	private void formatDeletedTask(String taskNo, String dateToDisplay,String timeToDisplay,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#848484", "<strike>" + dateToDisplay + timeToDisplay + "</strike>", 3);
+		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+	}
+
+	private void formatEditTask(String taskNo, String dateToDisplay,String timeToDisplay,
+			String tasks) throws BadLocationException {
+
+	}
+
+	private void formatDoneTask(String taskNo, String dateToDisplay,String timeToDisplay,
+			String tasks) throws BadLocationException {
+
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#00A300",  dateToDisplay + timeToDisplay , 3);
+		appendTasks("#00A300", tasks, 4);
+	}
+
+	private void formatAddTask(String taskNo, String dateToDisplay,String timeToDisplay,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#B8005C", "<font size=\"4\">" +  dateToDisplay + timeToDisplay 
+				+ "</font>", 3);
+		appendTasks("#B8005C", "<font size=\"4\">" + tasks + "</font>", 4);
+
+	}
+
+	private void formatTasks(String taskNo, String dateToDisplay,String timeToDisplay,
+			String tasks) throws BadLocationException {
 		appendTasks("#848484", taskNo, 1);
 		appendTasks("#FFFFFF", "!", 2);
-		appendTasks("#01A9DB", dateTimeToDisplay, 3);
+		appendTasks("#01A9DB", dateToDisplay + "<font color=\"#1F3D7A\">" + timeToDisplay + "</font>", 3);
 		appendTasks("#0A1B2A", tasks, 4);
 	}
 
@@ -125,15 +193,16 @@ public class UpcomingView extends SingleView implements View {
 				.replaceAll("\\]", "");
 		startTimeToDisplay = startTimeToDisplay.replace("AM", "am")
 				.replace("PM", "pm").replace(".00", "");
-		
+
 		String endTimeToDisplay = endTime.format(formatTime);
-		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
-				.replaceAll("\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
 		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
 				.replace("PM", "pm").replace(".00", "");
-		
-		String timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"+ startTimeToDisplay+ " - "+ endTimeToDisplay + "</font></p>";
-		
+
+		String timeToDisplay = "<p align=\"left\">"
+				+ startTimeToDisplay + " - " + endTimeToDisplay + "</p>";
+
 		return timeToDisplay;
 	}
 
@@ -141,41 +210,45 @@ public class UpcomingView extends SingleView implements View {
 		String startDateToDisplay = startDate.format(formatter);
 		startDateToDisplay = startDateToDisplay.replaceAll("\\[", "")
 				.replaceAll("\\]", "");
-		
+
 		String endDateToDisplay = endDate.format(formatter);
-		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
-				.replaceAll("\\]", "");
-		
-		String dateToDisplay = "<p align=\"left\">"+ startDateToDisplay + " - " + endDateToDisplay+ "</p>";
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+
+		String dateToDisplay = "<p align=\"left\">" + startDateToDisplay
+				+ " - " + endDateToDisplay + "</p>";
 		return dateToDisplay;
 	}
 
 	private String formatTimeDate() {
 		String endDateToDisplay = endDate.format(formatter);
 		String endTimeToDisplay = endTime.format(formatTime);
-		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "")
-				.replaceAll("\\]", "");
-		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "")
-				.replaceAll("\\]", "");
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
 		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
 				.replace("PM", "pm").replace(".00", "");
 
-		String endDateTime = "<p align=\"left\">" + endDateToDisplay
-				+ "</p>" + "<p align=\"left\"><font color=\"#1F3D7A\">"
+		String endDateTime = "<p align=\"left\">" + endDateToDisplay + "</p>"
+				+ "<p align=\"left\"><font color=\"#1F3D7A\">"
 				+ endTimeToDisplay + "</font></p>";
 		return endDateTime;
 	}
 
 	/**
 	 * Appends to Stringbuilder output
-	 * @param textColour,text,row
+	 * 
+	 * @param textColour
+	 *            ,text,row
 	 */
 	public void appendTasks(String textColour, String text, int row)
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
 					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
-					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
@@ -204,7 +277,7 @@ public class UpcomingView extends SingleView implements View {
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
-		Display display = Display.getInstance();
+		display = Display.getInstance();
 		page = display.getPaging();
 
 		output.append("<html>");

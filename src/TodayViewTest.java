@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +27,9 @@ public class TodayViewTest {
 		File file2 = new File("config.json");
 		file.delete();
 		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 	}
 
 	@After
@@ -34,6 +38,9 @@ public class TodayViewTest {
 		File file2 = new File("config.json");
 		file.delete();
 		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
 
 	}
 

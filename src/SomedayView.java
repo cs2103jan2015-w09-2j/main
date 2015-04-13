@@ -1,6 +1,7 @@
 //@author A0112715R
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.text.BadLocationException;
 
@@ -8,18 +9,20 @@ public class SomedayView extends SingleView implements View {
 	private StringBuilder output;
 	private int i = 0;
 	private int page = 1;
+	private String INVALID_PAGE_MESSAGE = "The page number entered is invalid";
+	private String CLASS_MESSAGE = "UpcomingView";
+	OneTagLogger logger = OneTagLogger.getInstance();
+	Display display;
+	boolean isCommandExecuted = false;
 
 	/**
-	 * Updates the list of tasks 
+	 * Updates the list of tasks
 	 */
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
-
 		setList(data.getSomeday());
-
 	}
-
 	/**
 	 * Supports paging. Sets the tasks to be shown for each "page"
 	 * 
@@ -42,8 +45,8 @@ public class SomedayView extends SingleView implements View {
 					tasksForPage = getList().subList(startTaskNo,
 							getList().size());
 				} catch (IllegalArgumentException e1) {
-					page = 1;
-					getTasksForPage();
+					logger.log(Level.WARNING, CLASS_MESSAGE,
+							INVALID_PAGE_MESSAGE);
 				}
 			}
 
@@ -60,26 +63,82 @@ public class SomedayView extends SingleView implements View {
 	protected void getSomeday() throws BadLocationException {
 		for (Task task : getTasksForPage()) {
 			i++;
-			String taskNo = "     " + i + ".   ";
+			String taskNoFormatted = "     " + i + ".   ";
 			String tasks = task.toString() + "\n";
-				appendTasks("#848484", taskNo, 1);
+			
+			
+			isCommandExecuted = (display.getCommand().equals(
+					COMMAND_TYPE.DELETE)
+					|| display.getCommand().equals(COMMAND_TYPE.ADD)
+					|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+					.getCommand().equals(COMMAND_TYPE.EDIT));
+			
+			if (isCommandExecuted && i == display.getViewIndex()) {
+				formatTaskAccdCommand(taskNoFormatted, tasks);
+			} else {
+				appendTasks("#848484", taskNoFormatted, 1);
 				appendTasks("#FFFFFF", "!", 2);
 				appendTasks("#0A1B2A", tasks, 3);
+			}
 		}
+	}
+
+	private void formatTaskAccdCommand(String taskNo,
+			String tasks) throws BadLocationException {
+		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+			formatDeletedTask(taskNo,tasks);
+		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+			formatAddTask(taskNo,tasks);
+		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+			formatDoneTask(taskNo,tasks);
+		}
+		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+			formatEditTask(taskNo,tasks);
+		}
+		
+	}
+	private void formatDeletedTask(String taskNo, 
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#848484", "<strike>" + tasks + "</strike>", 3);
+		
+	}
+
+	private void formatEditTask(String taskNo, String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#006666", tasks , 3);
+		
+	}
+
+	private void formatDoneTask(String taskNo, String tasks) throws BadLocationException {
+
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#00A300", tasks , 3);
+	}
+
+	private void formatAddTask(String taskNo,String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 3);
 	}
 
 	/**
 	 * Appends to Stringbuilder output
-	 * @param textColour,text,row
+	 * 
+	 * @param textColour
+	 *            ,text,row
 	 */
 	public void appendTasks(String textColour, String text, int row)
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
 					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
-					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
 		} else if (row == 2) {
-			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
 					+ textColour
 					+ "\"><p align=\"center\"><b>"
@@ -92,8 +151,9 @@ public class SomedayView extends SingleView implements View {
 					+ text
 					+ "</p></font></td></tr>");
 		}
+		
 	}
-	
+
 	/**
 	 * Table created using Html code to append to JTextpane
 	 * 
@@ -102,19 +162,21 @@ public class SomedayView extends SingleView implements View {
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
-		Display display = Display.getInstance();
+		display = Display.getInstance();
 		page = display.getPaging();
-
 		output.append("<html>");
-
 		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
 		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Someday </b></p></font></td></tr>");
 		getSomeday();
 		output.append("</table>");
-
 		output.append("</html>");
-
+		
 		return output.toString();
+	}
+	
+	public void updateShow() throws BadLocationException{
+		update();
+		show();
 	}
 
 	/**

@@ -112,7 +112,7 @@ public class EditCmd extends ModifiableCmd{
 		update();
 		writeToFile();
 		
-		display.set(getMessage());
+		display.set(getUndoMessage());
 	}
 	
 	//update the field of task if it is not null

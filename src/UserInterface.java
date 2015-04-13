@@ -30,6 +30,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
 
 import javax.swing.UIManager;
 import javax.swing.JLabel;
@@ -55,6 +56,12 @@ public class UserInterface {
 	private ArrayList<String> commandsEntered = new ArrayList<String>();
 	private int noOfCommandsEntered;
 	private String message = "";
+	private String THREAD_INTERUPPTED_MESSAGE= "Error in thread.";
+	private String CLASS_MESSAGE = "UserInterface";
+	private String ERROR_DISPLAYING_VIEW_MESSAGE = "Error in displaying the view.";
+	private String INVALID_INPUT_MESSAGE ="Invalid input entered.";
+	
+	OneTagLogger logger = OneTagLogger.getInstance();
 
 	
 	public static UserInterface getInstance() {
@@ -67,8 +74,9 @@ public class UserInterface {
 
 	/**
 	 * Executes the program
+	 * @ 
 	 */
-	public void executeInterface(){
+	public void executeInterface() {
 		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
@@ -275,7 +283,8 @@ public class UserInterface {
 			@Override
 			public void keyPressed(java.awt.event.KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					setCommand();
+						setCommand();
+					
 					e.consume();
 					commandFromUser.setText("");
 				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -290,6 +299,7 @@ public class UserInterface {
 	
 	/**
 	 * Gets and sets command to be processed
+	 * @ 
 	 */
 	public void setCommand(){
 		String command = commandFromUser.getText();
@@ -301,20 +311,22 @@ public class UserInterface {
 	/**
 	 * Executes the command, any error is shown to user. Else,
 	 * The relevant view is shown
+	 * 
 	 */
-	private void processCommand(String command) {
+	private void processCommand(String command)  {
 		showToUser.setContentType("text/html");
 		try{
 		control.executeCommand(command);
 		}catch(ArithmeticException | Error e){
+			logger.log(Level.WARNING, CLASS_MESSAGE, INVALID_INPUT_MESSAGE);
 			JOptionPane.showMessageDialog(null, "Invalid input. Enter \"help\" for assistance.", "Error", JOptionPane.ERROR_MESSAGE);   
 		}
 		showMessageToUser();
 		try {
 			showToUser.setText(Display.getInstance().getView().show());
+			
 		} catch (BadLocationException | IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			logger.log(Level.WARNING, CLASS_MESSAGE, ERROR_DISPLAYING_VIEW_MESSAGE);
 		}
 			
 		
@@ -338,7 +350,6 @@ public class UserInterface {
 			commandFromUser.setText(commandsEntered.get(noOfCurrentCmd++));
 			noOfCommandsEntered = noOfCurrentCmd;
 		}
-
 		catch (IndexOutOfBoundsException e2) {
 			commandFromUser.setText("");
 			noOfCommandsEntered = commandsEntered.size();
@@ -378,25 +389,28 @@ public class UserInterface {
 		StringBuilder htmlMessage = new StringBuilder();
 		feedback.setContentType("text/html");
 		message = Display.getInstance().getMessage();
-		try {
+		
 			if (!message.isEmpty()) {
 				htmlMessage.append("<html><p valign=\"top\" align=\"center\"><font face=\"Lucida sans\" color=\"#660000\" size=\"4.5\"><b>"+Display.getInstance().getMessage()+"</b></font></p></html>");
 				feedback.setText((htmlMessage.toString()) + "\n");
 			}
-		} catch (NullPointerException nullException) {
-			feedback.setText("");
-		}
+			else{
+				assert message=="";
+				feedback.setText(message);
+			}
 	}
 
 	/**
 	 * Add colour to keywords such as by,from and to. For design purposes.
 	 */
 	private void highlightKeywords() {
-		StyleContext cont = StyleContext.getDefaultStyleContext();
-		final AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
+		StyleContext style = StyleContext.getDefaultStyleContext();
+		final AttributeSet attrRed = style.addAttribute(style.getEmptySet(),
 				StyleConstants.Foreground, Color.RED);
-		final AttributeSet attrBlack = cont.addAttribute(cont.getEmptySet(),
+		
+		final AttributeSet attrBlack = style.addAttribute(style.getEmptySet(),
 				StyleConstants.Foreground, Color.BLACK);
+		
 		doc = new DefaultStyledDocument() {
 			public void insertString(int offset, String str, AttributeSet a)
 					throws BadLocationException {
@@ -417,7 +431,7 @@ public class UserInterface {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
 								.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|at|on|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
-							setCharacterAttributes(wordL, wordR - wordL, attr,
+							setCharacterAttributes(wordL, wordR - wordL, attrRed,
 									false);
 						} else {
 							setCharacterAttributes(wordL, wordR - wordL,
@@ -440,7 +454,7 @@ public class UserInterface {
 
 				if (text.substring(before, after).toLowerCase()
 						.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|at|on|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
-					setCharacterAttributes(before, after - before, attr, false);
+					setCharacterAttributes(before, after - before, attrRed, false);
 				} else {
 					setCharacterAttributes(before, after - before, attrBlack,
 							false);
@@ -452,7 +466,8 @@ public class UserInterface {
 
 	private int findLastNonWordChar(String text, int index) {
 		while (--index >= 0) {
-			if (String.valueOf(text.charAt(index)).matches("\\W")) {
+			if (String.valueOf(text.charAt(index)).matches("\\W")) 
+			{
 				break;
 			}
 		}

@@ -34,7 +34,7 @@ public class UserInterfaceTest {
 	private String doneTask1 = "Done 2";
 	private String doneTask3 = "Done 3";
 	
-	private String editTaskDes = "";
+	private String editTaskDes = "Edit 2 CS2103T Lecture";
 	private String editTaskEndTime = "";
 	private String editTaskStartTime = "";
 	
@@ -59,7 +59,7 @@ public class UserInterfaceTest {
 	}
 	
 	@After
-	public void clearAfterTesting(){
+	public void clearAfterTesting() throws InterruptedException{
 		UserInterface UI = UserInterface.getInstance();
 		assertNotNull(UI);
 		UI.executeInterface();
@@ -78,7 +78,7 @@ public class UserInterfaceTest {
 	
 	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating tasks
 	@Test
-	public void addTask() throws BadLocationException {
+	public void addTask() throws BadLocationException, InterruptedException {
 		UserInterface UI = UserInterface.getInstance();
 		assertNotNull(UI);
 		UI.executeInterface();
@@ -131,7 +131,7 @@ public class UserInterfaceTest {
 	
 	//testing deleting tasks
 		@Test
-		public void deleteTask() throws BadLocationException {
+		public void deleteTask() throws BadLocationException, InterruptedException {
 			UserInterface UI = UserInterface.getInstance();
 			assertNotNull(UI);
 			UI.executeInterface();
@@ -207,7 +207,7 @@ public class UserInterfaceTest {
 		
 //		testing marking task as done
 		@Test
-		public void markTask() throws BadLocationException {
+		public void markTask() throws BadLocationException, InterruptedException {
 			UserInterface UI = UserInterface.getInstance();
 			assertNotNull(UI);
 			UI.executeInterface();
@@ -282,7 +282,7 @@ public class UserInterfaceTest {
 		
 //		search for the keyword "report"
 		@Test
-		public void searchTask() throws BadLocationException {
+		public void searchTask() throws BadLocationException, InterruptedException {
 			UserInterface UI = UserInterface.getInstance();
 			assertNotNull(UI);
 			UI.executeInterface();

@@ -97,7 +97,9 @@ public class Display {
 	 */
 	public void set(String message) {
 		this.message = message;
-		this.view.update();
+		if(command.equals(COMMAND_TYPE.ADD)){
+			this.view.update();
+			}
 		this.command = COMMAND_TYPE.HOME;
 	}
 	
@@ -122,7 +124,9 @@ public class Display {
 		this.message = message;
 		this.viewIndex = viewIndex;
 		this.command = command;
+		if(command.equals(COMMAND_TYPE.ADD)){
 		this.view.update();
+		}
 	}
 
 }

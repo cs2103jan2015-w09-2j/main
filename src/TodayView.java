@@ -22,9 +22,10 @@ public class TodayView extends SingleView implements View {
 	private int page = 1;
 	private int taskNo;
 	private int taskLimit = 15;
+	Display display;
 
 	/**
-	 * Updates the list of tasks 
+	 * Updates the list of tasks
 	 */
 	@Override
 	public void update() {
@@ -33,6 +34,7 @@ public class TodayView extends SingleView implements View {
 
 	/**
 	 * Gets the information of each task
+	 * 
 	 * @param task
 	 */
 	private void getTaskInfo(Task task) {
@@ -82,6 +84,8 @@ public class TodayView extends SingleView implements View {
 
 	/**
 	 * Gets list of today task and sends for formatting
+	 * 
+	 * @throws BadLocationException
 	 */
 	private void getToday() throws BadLocationException {
 		for (Task task : getTasksForPage()) {
@@ -102,14 +106,22 @@ public class TodayView extends SingleView implements View {
 		String taskNoFormatted = "" + taskNo + ".   ";
 		String tasks = taskDes;
 		String timeToDisplay = formatStartEndTimeToDisplay();
-
-		if (task.isOverdue()) {
+		boolean isCommandExecuted = (display.getCommand().equals(
+				COMMAND_TYPE.DELETE)
+				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+				.getCommand().equals(COMMAND_TYPE.EDIT));
+		
+		if (isCommandExecuted && taskNo == display.getViewIndex()) {
+			formatTaskAccdCommand(taskNoFormatted, timeToDisplay, tasks);
+		} else if (task.isOverdue()) {
 			formatOverdueTasks(taskNoFormatted, timeToDisplay, tasks);
 		} else {
 			formatTasks(taskNoFormatted, timeToDisplay, tasks);
 		}
 
 	}
+
 
 	private String formatStartEndTimeToDisplay() {
 		String timeToDisplay = startTime.format(formatTime).replace("AM", "am")
@@ -125,17 +137,72 @@ public class TodayView extends SingleView implements View {
 
 	}
 
-	private void formatDeadlineTask(Task task, int i)
+	private void formatDeadlineTask(Task task, int taskNo)
 			throws BadLocationException {
 		String tasks = taskDes;
-		String taskNo = "" + i + ".   ";
+		String taskNoFormatted = "" + taskNo + ".   ";
 		String endTimeToDisplay = formatEndTimeToDisplay();
-		if (task.isOverdue()) {
-			formatOverdueTasks(taskNo, endTimeToDisplay, tasks);
+		boolean isCommandExecuted = (display.getCommand().equals(
+				COMMAND_TYPE.DELETE)
+				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+				.getCommand().equals(COMMAND_TYPE.EDIT));
+		
+		if (isCommandExecuted && taskNo == display.getViewIndex()) {
+			formatTaskAccdCommand(taskNoFormatted, endTimeToDisplay, tasks);
+		} else if (task.isOverdue()) {
+			formatOverdueTasks(taskNoFormatted, endTimeToDisplay, tasks);
 		} else {
-			formatTasks(taskNo, endTimeToDisplay, tasks);
+			formatTasks(taskNoFormatted, endTimeToDisplay, tasks);
 		}
 
+	}
+
+	private void formatTaskAccdCommand(String taskNo, String endTimeToDisplay,
+			String tasks) throws BadLocationException {
+		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+			formatDeletedTask(taskNo, endTimeToDisplay, tasks);
+		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+			formatAddTask(taskNo, endTimeToDisplay, tasks);
+		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+			formatDoneTask(taskNo, endTimeToDisplay, tasks);
+		}
+		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+			formatEditTask(taskNo, endTimeToDisplay, tasks);
+		}
+		
+		
+	}
+	private void formatDeletedTask(String taskNo, String dateTimeToDisplay,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#848484", "<strike>" + dateTimeToDisplay + "</strike>", 3);
+		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+	}
+
+	private void formatEditTask(String taskNo, String dateTimeToDisplay,
+			String tasks) {
+
+		
+	}
+
+	private void formatDoneTask(String taskNo, String dateTimeToDisplay,
+			String tasks) throws BadLocationException {
+
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#00A300",  dateTimeToDisplay, 3);
+		appendTasks("#00A300", tasks , 4);
+	}
+
+	private void formatAddTask(String taskNo, String dateTimeToDisplay,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#B8005C",  "<font size=\"4\">"+dateTimeToDisplay+"</font>", 3);
+		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 4);
+		
 	}
 
 	private String formatEndTimeToDisplay() {
@@ -171,14 +238,18 @@ public class TodayView extends SingleView implements View {
 
 	/**
 	 * Appends to Stringbuilder output
-	 * @param textColour,text,row
+	 * 
+	 * @param textColour
+	 *            ,text,row
+	 * @throws BadLocationException
 	 */
 	public void appendTasks(String textColour, String text, int row)
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
 					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
-					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
@@ -199,19 +270,18 @@ public class TodayView extends SingleView implements View {
 					+ text
 					+ "</p></font></td></tr>");
 		}
-
 	}
 
 	/**
 	 * Table created using Html code to append to JTextpane
 	 * 
 	 * @return String
+	 * @throws BadLocationException
 	 */
 	@Override
-	public String show() throws BadLocationException {
-		// TODO Auto-generated method stub
+	public String show() throws BadLocationException{
 		output = new StringBuilder();
-		Display display = Display.getInstance();
+		display = Display.getInstance();
 		page = display.getPaging();
 
 		output.append("<html>");
@@ -223,13 +293,13 @@ public class TodayView extends SingleView implements View {
 		return output.toString();
 
 	}
-	
+
 	/**
 	 * This is used for Testing
 	 * 
 	 * @return ArrayList<Task>
 	 */
-	public ArrayList<Task> getTodayList(){
+	public ArrayList<Task> getTodayList() {
 		ArrayList<Task> todayList = data.getToday();
 		return todayList;
 	}
