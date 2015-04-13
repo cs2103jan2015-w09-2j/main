@@ -1,4 +1,5 @@
 
+//@author A0111867A
 public class ViewCmd extends Cmd{
 
 	final static int PAGE_ONE = 1;
@@ -18,7 +19,10 @@ public class ViewCmd extends Cmd{
 		this.paging = paging;
 	}
 
-	public boolean execute(){
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute(){
 		this.preView = display.getView();
 
 		switch(command){
@@ -44,13 +48,21 @@ public class ViewCmd extends Cmd{
 				display.set(new HomeView());
 				break;
 		}	
-	    return true;
 	}
 	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
 	public void undo(){
 		display.set(preView, paging);
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof ViewCmd){

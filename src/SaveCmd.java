@@ -22,6 +22,9 @@ public class SaveCmd extends ModifiableCmd {
 		
 	}
 
+	/**
+	 * Undo the command previously executed by this class
+	 */
 	@Override
 	public void undo(){
 
@@ -46,8 +49,10 @@ public class SaveCmd extends ModifiableCmd {
 		display.set(MESSAGE_UNDO_SAVE);
 	}
 
-	@Override
-	public boolean execute() {
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute() {
 		
 		try{
 			previousStorageLocation = storage.getFilePath();
@@ -55,7 +60,7 @@ public class SaveCmd extends ModifiableCmd {
 			}catch(IOException ioEx){
 				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 				display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-				return false;
+				return;
 			}
 		
 		
@@ -64,14 +69,17 @@ public class SaveCmd extends ModifiableCmd {
 		}catch(IOException ioEx){
 			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
 			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
-			return false;
+			return;
 		}
 		
 		display.set(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
-		
-		return true;
 	}
 
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this.getClass() != o.getClass()){

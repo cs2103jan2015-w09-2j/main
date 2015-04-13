@@ -1,10 +1,10 @@
 import java.time.LocalDateTime;
 
-
+//@author A0111867A
 public class EditCmd extends ModifiableCmd{
 	
-	private Task task;
-	private int index;
+	private Task task = new Task("");
+	private int index = -1;
 	private int viewIndex = 0;
 	
 	private String description = null;
@@ -72,7 +72,10 @@ public class EditCmd extends ModifiableCmd{
 		this.viewIndex = 9;
 	}
 	
-	public boolean execute() throws IndexOutOfBoundsException{
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute() throws IndexOutOfBoundsException{
 		
 		task = getViewTask(index);
 		
@@ -99,10 +102,12 @@ public class EditCmd extends ModifiableCmd{
 		end = tempEnd;
 		
 		display.set(getMessage());
-		
-		return true;
 	}
 	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
 	public void undo(){
 		update();
 		writeToFile();
@@ -110,6 +115,7 @@ public class EditCmd extends ModifiableCmd{
 		display.set(getMessage());
 	}
 	
+	//update the field of task if it is not null
 	private void update(){
 		if(description != null){
 			task.setDescription(description);
@@ -122,6 +128,11 @@ public class EditCmd extends ModifiableCmd{
 		}
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof EditCmd){
@@ -131,8 +142,8 @@ public class EditCmd extends ModifiableCmd{
 			Boolean isSameIndex = this.index == otherEditCmd.index;
 			Boolean isSameViewIndex = this.viewIndex == otherEditCmd.viewIndex;
 			Boolean isSameDescription = this.description.equals(otherEditCmd.description);
-			Boolean isSameStart = this.start.equals(otherEditCmd.start);
-			Boolean isSameEnd = this.end.equals(otherEditCmd.end);
+			Boolean isSameStart = this.start == otherEditCmd.start;
+			Boolean isSameEnd = this.end == otherEditCmd.end;
 			Boolean isSameIsSomeday = this.isSomeday == otherEditCmd.isSomeday;
 			
 			return isSameTask && isSameIndex && isSameViewIndex && isSameDescription 
@@ -143,6 +154,7 @@ public class EditCmd extends ModifiableCmd{
 		}
 	}
 	
+	//@author A0112715
 	private String getMessage(){
 		String message = "";
 		

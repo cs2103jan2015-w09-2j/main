@@ -49,6 +49,7 @@ public class AddCmdTest {
 	
 	@Test
 	public void testExecute() {
+		data.set(emptyList);
 		addCmd.execute();
 		assertEquals("data", data.getData(), list);
 		try {

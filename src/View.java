@@ -3,14 +3,28 @@ import java.util.ArrayList;
 
 import javax.swing.text.BadLocationException;
 
-
+//@author A0111867A
 public interface View {
 		
-	void update();
+	/**
+	 * Call to get update from data
+	 */
+	public void update();
 	
-	String show() throws BadLocationException, IOException;
+	/**
+	 * Returns the html intepretation of data
+	 */
+	public String show() throws BadLocationException, IOException;
 	
-	Task getTask(int index) throws IndexOutOfBoundsException;
+	/**
+	 * Returns the task specified by index
+	 * 
+	 * @param index reference of the task
+	 */
+	public Task getTask(int index) throws IndexOutOfBoundsException;
 	
-	ArrayList<Task> getList();
+	/**
+	 * Returns the arraylist of task representation of this class
+	 */
+	public ArrayList<Task> getList();
 }

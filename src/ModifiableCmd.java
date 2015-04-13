@@ -3,11 +3,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-
+//@author A0111867A
 public abstract class ModifiableCmd extends Cmd{
 	
 	protected static final String NAME_CLASS_MODIFIABLECMD = "ModifiableCmd";
 	
+	//@author A0111217Y
 	protected void writeToFile(){
 		try{
 		Storage file = new Storage();

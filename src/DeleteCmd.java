@@ -10,7 +10,10 @@ public class DeleteCmd extends ModifiableCmd{
 		this.task = new Task("");
 	}
 	
-	public boolean execute(){
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute(){
 		task = getViewTask(index);
 		
 		data.remove(task);
@@ -18,10 +21,12 @@ public class DeleteCmd extends ModifiableCmd{
 	     
 		String deleteMsg = String.format(DELETE_TASK_MESSAGE, task.getDescription());
 		display.set(deleteMsg, index, COMMAND_TYPE.DELETE);
-
-	    return true;
 	}
 	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
 	public void undo(){
 		data.add(task);
 		writeToFile();
@@ -30,6 +35,11 @@ public class DeleteCmd extends ModifiableCmd{
 		display.set(undoMessage, index, COMMAND_TYPE.ADD);
 	}
 	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof DeleteCmd){
