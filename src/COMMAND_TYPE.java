@@ -1,4 +1,4 @@
-
+//@author A0108436H
 public enum COMMAND_TYPE {
 	DISPLAY, 
 	ADD, 
