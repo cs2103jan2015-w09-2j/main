@@ -318,7 +318,6 @@ public class OneTagParser {
 				String from = userChanges.substring(0,4);
 				String dateTimeString = userChanges.substring(4).trim();
 				if(dateTimeString.contains(TO)) {
-					System.out.println("Test code");
 					int posLastTo = dateTimeString.lastIndexOf(TO);
 					String stringFrom = dateTimeString.substring(0,posLastTo-1).trim();
 					String stringTo = dateTimeString.substring(posLastTo + 2).trim(); 
