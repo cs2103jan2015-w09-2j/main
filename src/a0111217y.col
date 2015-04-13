@@ -1,0 +1,1332 @@
+//@author: a0111217y
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\ExitCmd.java
+	 */
+
+public class ExitCmd extends ModifiableCmd{
+
+	private static final int EXIT_CODE = 0;
+
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute() {
+		logger.close();
+		System.exit(EXIT_CODE);
+	}
+
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this.getClass() == o.getClass()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}		
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\ExitCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\ExitCmdTest.java
+	 */
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class ExitCmdTest {
+	
+	private static final String FILE_DIRECTORY = "C:/CS2103";
+	
+	@Test
+	public void testEqualsObject() {
+		ExitCmd exitObject1 = new ExitCmd();
+		ExitCmd exitObject2 = new ExitCmd();
+		SaveCmd saveCmd = new SaveCmd(FILE_DIRECTORY);
+		
+		assertTrue(exitObject1.equals(exitObject2));
+		assertFalse(saveCmd.equals(exitObject1));
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\ExitCmdTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\ModifiableCmd.java
+	 */
+
+	protected void writeToFile(){
+		try{
+		Storage file = new Storage();
+		
+		ArrayList<Task> tasks = data.getData();
+		file.writeToFile(tasks);
+		}
+		catch(FileNotFoundException ex){
+			logger.log(Level.WARNING, NAME_CLASS_MODIFIABLECMD, MESSAGE_STORAGE_FILE_NOT_FOUND);
+			display.set(MESSAGE_STORAGE_FILE_NOT_FOUND);
+		}
+		catch(IOException ex){
+			logger.log(Level.WARNING, NAME_CLASS_MODIFIABLECMD, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+		}
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\ModifiableCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\SaveCmd.java
+	 */
+
+import java.io.IOException;
+import java.util.logging.Level;
+
+
+public class SaveCmd extends ModifiableCmd {
+	
+	String storageLocation;
+	String previousStorageLocation;
+	Storage storage;
+	
+	
+	public SaveCmd(String storageLocation) {
+		this.storageLocation = storageLocation;
+		
+		try{
+		storage = new Storage();
+		}catch(IOException ex){
+			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+		}
+		
+	}
+
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
+	public void undo(){
+
+		try{
+			storage.setPath(previousStorageLocation);
+		}
+		catch(IOException ioEx){
+			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			return;
+		}
+		
+		try{
+			data.set(storage.getData());
+		}
+		catch(IOException ioEx){
+				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				return;
+			}
+		
+		display.set(MESSAGE_UNDO_SAVE);
+	}
+
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute() {
+		
+		try{
+			previousStorageLocation = storage.getFilePath();
+			storage.setPath(storageLocation);
+			}catch(IOException ioEx){
+				logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+				return;
+			}
+		
+		
+		try{
+			data.set(storage.getData());
+		}catch(IOException ioEx){
+			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			display.set(MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+			return;
+		}
+		
+		display.set(String.format(MESSAGE_SAVE_NEW_USER_DIRECTORY , storageLocation));
+	}
+
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this.getClass() != o.getClass()){
+			return false;
+		}
+		
+		SaveCmd save = (SaveCmd) o;
+		
+		if (!this.storageLocation.equals(save.storageLocation)){
+			return false;
+		}
+		else if (!this.previousStorageLocation.equals(save.previousStorageLocation)){
+			return false;
+		}
+		else if (!save.storage.equals(save.storage)){
+			return false;
+		}
+		
+		return true;
+	}
+
+}
+	// End of segment: C:\Users\Ganga\workspace\main\src\SaveCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Storage.java
+	 */
+
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.logging.Level;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+public class Storage {
+
+	private static final String CHARACTER_END_OF_FILE = "\\Z";
+	private static final String NAME_CONFIG_FILE = "config.json";
+	private static final String USER_DIRECTORY = "user.dir";
+	private static final String CHARACTER_BACKSLASH = "\\";
+	private static final String CHARACTER_REVERSE_BACKSLASH = "/";
+	private static final String CHARACTER_EMPTY_STRING = "";
+	private static final String CLASS_NAME_STORAGE = "Storage";
+	private static final String LOGGER_DIRECTORY_CHANGED = "Directory changed";
+	private static final String LOGGER_FILE_WRITTEN = "File has been written";
+	private static final String LOGGER_FILE_READ = "File has been read";
+	private static OneTagLogger logger = OneTagLogger.getInstance();
+
+	private String fileName = "oneTag.json"; // default name is oneTag.json
+	private ArrayList<Task> allTasks;
+	private String currentRelativePath = System.getProperty(USER_DIRECTORY);
+	private String filePath = currentRelativePath + CHARACTER_BACKSLASH + fileName;
+
+	public Storage() throws IOException{
+		allTasks = new ArrayList<Task>();
+		checkFileExist(this.filePath);
+	}
+	
+	public Storage(String userSpecifiedDirectory) throws IOException{
+		allTasks = new ArrayList<Task>();
+		checkFileExist(userSpecifiedDirectory);
+	}
+	
+	// Used for testing
+	public Storage(String directory, ArrayList<Task> task) throws IOException{
+		filePath = directory;
+		allTasks = task;
+		checkFileExist(this.filePath);
+	}
+	
+	/**
+	 * Gets the entire file path
+	 * @return String
+	 */
+	public String getPath(){
+		return filePath;
+	}
+	
+	/**
+	 * Gets the file directory without the file name
+	 * @return String
+	 */
+	public String getFilePath(){
+		String pathToReturn = new String(filePath);
+		
+		pathToReturn = pathToReturn.replaceFirst(fileName, CHARACTER_EMPTY_STRING);
+		return pathToReturn;
+	}
+	
+	/**
+	 * Changes the directory to specified directory
+	 */
+	public void setPath(String userSpecifiedDirectory) throws IOException{
+		assert (userSpecifiedDirectory == null);
+		
+		String oldFilePath = filePath;
+		
+		if (userSpecifiedDirectory.endsWith(CHARACTER_BACKSLASH) | userSpecifiedDirectory.endsWith(CHARACTER_REVERSE_BACKSLASH)){
+			filePath = userSpecifiedDirectory + fileName;
+		}
+		else{
+		filePath = userSpecifiedDirectory + CHARACTER_BACKSLASH + fileName;
+		}
+		
+		File file = new File(filePath);
+		if (!file.exists()){
+		copyFile(oldFilePath, filePath);
+		}
+		writeStringToFile(filePath, NAME_CONFIG_FILE);
+		
+		File oldFile = new File(oldFilePath);
+		oldFile.delete();
+		
+		logger.log(Level.FINE, CLASS_NAME_STORAGE, LOGGER_DIRECTORY_CHANGED);
+		
+	}
+
+	/**
+	 * Writes the ArrayList<Task> to file
+	 * 
+	 * @param tasks
+	 */
+	public void writeToFile(ArrayList<Task> tasks) throws IOException{
+		
+		String json = convertTaskToString(tasks);
+		writeStringToFile(json, filePath);
+		logger.log(Level.FINE, CLASS_NAME_STORAGE, LOGGER_FILE_WRITTEN);
+	}
+
+	/**
+	 * Gets the list of tasks from file, puts them into an ArrayList
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getData() throws IOException{
+		String jsonString = new String(CHARACTER_EMPTY_STRING);
+		jsonString = readStringFromFile(jsonString);
+
+		convertStringToTask(jsonString);
+
+		if (allTasks == null) {
+			allTasks = new ArrayList<Task>();
+		}
+
+		logger.log(Level.FINEST, CLASS_NAME_STORAGE, LOGGER_FILE_READ);
+		return allTasks;
+
+	}
+	
+	/*
+	 * Contains mechanism to correct missing config.json files and oneTag.json file
+	 */
+	private boolean checkFileExist(String filePath) throws IOException {
+
+		File file;
+		File configFile = new File(NAME_CONFIG_FILE);
+		
+		if (configFile.exists()) {
+			Scanner scanConfig = new Scanner(configFile);
+			this.filePath = scanConfig.useDelimiter(CHARACTER_END_OF_FILE).next();
+			scanConfig.close();
+			file = new File(this.filePath);
+			if (file.exists()){
+				return true;
+			}
+			else{
+				file.createNewFile();
+				return false;
+			}
+		} else {
+			configFile.createNewFile();
+			file = new File(filePath);
+			file.createNewFile();
+			writeStringToFile(filePath, NAME_CONFIG_FILE);
+			return false;
+		}
+
+	}
+	
+	private void copyFile(String oldFilePath, String userSpecifiedPath) throws IOException {
+		
+		File oldLocationFile = new File(oldFilePath);
+		filePath = userSpecifiedPath;
+		
+		File updatedLocationFile = new File(filePath);
+		
+		
+		Files.copy(oldLocationFile.toPath(), updatedLocationFile.toPath());
+		
+	}
+	
+	private void convertStringToTask(String jsonString) {
+		Gson gson = new GsonBuilder().registerTypeAdapter(Task.class,
+				new TaskDeserializer()).create();
+		Type listType = new TypeToken<ArrayList<Task>>() {
+		}.getType();
+		allTasks = gson.fromJson(jsonString, listType);
+	}
+	
+	private String convertTaskToString(ArrayList<Task> tasks) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.setPrettyPrinting().registerTypeAdapter(Task.class, new TaskSerializer());
+		Gson gson = gsonBuilder.create();
+		String json = gson.toJson(tasks);
+		
+		return json;
+	}
+
+	private String readStringFromFile(String fileString) throws IOException {
+
+		BufferedReader br = null;
+
+		String line;
+		br = new BufferedReader(new FileReader(filePath));
+		while ((line = br.readLine()) != null) {
+			fileString += line;
+		}
+		
+		br.close();
+		
+		return fileString;
+	}
+	
+	private void writeStringToFile(String stringToWrite, String filePath) throws IOException{
+		FileWriter fw;
+		fw = new FileWriter(filePath);
+		fw.write(stringToWrite);
+		fw.flush();
+		fw.close();
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\Storage.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\StorageTest.java
+	 */
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+
+public class StorageTest {
+	
+	private static final String DIRECTORY_NEW = "D:\\";
+	private static final String MESSAGE_TEST_WRITING_AND_GETTING_DATA = "test writing and getting data";
+	private static final String MESSAGE_TEST_FILE_EXIST = "check if file is at new location";
+	private static final String MESSAGE_TEST_GET_PATH = "test getting the file path";
+	private static final String TASK_BUY_ORANGE = "Buy orange";
+	private static final String TASK_GO_RUNNING = "Go running";
+	private static final String TASK_GO_HOME = "Go Home";
+	private static final String TASK_GO_RT = "Go RT";
+	private static final String TASK_MOP_FLOOR = "Mop floor";
+	private static final String CHARACTER_BACKSLASH = "\\";
+	
+	private String currentRelativePath = System.getProperty(USER_DIRECTORY);
+	private String fileName = "oneTag.json";
+	private String filePath = currentRelativePath + CHARACTER_BACKSLASH + fileName;
+	private String configFileName = "config.json";
+	private static final String USER_DIRECTORY = "user.dir";
+	private File config = new File(configFileName);
+	
+	private Task floatingTask;
+	private Task earlyTimedTask;
+	private Task lateTimedTask;
+	private Task earlyDeadlineTask;
+	private Task lateDeadlineTask;
+	private ArrayList<Task> toDo = new ArrayList<Task>();
+	private ArrayList<Task> emptyList = new ArrayList<Task>();
+	private Storage storage;
+
+	@Before
+	public void oneTimeSetUp() throws Exception {
+		floatingTask = new Task(TASK_BUY_ORANGE);
+		earlyTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 19, 0), LocalDateTime.of(2015, 3, 10, 19, 30), TASK_GO_RUNNING);
+		lateTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 20, 0), LocalDateTime.of(2015, 3, 10, 20, 30), TASK_GO_HOME);
+		earlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
+		lateDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 22, 30), TASK_MOP_FLOOR);
+		
+		toDo.add(floatingTask);
+		toDo.add(earlyTimedTask);
+		toDo.add(lateTimedTask);
+		toDo.add(earlyDeadlineTask);
+		toDo.add(lateDeadlineTask);
+		
+		if (config.exists()){
+			config.delete();
+		}
+		storage = new Storage(filePath, toDo);
+		
+	}
+	
+	@After
+	public void tearDown() throws Exception{
+		File storageFile = new File(filePath);
+		if (storageFile.exists()){
+			storageFile.delete();
+		}
+		if (config.exists()){
+			config.delete();
+		}
+	}
+	
+	@Test
+	public void testGetPath(){
+		//Only one partition because file path can never be set to null assertions in code
+		assertEquals(MESSAGE_TEST_GET_PATH, storage.getPath(), filePath);
+
+	}
+	
+	@Test
+	public void testGetFilePath(){
+		//Path can never be null or empty
+		assertEquals(MESSAGE_TEST_GET_PATH, storage.getFilePath(), currentRelativePath + CHARACTER_BACKSLASH);
+	}
+	
+	@Test
+	public void testWriteToFileAndGetFromFile() throws IOException {
+		ArrayList<Task> list = null;
+		
+		// Writes file with null arraylist
+		try{
+		storage.writeToFile(null);
+		}catch (IOException ex){
+			assert false;
+		}
+		try{
+			list = storage.getData();
+		}catch(IOException ex){
+			assert false;
+		}
+		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, list, emptyList);
+		
+		//Writes file with empty arraylist
+		try{
+			storage.writeToFile(emptyList);
+		}catch(IOException ex){
+			assert false;
+		}
+		try{
+			list = storage.getData();
+		}catch(IOException ex){
+			assert false;
+		}
+		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, list, emptyList);
+		
+		// Writes file with ArrayList<Task>
+		try{
+			storage.writeToFile(toDo);
+		}catch(IOException ex){
+			assert false;
+		}
+		try{
+			list = storage.getData();
+		}catch(IOException ex){
+			assert false;
+		}
+		assertEquals(MESSAGE_TEST_WRITING_AND_GETTING_DATA, list, toDo);
+		
+	}
+	
+	@Test
+	public void testSetPath() throws IOException {
+		//Partition for location ending with "/" changed successfully
+		storage.setPath(DIRECTORY_NEW);
+		filePath = DIRECTORY_NEW + "oneTag.json";
+		File changedLocation = new File(filePath);
+		assertTrue(MESSAGE_TEST_FILE_EXIST, changedLocation.exists());
+		
+		//Partition for location not ending with "/" changed successfully
+		filePath = currentRelativePath;
+		storage.setPath(filePath);
+		changedLocation = new File(filePath);
+		assertTrue(MESSAGE_TEST_FILE_EXIST, changedLocation.exists());
+
+		
+	}
+
+
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\StorageTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Task.java
+	 */
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+public class Task{
+
+	private static final String EMPTY_STRING = "";
+	private static final String DEADLINE_TASK = "[%1$s] " + "%2$s";
+	private static final String NORMAL_TASK = "[%1$s - %2$s] %3$s";
+	
+	private String description;
+	private LocalDateTime start = null;
+	private LocalDateTime end = null;
+	private boolean isCompleted = false;
+		
+	// Used internally by TaskSerializer
+	public Task(){
+		
+	}	
+	
+	public Task(LocalDateTime end, String description){
+		this.end = end;
+		this.description =  description;
+	}
+
+	public Task(LocalDateTime start, LocalDateTime end, String description){
+		this.start = start;
+		this.end = end;
+		this.description = description;
+	}
+
+	public Task(String taskDescription) {
+		description = taskDescription;
+		start = null;
+		end = null;
+	}
+	
+	/**
+	 * Returns the description of Task object
+	 * @return String
+	 */
+	public String getDescription() {
+		return description;
+	}	
+	
+	/**
+	 * Returns the start date and time of Task object
+	 * @return LocalDateTime
+	 */
+	public LocalDateTime getStart() {
+		return start;
+	}
+
+	/**
+	 * Returns the end date and time of Task object
+	 * @return LocalDateTime
+	 */
+	public LocalDateTime getEnd() {
+		return end;
+	}
+	
+	/**
+	 * Returns the start time of Task object
+	 * @return LocalTime
+	 */
+	private LocalTime getStartTime(){
+		return start.toLocalTime();
+	}
+	
+	/**
+	 * Returns the end time of Task object
+	 * @return LocalTime
+	 */
+	private LocalTime getEndTime(){
+		return end.toLocalTime();
+	}
+	
+	/**
+	 * Returns whether the task is completed
+	 * @return boolean
+	 */
+	public boolean getIsCompleted(){
+		return isCompleted;
+	}
+	
+	/**
+	 * Sets the description of Task object
+	 * @param newDescription Sets the description of Task object
+	 */
+	public void setDescription(String newDescription) {
+		description = newDescription;
+	}
+	
+	/**
+	 * Sets the start date and time of Task object
+	 * @param newStart sets the start date and time of Task object
+	 */
+	public void setStart(LocalDateTime newStart) {
+		start = newStart;
+	}
+	
+	/**
+	 * Sets the end date and time of Task object
+	 * @param newEnd sets the end date and time of Task object
+	 */
+	public void setEnd(LocalDateTime newEnd) {
+		end = newEnd;
+	}
+	
+	/**
+	 * Sets the task as boolean isCompleted
+	 */
+	public void setIsCompleted(boolean isCompleted){
+		this.isCompleted = isCompleted;
+	}
+	
+	/**
+	 * Returns true if task is overdue, false otherwise
+	 * @return boolean
+	 */
+	public boolean isOverdue(){
+		LocalDateTime now = LocalDateTime.now();
+		
+		if (end == null){
+			return false;
+		}
+		else{
+			return end.isBefore(now);
+		}
+	}
+	
+	/**
+	 * Returns true if task is a floating task, false otherwise
+	 * @return true if task is a floating task, false otherwise
+	 */
+	public boolean isFloatingTask() {
+		
+		if (start == null && end == null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns true if task is a deadline task, false otherwise
+	 * @return true if Task is a deadline task, false otherwise
+	 */
+	public boolean isDeadlineTask() {
+
+		if (start == null && end != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/** 
+	 * Returns true if task is a timed task, false otherwise
+	 * @return true if Task is a timed task, false otherwise
+	 */
+	public boolean isNormalTask() {
+	
+		if (start != null && end != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns true if deadline task's end field is today or if timed task's start field is today, false otherwise
+	 * @return true if deadline task's end field is today or if timed tasks's start field is today, false otherwise
+	 */
+	public boolean isTodayTask(){
+		if (this.isOverdue()){
+			return true;
+		}
+		
+		LocalDate now = LocalDate.now();
+		
+		if (this.isFloatingTask()){
+			return false;
+		}else if (this.isDeadlineTask()){
+			if (this.end.toLocalDate().equals(now)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		else if (this.isNormalTask()){
+			if (this.start.toLocalDate().equals(now)){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns true if task is not some day's task and not today's task, false otherwise
+	 * @return true if task is not some day's task and not today's task, false otherwise
+	 */
+	public boolean isUpcomingTask(){
+		if (this.isCompleted){
+			return false;
+		}
+		else if (this.isOverdue()){
+			return false;
+		}
+		else if (!this.isSomedayTask() && !this.isTodayTask()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns true if task is a floating task
+	 * @return true if task is a floating task
+	 */
+	public boolean isSomedayTask(){
+		if (this.isCompleted){
+			return false;
+		}
+		if (this.isFloatingTask()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	/**
+	 * Returns a String representation of this object
+	 * @returns each task with a specified format - floating task - "Description", Deadline Task - [end time] "Description" Timed task - [start time - end time] "Description
+	 *
+	 */
+	public String toString() {
+		String toPrint = EMPTY_STRING;
+		if (isFloatingTask()) {
+			toPrint = description;
+		} else if (isDeadlineTask()) {
+			toPrint = String.format(DEADLINE_TASK, getEndTime().toString(),
+					description);
+		} else if (isNormalTask()) {
+			toPrint = String.format(NORMAL_TASK, getStartTime().toString(),
+					getEndTime().toString(), description);
+		}
+
+		return toPrint;
+	}
+	
+	/**
+	 * Returns true if some other object is "equal to" this one, false otherwise
+	 * @return true if some other object is "equal to" this one, false otherwise
+	 */
+	public boolean equals(Object obj) {
+	    boolean isNullObj = (obj == null);
+		
+		if (isNullObj) {
+	        return false;
+	    }
+		
+		assert !isNullObj;
+		
+	    if (getClass() != obj.getClass()) {
+	        return false;
+	    }
+	    
+	    assert this.getClass() == obj.getClass();
+	    
+	    
+	    final Task other = (Task) obj;
+	    
+	    if (this.isCompleted == other.isCompleted){
+	    
+	    if (this.isFloatingTask() && other.isFloatingTask()){
+	    	return this.getDescription().equals(other.getDescription());
+	    }
+	    else if (this.isDeadlineTask() && other.isDeadlineTask()){
+	    	return (this.getDescription().equals(other.getDescription()) && this.getEnd().equals(other.getEnd()));
+	    }
+	    else if (this.isNormalTask() && other.isNormalTask()){
+	    	return (this.getDescription().equals(other.getDescription()) && this.getStart().equals(other.getStart()) && this.getEnd().equals(other.getEnd()));
+	    }
+	    
+	    }
+	    else{
+	    	return false;
+	    }
+	    return false;
+	}
+	
+	// End of segment: C:\Users\Ganga\workspace\main\src\Task.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\TaskDeserializer.java
+	 */
+
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+public class TaskDeserializer implements JsonDeserializer<Task> {
+
+	private static final String STRING_COMPLETED = "Completed";
+	private static final String STRING_END = "End";
+	private static final String STRING_START = "Start";
+	private static final String STRING_DESCRIPTION = "Description";
+	private static final String EMPTY_STRING = "";
+
+	@Override
+	public Task deserialize(final JsonElement json, final Type typeOfT,
+			final JsonDeserializationContext context) {
+		DateTimeFormatter formatter = DateTimeFormatter
+				.ofPattern("dd-MM-yyyy HH:mm");
+		if (json == null) {
+			return null;
+		}
+
+		JsonObject jsonObject = json.getAsJsonObject();
+		String description = jsonObject.get(STRING_DESCRIPTION).getAsString();
+		String start = jsonObject.get(STRING_START).getAsString();
+		String end = jsonObject.get(STRING_END).getAsString();
+		boolean completed = jsonObject.get(STRING_COMPLETED).getAsBoolean();
+		final Task task = new Task();
+		if (!description.equals(EMPTY_STRING)){
+		task.setDescription(description);
+		}
+		if (!start.equals(EMPTY_STRING)) {
+			task.setStart(LocalDateTime.parse(start, formatter));
+		}
+		if (!end.equals(EMPTY_STRING)) {
+			task.setEnd(LocalDateTime.parse(end, formatter));
+		}
+		task.setIsCompleted(completed);
+
+		return task;
+	}
+}
+	// End of segment: C:\Users\Ganga\workspace\main\src\TaskDeserializer.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\TaskSerializer.java
+	 */
+
+
+import java.lang.reflect.Type;
+import java.time.format.DateTimeFormatter;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+
+public class TaskSerializer implements JsonSerializer<Task> {
+	private static final String STRING_COMPLETED = "Completed";
+	private static final String STRING_END = "End";
+	private static final String STRING_START = "Start";
+	private static final String STRING_DESCRIPTION = "Description";
+	private static final String EMPTY_STRING = "";
+
+	public JsonElement serialize(final Task task, final Type type,
+			final JsonSerializationContext context) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+		
+		JsonObject result = new JsonObject();
+		result.add(STRING_DESCRIPTION, new JsonPrimitive(task.getDescription()));
+		
+		if (task.getStart() == null){
+			result.add(STRING_START, new JsonPrimitive(EMPTY_STRING));
+		}
+		else{
+		result.add(STRING_START, new JsonPrimitive(task.getStart().format(formatter).toString()));
+		}
+		
+		if (task.getEnd() == null){
+			result.add(STRING_END, new JsonPrimitive(EMPTY_STRING));
+		}
+		else{
+		result.add(STRING_END, new JsonPrimitive(task.getEnd().format(formatter).toString()));
+		}
+		result.add(STRING_COMPLETED, new JsonPrimitive(task.getIsCompleted()));
+		
+		return result;
+	}
+}
+	// End of segment: C:\Users\Ganga\workspace\main\src\TaskSerializer.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\TaskTest.java
+	 */
+
+/**
+ * Assumption: time and date validity are handled by OneTagParser class
+ */
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDateTime;
+
+import org.junit.Before;
+import org.junit.Test;
+
+
+public class TaskTest {
+	
+	private static final String EMPTY_STRING = "";
+	private static final String MESSAGE_TEST_COMPLETED_TASK = "test completed task";
+	private static final String MESSAGE_TEST_TOMORROW_TASK = "test tomorrow task";
+	private static final String MESSAGE_TEST_TODAY_TASK = "test today task";
+	private static final String DATE_END_EARLY_TIMED_TASK = "2015-03-10T19:30";
+	private static final String DATE_END_EARLY_DEADLINE_TASK = "2015-03-10T21:30";
+	private static final String DATE_START_EARLY_TIMED_TASK = "2015-03-10T19:00";
+	private static final String MESSAGE_TEST_DEADLINE_TASK = "test deadline task";
+	private static final String MESSAGE_TEST_TIMED_TASK = "test timed task";
+	private static final String MESSAGE_TEST_FLOATING_TASK = "test floating task";
+	private static final String MESSAGE_TEST_FLOATING_TIMED_TASK = "test floating task with timed task";
+	private static final String MESSAGE_TEST_TIMED_DEADLINE_TASK = "test timed task with deadline task";
+	private static final String MESSAGE_TEST_DEADLINE_FLOATING_TASK = "test deadline task with floating task";
+	private static final String MESSAGE_TEST_EMPTY_TASK = "test task with empty description";
+	private static final String MESSAGE_TEST_NULL_TASK = "test null task";
+	private static final String TASK_GO_HIKING = "Go Hiking";
+	private static final String TASK_BUY_APPLE = "Buy apple";
+	private static final String TASK_BUY_ORANGE = "Buy orange";
+	private static final String TASK_GO_RUNNING = "Go running";
+	private static final String STRING_EARLY_TIMED_TASK = "[19:00 - 19:30] " + TASK_GO_RUNNING;
+	private static final String TASK_GO_HOME = "Go Home";
+	private static final String TASK_GO_RT = "Go RT";
+	private static final String STRING_EARLY_DEADLINE_TASK = "[21:30] " + TASK_GO_RT;
+	private static final String TASK_MOP_FLOOR = "Mop floor";
+	private static final int oneDay = 1;
+	private static final String EMPTY_SPACE_STRING = "　　" ;
+	
+	private Task floatingTask;
+	private Task dupFloatingTask;
+	private Task earlyTimedTask;
+	private Task lateTimedTask;
+	private Task dupLateTimedTask;
+	private Task earlyDeadlineTask;
+	private Task lateDeadlineTask;
+	private Task dupLateDeadlineTask;
+	private Task todayTask;
+	private Task tomorrowTask;
+	private Task completedFloatingTask;
+	private Task completedEarlyTimedTask;
+	private Task completedEarlyDeadlineTask;
+	private Task completedTodayTask;
+	private Task completedTomorrowTask;
+	private Task dupCompletedEarlyDeadlineTask;
+	private Task nullTask;
+	private Task emptyStringFloatingTask;
+	private LocalDateTime today;
+	private LocalDateTime tomorrow;
+	private Task nullReferenceTask = null;
+	private Task undefinedTask;
+	private Integer integer;
+
+	@Before
+	public void setUp() throws Exception {
+		today = LocalDateTime.now();
+		tomorrow = LocalDateTime.now().plusDays(oneDay);
+		todayTask = new Task(today, TASK_GO_HIKING);
+		tomorrowTask = new Task(tomorrow, TASK_BUY_APPLE);
+		floatingTask = new Task(TASK_BUY_ORANGE);
+		dupFloatingTask = new Task(TASK_BUY_ORANGE);
+		earlyTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 19, 0), LocalDateTime.of(2015, 3, 10, 19, 30), TASK_GO_RUNNING);
+		lateTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 20, 0), LocalDateTime.of(2015, 3, 10, 20, 30), TASK_GO_HOME);
+		dupLateTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 20, 0) ,LocalDateTime.of(2015, 3, 10, 20, 30), TASK_GO_HOME);
+		earlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
+		lateDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 22, 30), TASK_MOP_FLOOR);
+		dupLateDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 22, 30), TASK_MOP_FLOOR);
+		completedFloatingTask = new Task(TASK_BUY_ORANGE);
+		completedFloatingTask.setIsCompleted(true);
+		completedEarlyTimedTask = new Task(LocalDateTime.of(2015, 3, 10, 19, 0),LocalDateTime.of(2015, 3, 10, 19, 30), TASK_GO_RUNNING);
+		completedEarlyTimedTask.setIsCompleted(true);
+		completedEarlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
+		completedEarlyDeadlineTask.setIsCompleted(true);
+		completedTodayTask = new Task(today, TASK_GO_HIKING);
+		completedTodayTask.setIsCompleted(true);
+		completedTomorrowTask = new Task(tomorrow, TASK_BUY_APPLE);
+		completedTomorrowTask.setIsCompleted(true);
+		dupCompletedEarlyDeadlineTask = new Task(LocalDateTime.of(2015, 3, 10, 21, 30), TASK_GO_RT);
+		dupCompletedEarlyDeadlineTask.setIsCompleted(true);
+		nullTask = new Task();
+		emptyStringFloatingTask = new Task(EMPTY_SPACE_STRING);
+		undefinedTask = new Task();
+		undefinedTask.setStart(today);
+		undefinedTask.setDescription(TASK_GO_RT);
+		integer = new Integer(1);
+	}
+
+	@Test
+	public void testGetDescription() {
+		//test successful getting description
+		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getDescription(), TASK_BUY_ORANGE);
+		//test getting null description
+		assertEquals(MESSAGE_TEST_NULL_TASK, nullTask.getDescription(), null);
+		//test getting empty string description
+		assertEquals(MESSAGE_TEST_EMPTY_TASK, emptyStringFloatingTask.getDescription(), EMPTY_SPACE_STRING);
+	}
+	
+	@Test
+	public void testSetDescription(){
+		//test getting description after setting any normal string
+		floatingTask.setDescription(TASK_GO_HOME);
+		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getDescription(), TASK_GO_HOME);
+		
+		//test getting description after setting null string
+		floatingTask.setDescription(null);
+		assertEquals(MESSAGE_TEST_NULL_TASK, floatingTask.getDescription(), null);
+		
+		//test getting description after setting empty string
+		floatingTask.setDescription(EMPTY_SPACE_STRING);
+		assertEquals(MESSAGE_TEST_EMPTY_TASK, floatingTask.getDescription(), EMPTY_SPACE_STRING);
+		
+	}
+
+	@Test
+	public void testGetStart() {
+		// Equivalence partition of the 3 supported types of tasks
+		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getStart(), null);
+		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.getStart().toString(), DATE_START_EARLY_TIMED_TASK);
+		assertEquals(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.getStart(), null);
+	}
+	
+	@Test
+	public void testSetStart() {
+		//test successful setting of normal date time
+		nullTask.setStart(today);
+		assertEquals(nullTask.getStart(), today);
+		
+		//test setting of null for start date time
+		nullTask.setStart(null);
+		assertEquals(nullTask.getStart(), null);
+	}
+	
+	@Test
+	public void testSetEnd(){
+		//test successful setting normal date time
+		nullTask.setEnd(tomorrow);
+		assertEquals(nullTask.getEnd() , tomorrow);
+		
+		//test setting of null for end date time
+		nullTask.setEnd(null);
+		assertEquals(nullTask.getEnd(), null);
+		
+	}
+	
+	@Test
+	public void testGetEnd() {
+		// Equivalence partition of the 3 supported types of tasks
+		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.getEnd(), null);
+		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.getEnd().toString(), DATE_END_EARLY_TIMED_TASK);
+		assertEquals(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.getEnd().toString(),DATE_END_EARLY_DEADLINE_TASK);
+	}
+	
+	@Test
+	public void testGetIsCompleted(){
+		// Equivalence partition of completed and incomplete tasks
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, floatingTask.getIsCompleted());
+		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedEarlyDeadlineTask.getIsCompleted());
+	}
+	
+	@Test
+	public void testIsFloatingTask() {
+		// Equivalence partition of 3 diferent types of tasks
+		assertTrue(MESSAGE_TEST_FLOATING_TASK, floatingTask.isFloatingTask());
+		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isFloatingTask());
+		assertFalse(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isFloatingTask());
+		// Check if completed task affects return result
+		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedFloatingTask.isFloatingTask());
+
+	}
+
+	@Test
+	public void testIsDeadlineTask() {
+		// Equivalence partition of 3 diferent types of tasks
+		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isDeadlineTask());
+		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isDeadlineTask());
+		assertTrue(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isDeadlineTask());
+		// Check if completed task affects return result
+		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedEarlyDeadlineTask.isDeadlineTask());
+	}
+
+	@Test
+	public void testIsNormalTask() {
+		// Equivalence partition of 3 diferent types of tasks
+		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isNormalTask());
+		assertTrue(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isNormalTask());
+		assertFalse(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isNormalTask());
+		// Check if completed task affects return result
+		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedEarlyTimedTask.isNormalTask());
+	}
+	
+	@Test
+	public void testIsTodayTask(){
+		// Equivalence partition of 3 different types of task for today
+		assertTrue(MESSAGE_TEST_TODAY_TASK, todayTask.isTodayTask());
+		earlyDeadlineTask.setEnd(today);
+		assertTrue(MESSAGE_TEST_TODAY_TASK, earlyDeadlineTask.isTodayTask());
+		assertTrue(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.isTodayTask());
+		
+		// Check if tasks of any other time will fail
+		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isTodayTask());
+		assertFalse(MESSAGE_TEST_TOMORROW_TASK, tomorrowTask.isTodayTask());
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTomorrowTask.isTodayTask());
+		
+		// Overdue Task appears under Today
+		assertTrue(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isTodayTask());
+		
+		// check against null task
+		assertFalse(MESSAGE_TEST_NULL_TASK, nullTask.isTodayTask());
+		
+		// check against undefined task
+		assertFalse(undefinedTask.isTodayTask());
+	}
+	
+	@Test
+	public void testIsSomedayTask(){
+		//Equivalence partition of someday task and not someday task
+		assertTrue(MESSAGE_TEST_FLOATING_TASK, floatingTask.isSomedayTask());
+		
+		//Check if tasks of any other type will return the false
+		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.isSomedayTask());
+		assertFalse(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.isSomedayTask());
+		assertFalse(MESSAGE_TEST_TODAY_TASK, todayTask.isSomedayTask());
+		assertFalse(MESSAGE_TEST_TOMORROW_TASK, tomorrowTask.isSomedayTask());
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.isSomedayTask());
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTomorrowTask.isSomedayTask());
+	}
+	
+	@Test
+	public void testIsUpcomingTask(){
+		assertFalse(MESSAGE_TEST_FLOATING_TASK, floatingTask.isUpcomingTask());
+		assertFalse(MESSAGE_TEST_TODAY_TASK, todayTask.isUpcomingTask());
+		assertTrue(MESSAGE_TEST_TOMORROW_TASK, tomorrowTask.isUpcomingTask());
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.isUpcomingTask());
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTomorrowTask.isUpcomingTask());
+		
+	}
+	
+	@Test
+	public void testToString() {
+		// Different format for the 3 different types of task
+		assertEquals(MESSAGE_TEST_FLOATING_TASK, floatingTask.toString(), TASK_BUY_ORANGE);
+		assertEquals(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.toString(), STRING_EARLY_TIMED_TASK);
+		assertEquals(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.toString(), STRING_EARLY_DEADLINE_TASK);
+		
+		// Task with only start time - not used in our system
+		assertEquals(undefinedTask.toString(), EMPTY_STRING);
+	}
+
+	@Test
+	public void testEqualsObject() {
+		assertFalse(MESSAGE_TEST_FLOATING_TIMED_TASK, floatingTask.equals(earlyTimedTask));
+		assertFalse(MESSAGE_TEST_TIMED_DEADLINE_TASK, earlyTimedTask.equals(earlyDeadlineTask));
+		assertFalse(MESSAGE_TEST_DEADLINE_FLOATING_TASK, earlyDeadlineTask.equals(floatingTask));
+		assertTrue(MESSAGE_TEST_FLOATING_TASK, floatingTask.equals(floatingTask));
+		assertTrue(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.equals(earlyDeadlineTask));
+		assertFalse(MESSAGE_TEST_DEADLINE_TASK, earlyDeadlineTask.equals(lateDeadlineTask));
+		assertTrue(MESSAGE_TEST_TIMED_TASK, lateTimedTask.equals(lateTimedTask));
+		assertFalse(MESSAGE_TEST_TIMED_TASK, earlyTimedTask.equals(lateTimedTask));
+		assertTrue(MESSAGE_TEST_TIMED_TASK, dupLateTimedTask.equals(lateTimedTask));
+		assertTrue(MESSAGE_TEST_DEADLINE_TASK, dupLateDeadlineTask.equals(lateDeadlineTask));
+		assertTrue(MESSAGE_TEST_FLOATING_TASK, dupFloatingTask.equals(floatingTask));
+		//Additional completed task because a completed task is not equals to a non completed task with the same description and time
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedEarlyDeadlineTask.equals(earlyDeadlineTask));
+		assertFalse(MESSAGE_TEST_COMPLETED_TASK, completedTodayTask.equals(todayTask));
+		assertTrue(MESSAGE_TEST_COMPLETED_TASK, dupCompletedEarlyDeadlineTask.equals(completedEarlyDeadlineTask));
+		
+		//test something equals null reference Task
+		assertFalse(floatingTask.equals(nullReferenceTask));
+		
+		//test whether other class equals Task class
+		assertFalse(floatingTask.equals(integer));
+	}
+	
+	/*
+	@Test
+	public void testUpdate(){
+		//Timed task updating
+		earlyTimedTask.update(lateTimedTask);
+		assertTrue(earlyTimedTask.equals(lateTimedTask));
+		
+		//null task updating does not do anything
+		floatingTask.update(nullTask);
+		assertTrue(floatingTask.equals(floatingTask));
+		
+		
+		
+	}
+	*/
+	
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\TaskTest.java
+
+
+
+
+

@@ -1,0 +1,3396 @@
+//@author: a0112715r
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\CompletedView.java
+	 */
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import javax.swing.text.BadLocationException;
+
+public class CompletedView extends SingleView implements View {
+	private StringBuilder output = new StringBuilder();
+	private DateTimeFormatter formatter = DateTimeFormatter
+			.ofPattern("dd-MM-yyyy");
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
+			Locale.US);
+	private String taskDes;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private int taskLimit = 10;
+
+	@Override
+	public void update() {
+		Data data = Data.getInstance();
+
+		setList(data.getCompleted());
+	}
+
+	/**
+	 * Gets the information of each task
+	 * 
+	 * @param task
+	 */
+	private void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if (!task.isFloatingTask()) {
+			if (!task.isDeadlineTask()) {
+				startDate = task.getStart().toLocalDate();
+				startTime = task.getStart().toLocalTime();
+			}
+			endDate = task.getEnd().toLocalDate();
+			endTime = task.getEnd().toLocalTime();
+		}
+	}
+
+	/**
+	 * Gets all completed tasks and sends for formatting according to task type
+	 * 
+	 */
+	private void getCompletedTasks() throws BadLocationException {
+		int i=0;
+		for (Task task : getList()) {
+			if (i < taskLimit) {
+				i++;
+				getTaskInfo(task);
+				String taskNo = "     " + i + ".   ";
+				if (task.isDeadlineTask()) {
+					formatDeadlineTask(taskNo);
+				} else {
+					formatTimedAndFloatingTasks(task, taskNo);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Formats the deadline tasks
+	 * 
+	 * @param task
+	 *            ,taskNo
+	 */
+	private void formatDeadlineTask(String taskNo) throws BadLocationException {
+		String tasks = taskDes;
+		String endDateTime = formatEndDateTime();
+		formatTasks(taskNo, endDateTime, tasks);
+	}
+
+	/**
+	 * Formats the timed and floating tasks
+	 * 
+	 * @param task
+	 *            ,taskNo
+	 */
+	private void formatTimedAndFloatingTasks(Task task, String taskNo)
+			throws BadLocationException {
+		String tasks = taskDes;
+		String dateToDisplay = "---";
+		String timeToDisplay = "---";
+
+		if (!task.isFloatingTask()) {
+			dateToDisplay = formatStartEndDate();
+			timeToDisplay = formatStartEndTime();
+		}
+		String dateTime = dateToDisplay + timeToDisplay;
+		formatTasks(taskNo, dateTime, tasks);
+
+	}
+
+	private void formatTasks(String taskNo, String dateTime, String tasks)
+			throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#01A9DB", dateTime, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	private String formatEndDateTime() {
+		String endDateToDisplay = endDate.format(formatter);
+		String endTimeToDisplay = endTime.format(formatTime);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String endDateTime = "<p align=\"left\">" + endDateToDisplay + "</p>"
+				+ "<p align=\"left\"><font color=\"#1F3D7A\">"
+				+ endTimeToDisplay + "</font></p>";
+		return endDateTime;
+	}
+
+	private String formatStartEndDate() {
+		String startDateToDisplay = startDate.format(formatter);
+		startDateToDisplay = startDateToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+
+		String endDateToDisplay = endDate.format(formatter);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+
+		String dateToDisplay = "<p align=\"left\">" + startDateToDisplay
+				+ " - " + endDateToDisplay + "</p>";
+		;
+		return dateToDisplay;
+
+	}
+
+	private String formatStartEndTime() {
+		String startTimeToDisplay = startTime.format(formatTime);
+		startTimeToDisplay = startTimeToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		startTimeToDisplay = startTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String endTimeToDisplay = endTime.format(formatTime);
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+		String timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"
+				+ startTimeToDisplay + " - " + endTimeToDisplay + "</font></p>";
+
+		return timeToDisplay;
+	}
+
+	/**
+	 * Appends to Stringbuilder output
+	 * 
+	 * @param textColour
+	 *            ,text,row
+	 */
+	public void appendTasks(String textColour, String text, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
+					+ textColour + "\"><b>" + text + "</b></font></td>");
+		} else if (row == 4) {
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		} else if (row == 5) {
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		}
+
+	}
+
+	/**
+	 * Table created using Html code to append to JTextpane
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String show() throws BadLocationException {
+		output = new StringBuilder();
+		// Display display = Display.getInstance();
+		// page = display.getPaging();
+		output.append("<html>");
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Completed</b></p></font></td></tr>");
+		getCompletedTasks();
+		output.append("</table>");
+
+		output.append("</html>");
+
+		return output.toString();
+
+	}
+
+	/**
+	 * This is used for Testing
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getCompletedList() {
+		ArrayList<Task> completedList = data.getCompleted();
+		return completedList;
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\CompletedView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\EditCmd.java
+	 */
+
+	private String getMessage(){
+		String message = "";
+		
+		switch(viewIndex){
+			case 1 :
+				message = String.format(EDIT_TASK_TO_SOMEDAY_MESSAGE,description,getTaskType(task));
+				break;
+			case 2 :
+				message = String.format(EDIT_DES_MESSAGE,task.getDescription(),description);
+				break;
+			case 3 :
+				message = String.format(EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE,description,task.getDescription(),getTaskType(task));
+				break;
+			case 4 :
+				message = String.format(EDIT_START_MESSAGE,task.getDescription(),task.getStart(),start);
+				break;
+			case 5 :
+				message = String.format(EDIT_END_MESSAGE,task.getDescription(),task.getEnd());
+				break;
+			case 6 :
+				message = String.format(EDIT_TIME_MESSAGE,task.getDescription(),task.getStart(),task.getEnd());
+				break;
+			case 7 :
+				message = String.format(EDIT_DES_START_MESSAGE,description,task.getDescription(),task.getStart());
+				break;				
+			case 8 :
+				message = String.format(EDIT_DES_END_MESSAGE,description,task.getDescription(),task.getEnd());
+				break;
+			case 9 :
+				message = String.format(EDIT_DES_AND_DATETIME_MESSAGE,description,task.getDescription(),task.getStart(),task.getEnd());
+				break;
+		}
+		
+		return message;
+	}
+	
+	// End of segment: C:\Users\Ganga\workspace\main\src\EditCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\EditCmd.java
+	 */
+
+	private String getUndoMessage(){
+		String message = "";
+		
+		switch(viewIndex){
+			case 1 :
+				message = String.format(UNDO_EDIT_TASK_TO_SOMEDAY_MESSAGE,description,getTaskType(task));
+				break;
+			case 2 :
+				message = String.format(UNDO_EDIT_DES_MESSAGE,task.getDescription(),description);
+				break;
+			case 3 :
+				message = String.format(UNDO_EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE,description,task.getDescription(),getTaskType(task));
+				break;
+			case 4 :
+				message = String.format(UNDO_EDIT_START_MESSAGE,task.getDescription(),task.getStart(),start);
+				break;
+			case 5 :
+				message = String.format(UNDO_EDIT_END_MESSAGE,task.getDescription(),task.getEnd());
+				break;
+			case 6 :
+				message = String.format(UNDO_EDIT_TIME_MESSAGE,task.getDescription(),task.getStart(),task.getEnd());
+				break;
+			case 7 :
+				message = String.format(UNDO_EDIT_DES_START_MESSAGE,description,task.getDescription(),task.getStart());
+				break;				
+			case 8 :
+				message = String.format(UNDO_EDIT_DES_END_MESSAGE,description,task.getDescription(),task.getEnd());
+				break;
+			case 9 :
+				message = String.format(UNDO_EDIT_DES_AND_DATETIME_MESSAGE,description,task.getDescription(),task.getStart(),task.getEnd());
+				break;
+		}
+		
+		return message;
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\EditCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.swing.text.BadLocationException;
+
+public class HomeView implements View {
+	private ArrayList<Task> today;
+	private ArrayList<Task> upcoming;
+	private ArrayList<Task> someday;
+	private int i = 0;
+	private String taskDes;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+			"EEE, dd MMM yyyy", Locale.US);
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
+			Locale.US);
+	private StringBuilder output = new StringBuilder();
+	private static int todayLimit = 6;
+	private static int upcomingLimit = 8;
+	private static int somedayLimit = 10;
+	Display display;
+
+	/**
+	 * Updates the view with the latest list
+	 */
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	/**
+	 * Gets the task information and initializes the variables
+	 * 
+	 * @param task
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if (!task.isFloatingTask()) {
+			if (!task.isDeadlineTask()) {
+				startDate = task.getStart().toLocalDate();
+				startTime = task.getStart().toLocalTime();
+			}
+			endDate = task.getEnd().toLocalDate();
+			endTime = task.getEnd().toLocalTime();
+
+		}
+	}
+
+	/**
+	 * Gets the list of tasks under today and sends it for formatting
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void getToday() throws BadLocationException {
+		i = 0;
+		for (Task task : today) {
+			formatTasksForToday(task);
+		}
+	}
+
+	/**
+	 * Sends the different types of tasks under today for formatting
+	 * 
+	 * @param task
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatTasksForToday(Task task) throws BadLocationException {
+		if (i < todayLimit) {
+			i++;
+			getTaskInfo(task);
+			String taskNo = "" + i + ".   ";
+			if (task.isDeadlineTask()) {
+				formatDeadlineTaskToday(task, taskNo);
+
+			} else {
+				formatTimedTaskToday(task, taskNo);
+
+			}
+		}
+	}
+
+	/**
+	 * Formats timed task under today category
+	 * 
+	 * @param task
+	 *            , taskNo : the number of the task
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatTimedTaskToday(Task task, String taskNo)
+			throws BadLocationException {
+
+		String tasks = taskDes;
+		String startTimeFormatted = startTime.format(formatTime)
+				.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+		String endTimeFormatted = endTime.format(formatTime)
+				.replace("AM", "am").replace("PM", "pm").replace(".00", "");
+		String startEndTime = startTimeFormatted + "-" + endTimeFormatted;
+
+		startEndTime = startEndTime.toString().replaceAll("\\[", "")
+				.replaceAll("\\]", " -");
+		boolean isCommandExecuted = (display.getCommand().equals(
+				COMMAND_TYPE.DELETE)
+				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+				.getCommand().equals(COMMAND_TYPE.EDIT));
+		
+//		if (isCommandExecuted && i == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNo, startEndTime, tasks);
+//		} else 
+		if (task.isOverdue()) {
+			formatOverdueTasks(taskNo, startEndTime, tasks );
+		} else {
+			formatTasks(taskNo, startEndTime, tasks);
+		}
+
+	}
+
+	/**
+	 * Gets the list of tasks from file, puts them into an ArrayList
+	 * 
+	 * @param task
+	 *            , taskNo
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatDeadlineTaskToday(Task task, String taskNo)
+			throws BadLocationException {
+		String endTimeFormatted = "";
+		String tasks = taskDes;
+		endTimeFormatted = endTime.format(formatTime).replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		endTimeFormatted = endTimeFormatted.toString().replaceAll("\\[", "")
+				.replaceAll("\\]", " -");
+		
+//		boolean isCommandExecuted = (display.getCommand().equals(
+//				COMMAND_TYPE.DELETE)
+//				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//				.getCommand().equals(COMMAND_TYPE.EDIT));
+//		
+//		if (isCommandExecuted && i == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNo, endTimeFormatted, tasks);
+//		} else 
+			if (task.isOverdue()) {
+			formatOverdueTasks(taskNo, endTimeFormatted,tasks);
+		} else {
+			formatTasks(taskNo, endTimeFormatted, tasks);
+		}
+
+	}
+
+//	private void formatTaskAccdCommand(String taskNo, String endTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+//			formatDeletedTask(taskNo, endTimeToDisplay, tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+//			formatAddTask(taskNo, endTimeToDisplay, tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+//			formatDoneTask(taskNo, endTimeToDisplay, tasks);
+//		}
+//		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+//			formatEditTask(taskNo, endTimeToDisplay, tasks);
+//		}
+//		
+//		
+//	}
+//	private void formatDeletedTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + dateTimeToDisplay + "</strike>", 3);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+//	}
+//
+//	private void formatEditTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) {
+//
+//		
+//	}
+//
+//	private void formatDoneTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300",  dateTimeToDisplay, 3);
+//		appendTasks("#00A300", tasks , 4);
+//	}
+//
+//	private void formatAddTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C",  "<font size=\"4\">"+dateTimeToDisplay+"</font>", 3);
+//		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 4);
+//		
+//	}
+	/**
+	 * Gets the list of upcoming tasks and sends them for formatting
+	 */
+	private void getUpcoming() throws BadLocationException {
+
+		for (Task task : upcoming) {
+			if (i < upcomingLimit) {
+				getTasksForUpcoming(task);
+			}
+		}
+	}
+
+	/**
+	 * Different types of tasks are sent for formatting
+	 * 
+	 * @param task
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void getTasksForUpcoming(Task task) throws BadLocationException {
+		i++;
+		getTaskInfo(task);
+		String taskNo = "     " + i + ".   ";
+		if (task.isDeadlineTask()) {
+			formatDeadlineTaskUpcoming(task, taskNo);
+		}
+
+		else {
+			formatTimedTaskUpcoming(task, taskNo);
+		}
+
+	}
+
+	/**
+	 * Formats Timed Tasks under the upcoming category
+	 * 
+	 * @param task
+	 *            , taskNo
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatTimedTaskUpcoming(Task task, String taskNo)
+			throws BadLocationException {
+		String tasks = taskDes;
+		String startDateFormatted = "";
+		startDateFormatted = startDate.format(formatter);
+		startDateFormatted = startDateFormatted.replaceAll("\\[", "")
+				.replaceAll("\\]", "-");
+//		boolean isCommandExecuted = (display.getCommand().equals(
+//				COMMAND_TYPE.DELETE)
+//				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//				.getCommand().equals(COMMAND_TYPE.EDIT));
+//		
+//		if (isCommandExecuted && i == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNo, startDateFormatted, tasks);
+//		} else{
+//		
+//		}
+	formatTasks(taskNo, startDateFormatted, tasks);
+	}
+
+	/**
+	 * Formats deadline tasks under upcoming category
+	 * 
+	 * @param task
+	 *            , taskNo
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatDeadlineTaskUpcoming(Task task, String taskNo)
+			throws BadLocationException {
+		String tasks = taskDes;
+		String endDateFormatted = "";
+		endDateFormatted = endDate.format(formatter);
+		endDateFormatted = endDateFormatted.replaceAll("\\[", "").replaceAll(
+				"\\]", "-");
+
+//		boolean isCommandExecuted = (display.getCommand().equals(
+//				COMMAND_TYPE.DELETE)
+//				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//				.getCommand().equals(COMMAND_TYPE.EDIT));
+//		
+//		if (isCommandExecuted && i == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNo, endDateFormatted, tasks);
+//		} else {
+//		
+//		}
+		formatTasks(taskNo, endDateFormatted, tasks);
+	}
+
+	/**
+	 * Format Non-overdue tasks
+	 * 
+	 * @param taskNo
+	 *            , dateTimeFormatted, tasks
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatTasks(String taskNo, String dateTimeFormatted,
+			String tasks) throws BadLocationException {
+
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#01A9DB", dateTimeFormatted, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	/**
+	 * Format overdue tasks
+	 * 
+	 * @param endTimeFormatted2
+	 * @param
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatOverdueTasks(String taskNo, 
+			String endTimeFormatted, String tasks) throws BadLocationException {
+		String endDateTimeFormatted = endTimeFormatted;
+
+		if (!(endDate.equals(LocalDate.now()))) {
+			endDateTimeFormatted = endDate.format(formatter);
+			endDateTimeFormatted = endDateTimeFormatted.replaceAll("\\[", "")
+					.replaceAll("\\]", "-");
+		}
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "!", 2);
+		appendTasks("#01A9DB", endDateTimeFormatted, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	/**
+	 * Gets the list of tasks from someday list and sends them for formatting
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void getSomeday() throws BadLocationException {
+		for (Task task : someday) {
+			if (i < somedayLimit) {
+				i++;
+				String taskNo = "     " + i + ".   ";
+				String tasks = task.toString() + "\n";
+				boolean isCommandExecuted = (display.getCommand().equals(
+						COMMAND_TYPE.DELETE)
+						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+						.getCommand().equals(COMMAND_TYPE.EDIT));
+				
+				if (isCommandExecuted && i == display.getViewIndex()) {
+					formatTaskAccdCommandSomeday(taskNo, tasks);
+				} else {
+				formatSomedayTasks(taskNo, tasks);
+				}
+			}
+		}
+	}
+
+	private void formatTaskAccdCommandSomeday(String taskNo, String tasks) throws BadLocationException {
+		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+			formatDeletedTaskSomeday(taskNo,tasks);
+		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+			formatAddTaskSomeday(taskNo,tasks);
+		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+			formatDoneTaskSomeday(taskNo,tasks);
+		}
+		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+			formatEditTaskSomeday(taskNo,tasks);
+		}		
+	}
+
+	private void formatDeletedTaskSomeday(String taskNo, String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#848484", "<strike>" + tasks + "</strike>", 3);
+		
+	}
+	
+	private void formatEditTaskSomeday(String taskNo, String tasks) {
+
+		
+	}
+
+	private void formatDoneTaskSomeday(String taskNo, String tasks) throws BadLocationException {
+
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#00A300", tasks , 3);
+	}
+
+	private void formatAddTaskSomeday(String taskNo,String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "", 2);
+		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 3);
+		
+	}
+
+	/**
+	 * Format tasks under someday
+	 * 
+	 * @param taskNo
+	 *            , tasks
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	private void formatSomedayTasks(String taskNo, String tasks)
+			throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#0A1B2A", tasks, 5);
+
+	}
+
+	/**
+	 * Gets the list of tasks from file, puts them into an ArrayList
+	 * 
+	 * @param textColour
+	 *            , text, row : row number for table
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	public void appendTasks(String textColour, String text, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 4) {
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		} else if (row == 5) {
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		}
+
+	}
+
+	/**
+	 * Forms the html to show on the JTextPane in UserInterface class
+	 * 
+	 * @return String
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	public String show() throws BadLocationException {
+		output = new StringBuilder();
+		display = Display.getInstance();
+		output.append("<html>");
+		output.append("<table  STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
+		getToday();
+		output.append("</table>");
+
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
+		getUpcoming();
+		output.append("</table>");
+
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Someday </b></p></font></td></tr>");
+		getSomeday();
+		output.append("</table>");
+
+		output.append("</html>");
+
+		return output.toString();
+
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\OneTagTest.java
+	 */
+
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+
+
+public class OneTagTest {
+	
+
+	private String addTodayTask1 = "add Submit developer guide by 10am";
+	private String addTodayTask2 = "add Lecture from 11am to 1pm";
+	private String addTodayTask3 = "add Swimming from 3pm to 4pm";
+	
+	private String addUpcomingTask1 = "add Birthday celebration from 06 July 2pm to 06 July 7pm";
+	private String addUpcomingTask2 = "add Holiday with Family from 08 June 6pm to 10 June 10am";
+	
+	private String addFloatingTask1 = "add Learn French";
+	private String addFloatingTask2 = "add Read \"The Great Gatsby\"";
+	
+	private String deleteTask1 = "Delete 1";
+	
+	private String deleteTask3 = "Delete 3";
+	private String deleteTask4 = "Delete 4";
+	
+	private String doneTask1 = "Done 2";
+	private String doneTask3 = "Done 3";
+	private String editTask1 = "Edit 1 by 1pm";
+	private String editTask2 = "Edit 2 CS2103T Lecture";
+	private String editTask3 = "edit 3 Swimming at NUS from 6pm to 8pm";
+	private String undo = "undo";
+	
+	private String keyword = "report";
+	
+	private String addSearchTask1 = "add Submit report by 11pm\"";
+	private String addSearchTask2 = "add Write section 1 to section 3 of report from 19 June 3pm to 20 June 5pm\"";
+	private String addSearchTask3 = "add Edit the report";
+
+	@Before
+	public void beforeTesting(){
+		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
+		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
+	}
+	
+	@After
+	public void clearAfterTesting() throws InterruptedException{
+		UserInterface UI = UserInterface.getInstance();
+		assertNotNull(UI);
+		UI.executeInterface();
+		UI.initialize();
+		
+		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
+		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
+		
+		
+	}
+	
+	//testing the adding of different types of tasks. i.e.timed task, deadline task, floating tasks
+	@Test
+	public void addTask() throws BadLocationException, InterruptedException {
+		UserInterface UI = UserInterface.getInstance();
+		assertNotNull(UI);
+		UI.executeInterface();
+		UI.initialize();
+		
+		JTextPane input = UserInterface.commandFromUser;
+		assertNotNull(input);
+		input.setText(addTodayTask1);
+		UI.setCommand();
+		
+		input = UserInterface.commandFromUser;
+		assertNotNull(input);
+		input.setText(addTodayTask2);
+		UI.setCommand();
+		
+		input = UserInterface.commandFromUser;
+		assertNotNull(input);
+		input.setText(addUpcomingTask1);
+		UI.setCommand();
+			
+		input = UserInterface.commandFromUser;
+		assertNotNull(input);
+		input.setText(addUpcomingTask2);	
+		UI.setCommand();
+		
+		input = UserInterface.commandFromUser;
+		assertNotNull(input);
+		input.setText(addFloatingTask1);	
+		UI.setCommand();
+		
+		input = UserInterface.commandFromUser;
+		assertNotNull(input);
+		input.setText(addFloatingTask2);
+		UI.setCommand();
+		
+		
+		HomeView home = new HomeView();
+		String actualResult = home.getList().toString();
+		String expectedResult = "[[10:00] Submit developer guide , [11:00 - 13:00] Lecture , [18:00 - 10:00] Holiday with Family , [14:00 - 19:00] Birthday celebration , Learn French , Read \"The Great Gatsby\" ]";
+		assertEquals(actualResult,expectedResult);
+		
+		//clear the tasks from file for next testing
+		for(int i =0; i<6; i++){
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(deleteTask1);
+			UI.setCommand();
+		}	
+	}
+	
+	//testing deleting tasks
+		@Test
+		public void deleteTask() throws BadLocationException, InterruptedException {
+			UserInterface UI = UserInterface.getInstance();
+			assertNotNull(UI);
+			UI.executeInterface();
+			UI.initialize();
+			
+			JTextPane input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask1);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask2);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask1);
+			UI.setCommand();
+				
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask2);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask1);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask2);
+			UI.setCommand();
+			
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(deleteTask1);
+			UI.setCommand();
+			HomeView home = new HomeView();
+			String actualResult = home.getList().toString();
+			String expectedResult = "[[11:00 - 13:00] Lecture , [18:00 - 10:00] Holiday with Family , [14:00 - 19:00] Birthday celebration , Learn French , Read \"The Great Gatsby\" ]";
+			assertEquals(actualResult,expectedResult);
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(deleteTask3);
+			UI.setCommand();
+			home = new HomeView();
+			actualResult = home.getList().toString();
+			expectedResult = "[[11:00 - 13:00] Lecture , [18:00 - 10:00] Holiday with Family , Learn French , Read \"The Great Gatsby\" ]";
+			assertEquals(actualResult,expectedResult);
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(deleteTask4);
+			UI.setCommand();
+			home = new HomeView();
+			actualResult = home.getList().toString();
+			expectedResult = "[[11:00 - 13:00] Lecture , [18:00 - 10:00] Holiday with Family , Learn French ]";
+			assertEquals(actualResult,expectedResult);
+			
+			
+			//clear the tasks from file for next testing
+			for(int i =0; i<6; i++){
+				input = UserInterface.commandFromUser;
+				assertNotNull(input);
+				input.setText(deleteTask1);
+				UI.setCommand();
+			}	
+		}
+		
+//		testing marking task as done
+		@Test
+		public void markTask() throws BadLocationException, InterruptedException {
+			UserInterface UI = UserInterface.getInstance();
+			Display display = Display.getInstance();
+			assertNotNull(UI);
+			UI.executeInterface();
+			UI.initialize();
+			
+			JTextPane input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask1);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask2);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask1);
+			UI.setCommand();
+				
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask2);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask1);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask2);
+			UI.setCommand();
+			
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(doneTask1);
+			UI.setCommand();
+			CompletedView completed = new CompletedView();
+			String actualResult = completed.getCompletedList().toString();
+			String expectedResult = "[[11:00 - 13:00] Lecture ]";
+			assertEquals(actualResult,expectedResult);
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(doneTask3);
+			UI.setCommand();
+			display.getView().update();
+			completed = new CompletedView();
+			actualResult = completed.getCompletedList().toString();
+			expectedResult = "[[11:00 - 13:00] Lecture , [14:00 - 19:00] Birthday celebration ]";
+			assertEquals(actualResult,expectedResult);
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(doneTask3);
+			UI.setCommand();
+			display.getView().update();
+			completed = new CompletedView();
+			actualResult = completed.getCompletedList().toString();
+			expectedResult = "[[11:00 - 13:00] Lecture , [14:00 - 19:00] Birthday celebration , Learn French ]";
+			assertEquals(actualResult,expectedResult);
+			
+			//clear the tasks from file for next testing
+			for(int i =0; i<6; i++){
+				input = UserInterface.commandFromUser;
+				assertNotNull(input);
+				input.setText(deleteTask1);
+				UI.setCommand();
+			}	
+		}
+		
+//		search for the keyword "report"
+		@Test
+		public void searchTask() throws BadLocationException, InterruptedException {
+			UserInterface UI = UserInterface.getInstance();
+			assertNotNull(UI);
+			UI.executeInterface();
+			UI.initialize();
+			
+			JTextPane input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask1);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask1);
+			UI.setCommand();	
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask1);	
+			UI.setCommand();
+
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addSearchTask1);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addSearchTask2);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addSearchTask3);
+			UI.setCommand();
+			
+			SearchView search = new SearchView(keyword);		
+			String actualResult = search.getList().toString();
+			String expectedResult = "[[23:00] Submit report , [15:00 - 17:00] Write section 1 to section 3 of report , Edit the report ]";
+			assertEquals(actualResult,expectedResult);
+			
+			//clear the tasks from file for next testing
+			for(int i =0; i<10; i++){
+				input = UserInterface.commandFromUser;
+				assertNotNull(input);
+				input.setText(deleteTask1);
+				UI.setCommand();
+			}	
+		}
+		
+		//testing the editing of tasks
+		@Test
+		public void editTask() throws BadLocationException, InterruptedException {
+			UserInterface UI = UserInterface.getInstance();
+			assertNotNull(UI);
+			UI.executeInterface();
+			UI.initialize();
+			
+			JTextPane input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask1);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask2);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask3);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask1);
+			UI.setCommand();
+				
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask2);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask1);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask2);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(editTask1);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(editTask2);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(editTask3);
+			UI.setCommand();
+			
+			HomeView home = new HomeView();
+			String actualResult = home.getList().toString();
+			String expectedResult = "[[13:00] Submit developer guide , [11:00 - 13:00] CS2103T Lecture, [18:00 - 20:00] Swimming at NUS, [18:00 - 10:00] Holiday with Family , [14:00 - 19:00] Birthday celebration , Learn French , Read \"The Great Gatsby\" ]";
+			assertEquals(actualResult,expectedResult);
+			
+			//clear the tasks from file for next testing
+			for(int i =0; i<6; i++){
+				input = UserInterface.commandFromUser;
+				assertNotNull(input);
+				input.setText(deleteTask1);
+				UI.setCommand();
+			}	
+		}
+		
+		@Test
+		public void undoAddingTask() throws BadLocationException, InterruptedException {
+			UserInterface UI = UserInterface.getInstance();
+			assertNotNull(UI);
+			UI.executeInterface();
+			UI.initialize();
+			
+			JTextPane input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask1);
+			UI.setCommand();
+			
+
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask1);
+			UI.setCommand();
+				
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask1);	
+			UI.setCommand();
+			
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(undo);
+			UI.setCommand();
+			
+			
+			HomeView home = new HomeView();
+			String actualResult = home.getList().toString();
+			String expectedResult = "[[10:00] Submit developer guide , [14:00 - 19:00] Birthday celebration ]";
+			assertEquals(actualResult,expectedResult);
+			
+			//clear the tasks from file for next testing
+			for(int i =0; i<6; i++){
+				input = UserInterface.commandFromUser;
+				assertNotNull(input);
+				input.setText(deleteTask1);
+				UI.setCommand();
+			}	
+		}
+		
+		@Test
+		public void undoDeletingTask() throws BadLocationException, InterruptedException {
+			UserInterface UI = UserInterface.getInstance();
+			assertNotNull(UI);
+			UI.executeInterface();
+			UI.initialize();
+			
+			JTextPane input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addTodayTask1);
+			UI.setCommand();
+			
+
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addUpcomingTask1);
+			UI.setCommand();
+				
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(addFloatingTask2);	
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(deleteTask1);
+			UI.setCommand();
+			
+			input = UserInterface.commandFromUser;
+			assertNotNull(input);
+			input.setText(undo);
+			UI.setCommand();
+			
+			
+			HomeView home = new HomeView();
+			String actualResult = home.getList().toString();
+			String expectedResult = "[[10:00] Submit developer guide , [14:00 - 19:00] Birthday celebration , Read \"The Great Gatsby\" ]";
+			assertEquals(actualResult,expectedResult);
+			
+			//clear the tasks from file for next testing
+			for(int i =0; i<6; i++){
+				input = UserInterface.commandFromUser;
+				assertNotNull(input);
+				input.setText(deleteTask1);
+				UI.setCommand();
+			}	
+		}
+		
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\OneTagTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\SearchView.java
+	 */
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import javax.swing.text.BadLocationException;
+
+public class SearchView extends SingleView implements View {
+	private String searchedText = "";
+	private String taskDes;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private DateTimeFormatter formatter = DateTimeFormatter
+			.ofPattern("dd-MM-yyyy");
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
+			Locale.US);
+	private StringBuilder output;
+	private int taskLimit = 10;
+
+	/**
+	 * Gets the task containing the keyword specified
+	 * 
+	 * @param searchedText
+	 */
+	public SearchView(String searchedText) {
+		System.out.println("search:" + searchedText);
+		this.searchedText = searchedText;
+		update();
+	}
+
+	@Override
+	public void update() {
+		setList(data.getSearched(searchedText));
+	}
+
+	/**
+	 * Gets the information of each task
+	 * 
+	 * @param task
+	 */
+	private void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if (!task.isFloatingTask()) {
+			if (!task.isDeadlineTask()) {
+				startDate = task.getStart().toLocalDate();
+				startTime = task.getStart().toLocalTime();
+			}
+			endDate = task.getEnd().toLocalDate();
+			endTime = task.getEnd().toLocalTime();
+
+		}
+	}
+
+	/**
+	 * Gets the search results
+	 */
+	private void getSearchResults() throws BadLocationException {
+		int i = 0;
+		for (Task task : getList()) {
+			if (i < taskLimit) {
+				i++;
+				getTaskInfo(task);
+				String taskNo = "     " + i + ".   ";
+				if (task.isDeadlineTask()) {
+					formatDeadlineTasks(task, taskNo);
+				} else {
+					formatTimedAndFloatingTasks(task, taskNo);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Formats the deadline tasks
+	 * 
+	 * @param task
+	 *            ,taskNo
+	 */
+	private void formatDeadlineTasks(Task task, String taskNo)
+			throws BadLocationException {
+		String tasks = taskDes;
+
+		String endDateTime = formatEndDateTime(task);
+
+		if (task.getIsCompleted()) {
+			formatCompletedTasks(taskNo, endDateTime, tasks);
+
+		} else if (task.isOverdue()) {
+			fomatOverdueTasks(taskNo, endDateTime, tasks);
+
+		} else {
+			formatTasks(taskNo, endDateTime, tasks);
+		}
+
+	}
+
+	private void formatCompletedTasks(String taskNo, String endDateTime,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#00A300", endDateTime, 3);
+		appendTasks("#00A300", tasks, 4);
+
+	}
+
+	private String formatEndDateTime(Task task) {
+		String endDateToDisplay = endDate.format(formatter);
+		String endTimeToDisplay = endTime.format(formatTime);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String endDateTime = "<p align=\"left\">" + endDateToDisplay + "</p>"
+				+ "<p align=\"left\"><font color=\"#1F3D7A\">"
+				+ endTimeToDisplay + "</font></p>";
+
+		if (task.getIsCompleted()) {
+			endDateTime = "<p align=\"left\">" + endDateToDisplay + "</p>"
+					+ "<p align=\"left\"><font color=\"#00A300\">"
+					+ endTimeToDisplay + "</font></p>";
+		}
+
+		return endDateTime;
+	}
+
+	private void formatTasks(String taskNo, String dateTime, String tasks)
+			throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#01A9DB", dateTime, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	private void fomatOverdueTasks(String taskNo, String endDateTime,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "!", 2);
+		appendTasks("#01A9DB", endDateTime, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+
+	}
+
+	/**
+	 * Formats the timed tasks and floating tasks
+	 * 
+	 * @param task
+	 *            ,taskNo
+	 */
+	private void formatTimedAndFloatingTasks(Task task, String taskNo)
+			throws BadLocationException {
+		String tasks = taskDes;
+
+		String dateToDisplay = "---";
+		String timeToDisplay = "---";
+
+		if (!task.isFloatingTask()) {
+			dateToDisplay = formatStartEndDate();
+			timeToDisplay = formatStartEndTime();
+		}
+
+		String dateTime = dateToDisplay + timeToDisplay;
+		if (task.getIsCompleted()) {
+			formatCompletedTasks(taskNo, dateTime, tasks);
+
+		} else if (task.isOverdue()) {
+			fomatOverdueTasks(taskNo, dateTime, tasks);
+		} else {
+			formatTasks(taskNo, dateTime, tasks);
+		}
+
+	}
+
+	private String formatStartEndDate() {
+		String startDateToDisplay = startDate.format(formatter);
+		startDateToDisplay = startDateToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+
+		String endDateToDisplay = endDate.format(formatter);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+
+		String dateToDisplay = "<p align=\"left\">" + startDateToDisplay
+				+ " - " + endDateToDisplay + "</p>";
+		;
+		return dateToDisplay;
+
+	}
+
+	private String formatStartEndTime() {
+		String startTimeToDisplay = startTime.format(formatTime);
+		startTimeToDisplay = startTimeToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		startTimeToDisplay = startTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String endTimeToDisplay = endTime.format(formatTime);
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+		String timeToDisplay = "<p align=\"left\"><font color=\"#1F3D7A\">"
+				+ startTimeToDisplay + " - " + endTimeToDisplay + "</font></p>";
+
+		return timeToDisplay;
+	}
+
+	/**
+	 * Appends to Stringbuilder output
+	 * 
+	 * @param textColour
+	 *            ,text,row
+	 */
+	public void appendTasks(String textColour, String text, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td valign=\"top\" width=\"200px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
+					+ textColour + "\"><b>" + text + "</b></font></td>");
+		} else if (row == 4) {
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		} else if (row == 5) {
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		}
+
+	}
+
+	/**
+	 * Table created using Html code to append to JTextpane
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String show() throws BadLocationException {
+		output = new StringBuilder();
+		output.append("<html>");
+		output.append("<table  STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Search Results</b></p></font></td></tr>");
+		getSearchResults();
+		output.append("</table>");
+		output.append("</html>");
+
+		return output.toString();
+
+	}
+
+	/**
+	 * This is used for Testing
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getSearchList() {
+		ArrayList<Task> searchList = data.getSearched(searchedText);
+		return searchList;
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\SearchView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\SomedayView.java
+	 */
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
+import javax.swing.text.BadLocationException;
+
+public class SomedayView extends SingleView implements View {
+	private StringBuilder output;
+	private int i = 0;
+	private int page = 1;
+	private String INVALID_PAGE_MESSAGE = "The page number entered is invalid";
+	private String CLASS_MESSAGE = "UpcomingView";
+	OneTagLogger logger = OneTagLogger.getInstance();
+	Display display;
+	private int taskLimit = 15;
+
+	/**
+	 * Updates the list of tasks
+	 */
+	@Override
+	public void update() {
+		Data data = Data.getInstance();
+		setList(data.getSomeday());
+	}
+	/**
+	 * Supports paging. Sets the tasks to be shown for each "page"
+	 * 
+	 * @return List<Task>
+	 */
+	protected List<Task> getTasksForPage() {
+		if (page == 0) {
+			page = 1;
+		}
+		List<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+
+		if (getList().size() >= taskLimit) {
+			startTaskNo = (page - 1) * taskLimit;
+			int endTaskNo = startTaskNo + taskLimit;
+			try {
+				tasksForPage = getList().subList(startTaskNo, endTaskNo);
+			} catch (IndexOutOfBoundsException e) {
+				try {
+					tasksForPage = getList().subList(startTaskNo,
+							getList().size());
+				} catch (IllegalArgumentException e1) {
+					logger.log(Level.WARNING, CLASS_MESSAGE,
+							INVALID_PAGE_MESSAGE);
+				}
+			}
+
+		} else {
+			tasksForPage = getList();
+		}
+		i = startTaskNo;
+		return tasksForPage;
+	}
+
+	/**
+	 * Gets list of someday task and formats them
+	 */
+	protected void getSomeday() throws BadLocationException {
+		for (Task task : getTasksForPage()) {
+			i++;
+			String taskNoFormatted = "     " + i + ".   ";
+			String tasks = task.toString() + "\n";
+				appendTasks("#848484", taskNoFormatted, 1);
+				appendTasks("#FFFFFF", "!", 2);
+				appendTasks("#0A1B2A", tasks, 3);
+			
+		}
+	}
+
+//	private void formatTaskAccdCommand(String taskNo,
+//			String tasks) throws BadLocationException {
+//		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+//			formatDeletedTask(taskNo,tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+//			formatAddTask(taskNo,tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+//			formatDoneTask(taskNo,tasks);
+//		}
+//		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+//			formatEditTask(taskNo,tasks);
+//		}
+//		
+//	}
+//	private void formatDeletedTask(String taskNo, 
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 3);
+//		
+//	}
+//
+//	private void formatEditTask(String taskNo, String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#006666", tasks , 3);
+//		
+//	}
+//
+//	private void formatDoneTask(String taskNo, String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300", tasks , 3);
+//	}
+//
+//	private void formatAddTask(String taskNo,String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 3);
+//	}
+
+	/**
+	 * Appends to Stringbuilder output
+	 * 
+	 * @param textColour
+	 *            ,text,row
+	 */
+	public void appendTasks(String textColour, String text, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"4\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		}
+		
+	}
+
+	/**
+	 * Table created using Html code to append to JTextpane
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String show() throws BadLocationException {
+		output = new StringBuilder();
+		display = Display.getInstance();
+		page = display.getPaging();
+		output.append("<html>");
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Someday </b></p></font></td></tr>");
+		getSomeday();
+		output.append("</table>");
+		output.append("</html>");
+		
+		return output.toString();
+	}
+	
+	public void updateShow() throws BadLocationException{
+		update();
+		show();
+	}
+
+	/**
+	 * This is used for Testing
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getSomedayList() {
+		ArrayList<Task> somedayList = data.getSomeday();
+		return somedayList;
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\SomedayView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\SomedayViewTest.java
+	 */
+
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+
+public class SomedayViewTest {
+
+	private String addSomedayTask1 = "add Learn French";
+	private String addSomedayTask2 = "add Buy belated birthday gifts";
+	private String addSomedayTask3 = "add Go Skydiving";
+	private String addSomedayTask4 = "add Lunch with Friends by 2pm";
+
+	private String deleteTask1 = "delete 1";
+	private String deleteTask3 = "delete 3";
+	
+	private String editDesTask3 = "edit 3 Try to go skydiving at least once";
+
+	private String markDoneTask2 = "done 2";
+	
+	@Before
+	public void beforeTesting() {
+		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
+		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
+	}
+
+	@After
+	public void clearAfterTesting() {
+		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
+		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
+
+	}
+
+	@Test
+	public void testAddingTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addSomedayTask1);
+
+		control.executeCommand(addSomedayTask2);
+
+		control.executeCommand(addSomedayTask3);
+
+		control.executeCommand(addSomedayTask4);
+
+		SomedayView today = new SomedayView();
+		String actualResult = today.getSomedayList().toString();
+		String expectedResult = "[Learn French , Buy belated birthday gifts , Go Skydiving ]";
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+
+	@Test
+	public void testDeletingTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addSomedayTask1);
+
+		control.executeCommand(addSomedayTask2);
+
+		control.executeCommand(addSomedayTask3);
+
+		control.executeCommand(addSomedayTask4);
+
+		control.executeCommand(deleteTask3);
+
+		SomedayView today = new SomedayView();
+		String actualResult = today.getSomedayList().toString();
+		String expectedResult = "[Learn French , Go Skydiving ]";
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+	
+	@Test
+	public void testEditingTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addSomedayTask1);
+
+		control.executeCommand(addSomedayTask2);
+
+		control.executeCommand(addSomedayTask3);
+
+		control.executeCommand(addSomedayTask4);
+
+		control.executeCommand(editDesTask3);
+
+		SomedayView today = new SomedayView();
+		String actualResult = today.getSomedayList().toString();
+		String expectedResult = "[Learn French , Try to go skydiving at least once, Go Skydiving ]";
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+	
+	@Test
+	public void testMarkingDoneTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addSomedayTask1);
+
+		control.executeCommand(addSomedayTask2);
+
+		control.executeCommand(addSomedayTask3);
+
+		control.executeCommand(addSomedayTask4);
+
+		control.executeCommand(markDoneTask2);
+
+		SomedayView someday = new SomedayView();
+		String actualResult = someday.getSomedayList().toString();
+		String expectedResult = "[Buy belated birthday gifts , Go Skydiving ]";
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\SomedayViewTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\TodayView.java
+	 */
+
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.swing.text.BadLocationException;
+
+public class TodayView extends SingleView implements View {
+	private String taskDes;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private DateTimeFormatter formatter = DateTimeFormatter
+			.ofPattern("EEE, dd MMMM");
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern(
+			"h:mm a", Locale.US);
+	private StringBuilder output = new StringBuilder();
+	private int page = 1;
+	private int taskNo;
+	private int taskLimit = 15;
+	Display display;
+
+	/**
+	 * Updates the list of tasks
+	 */
+	@Override
+	public void update() {
+		setList(data.getToday());
+	}
+
+	/**
+	 * Gets the information of each task
+	 * 
+	 * @param task
+	 */
+	private void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if (!task.isFloatingTask()) {
+			if (!task.isDeadlineTask()) {
+				startTime = task.getStart().toLocalTime();
+			}
+			endDate = task.getEnd().toLocalDate();
+			endTime = task.getEnd().toLocalTime();
+		}
+	}
+
+	/**
+	 * Supports paging. Sets the tasks to be shown for each "page"
+	 * 
+	 * @return List<Task>
+	 */
+	private List<Task> getTasksForPage() {
+		if (page == 0) {
+			page = 1;
+		}
+		List<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+
+		if (getList().size() >= taskLimit) {
+			startTaskNo = (page - 1) * taskLimit;
+			int endTaskNo = startTaskNo + taskLimit;
+			try {
+				tasksForPage = getList().subList(startTaskNo, endTaskNo);
+			} catch (IndexOutOfBoundsException e) {
+				try {
+					tasksForPage = getList().subList(startTaskNo,
+							getList().size());
+				} catch (IllegalArgumentException e1) {
+					page = 1;
+					getTasksForPage();
+				}
+			}
+		} else {
+			tasksForPage = getList();
+		}
+
+		taskNo = startTaskNo;
+		return tasksForPage;
+	}
+
+	/**
+	 * Gets list of today task and sends for formatting
+	 * 
+	 * @throws BadLocationException
+	 */
+	private void getToday() throws BadLocationException {
+		for (Task task : getTasksForPage()) {
+			taskNo++;
+			getTaskInfo(task);
+			if (task.isDeadlineTask()) {
+				formatDeadlineTask(task, taskNo);
+
+			} else {
+				formatTimedTasks(task, taskNo);
+
+			}
+		}
+	}
+
+	private void formatTimedTasks(Task task, int taskNo)
+			throws BadLocationException {
+		String taskNoFormatted = "" + taskNo + ".   ";
+		String tasks = taskDes;
+		String timeToDisplay = formatStartEndTimeToDisplay();
+//		boolean isCommandExecuted = (display.getCommand().equals(
+//				COMMAND_TYPE.DELETE)
+//				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//				.getCommand().equals(COMMAND_TYPE.EDIT));
+//		
+//		if (isCommandExecuted && taskNo == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNoFormatted, timeToDisplay, tasks);
+//		} else 
+//			
+			if (task.isOverdue()) {
+			formatOverdueTasks(taskNoFormatted, timeToDisplay, tasks);
+		} else {
+			formatTasks(taskNoFormatted, timeToDisplay, tasks);
+		}
+
+	}
+
+
+	private String formatStartEndTimeToDisplay() {
+		String timeToDisplay = startTime.format(formatTime).replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "")
+				+ " - "
+				+ endTime.format(formatTime).replace("AM", "am")
+						.replace("PM", "pm").replace(".00", "");
+
+		timeToDisplay = timeToDisplay.toString().replaceAll("\\[", "")
+				.replaceAll("\\]", " -");
+
+		return timeToDisplay;
+
+	}
+
+	private void formatDeadlineTask(Task task, int taskNo)
+			throws BadLocationException {
+		String tasks = taskDes;
+		String taskNoFormatted = "" + taskNo + ".   ";
+		String endTimeToDisplay = formatEndTimeToDisplay();
+//		boolean isCommandExecuted = (display.getCommand().equals(
+//				COMMAND_TYPE.DELETE)
+//				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//				.getCommand().equals(COMMAND_TYPE.EDIT));
+//		
+//		if (isCommandExecuted && taskNo == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNoFormatted, endTimeToDisplay, tasks);
+//		} else 
+			
+			if (task.isOverdue()) {
+			formatOverdueTasks(taskNoFormatted, endTimeToDisplay, tasks);
+		} else {
+			formatTasks(taskNoFormatted, endTimeToDisplay, tasks);
+		}
+
+	}
+
+//	private void formatTaskAccdCommand(String taskNo, String endTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+//			formatDeletedTask(taskNo, endTimeToDisplay, tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+//			formatAddTask(taskNo, endTimeToDisplay, tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+//			formatDoneTask(taskNo, endTimeToDisplay, tasks);
+//		}
+//		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+//			formatEditTask(taskNo, endTimeToDisplay, tasks);
+//		}
+//		
+//		
+//	}
+//	private void formatDeletedTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + dateTimeToDisplay + "</strike>", 3);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+//	}
+//
+//	private void formatEditTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) {
+//
+//		
+//	}
+//
+//	private void formatDoneTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300",  dateTimeToDisplay, 3);
+//		appendTasks("#00A300", tasks , 4);
+//	}
+//
+//	private void formatAddTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C",  "<font size=\"4\">"+dateTimeToDisplay+"</font>", 3);
+//		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 4);
+//		
+//	}
+
+	private String formatEndTimeToDisplay() {
+		String timeToDisplay = endTime.format(formatTime).replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+		timeToDisplay = timeToDisplay.toString().replaceAll("\\[", "")
+				.replaceAll("\\]", " -");
+		return timeToDisplay;
+	}
+
+	private void formatTasks(String taskNo, String timeToDisplay, String tasks)
+			throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#01A9DB", timeToDisplay, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	private void formatOverdueTasks(String taskNo, String dateTimeToDisplay,
+			String tasks) throws BadLocationException {
+
+		if (!(endDate.equals(LocalDate.now()))) {
+			dateTimeToDisplay = endDate.format(formatter);
+			dateTimeToDisplay = dateTimeToDisplay.replaceAll("\\[", "")
+					.replaceAll("\\]", "-");
+		}
+
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FF0000", "!", 2);
+		appendTasks("#01A9DB", dateTimeToDisplay, 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	/**
+	 * Appends to Stringbuilder output
+	 * 
+	 * @param textColour
+	 *            ,text,row
+	 * @throws BadLocationException
+	 */
+	public void appendTasks(String textColour, String text, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 4) {
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		}
+	}
+
+	/**
+	 * Table created using Html code to append to JTextpane
+	 * 
+	 * @return String
+	 * @throws BadLocationException
+	 */
+	@Override
+	public String show() throws BadLocationException{
+		output = new StringBuilder();
+		display = Display.getInstance();
+		page = display.getPaging();
+
+		output.append("<html>");
+		output.append("<table  STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td  height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Today</b></p></font></td></tr>");
+		getToday();
+		output.append("</table>");
+		output.append("</table></html>");
+		return output.toString();
+
+	}
+
+	/**
+	 * This is used for Testing
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getTodayList() {
+		ArrayList<Task> todayList = data.getToday();
+		return todayList;
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\TodayView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\UpcomingView.java
+	 */
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+
+import javax.swing.text.BadLocationException;
+
+public class UpcomingView extends SingleView implements View {
+
+	private String taskDes;
+	private LocalDate startDate;
+	private LocalDate endDate;
+	private LocalTime startTime;
+	private LocalTime endTime;
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
+			"EEE, dd MMM yyyy", Locale.US);
+	private DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("h.mma",
+			Locale.US);
+	private StringBuilder output;
+	private int page = 1;
+	private int i = 0;
+	private int taskLimit = 5;
+	private String INVALID_PAGE_MESSAGE = "The page number entered is invalid";
+	private String CLASS_MESSAGE = "UpcomingView";
+	Display display = Display.getInstance();
+	OneTagLogger logger = OneTagLogger.getInstance();
+
+	/**
+	 * Updates the list of tasks
+	 */
+	@Override
+	public void update() {
+		Data data = Data.getInstance();
+
+		setList(data.getUpcoming());
+	}
+
+	/**
+	 * Supports paging. Sets the tasks to be shown for each "page"
+	 * 
+	 * @return List<Task>
+	 */
+	private List<Task> getTasksForPage() {
+		List<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+
+		if (getList().size() >= taskLimit) {
+			startTaskNo = (page - 1) * taskLimit;
+			int endTaskNo = startTaskNo + taskLimit;
+			try {
+				tasksForPage = getList().subList(startTaskNo, endTaskNo);
+			} catch (IndexOutOfBoundsException e) {
+				try {
+					tasksForPage = getList().subList(startTaskNo,
+							getList().size());
+				} catch (IllegalArgumentException e1) {
+					logger.log(Level.WARNING, CLASS_MESSAGE,
+							INVALID_PAGE_MESSAGE);
+				}
+			}
+		} else {
+			tasksForPage = getList();
+		}
+		i = startTaskNo;
+		return tasksForPage;
+	}
+
+	/**
+	 * Gets the information of each task
+	 * 
+	 * @param task
+	 */
+	private void getTaskInfo(Task task) {
+		taskDes = task.getDescription();
+		if (!task.isFloatingTask()) {
+			if (!task.isDeadlineTask()) {
+				startDate = task.getStart().toLocalDate();
+				startTime = task.getStart().toLocalTime();
+			}
+			endDate = task.getEnd().toLocalDate();
+			endTime = task.getEnd().toLocalTime();
+		}
+	}
+
+	/**
+	 * Gets list of upcoming task and sends for formatting
+	 */
+	private void getUpcoming() throws BadLocationException {
+		for (Task task : getTasksForPage()) {
+			i++;
+			getTaskInfo(task);
+			if (task.isDeadlineTask()) {
+				String tasks = taskDes;
+				String taskNoFormatted = "     " + i + ".   ";
+				String endDateTime = formatTimeDate();
+
+//				boolean isCommandExecuted = (display.getCommand().equals(
+//						COMMAND_TYPE.DELETE)
+//						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//						.getCommand().equals(COMMAND_TYPE.EDIT));
+//
+//				if (isCommandExecuted && i == display.getViewIndex()) {
+//					formatTaskAccdCommand(taskNoFormatted, endDateTime,"", tasks);
+//				} else {
+//					
+//				}
+				formatTasks(taskNoFormatted, endDateTime,"", tasks);
+			}
+
+			else {
+				String tasks = taskDes;
+				String taskNoFormatted = "     " + i + ".   ";
+				String dateToDisplay = formatStartEndDate();
+				String timeToDisplay = formatStartEndTime();
+	
+//				boolean isCommandExecuted = (display.getCommand().equals(
+//						COMMAND_TYPE.DELETE)
+//						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//						.getCommand().equals(COMMAND_TYPE.EDIT));
+//
+//				if (isCommandExecuted && i == display.getViewIndex()) {
+//					formatTaskAccdCommand(taskNoFormatted, dateToDisplay, timeToDisplay,
+//							tasks);
+//				} else {
+//					
+//				}
+				formatTasks(taskNoFormatted, dateToDisplay, timeToDisplay,
+							tasks);
+			}
+		}
+	}
+
+//	private void formatTaskAccdCommand(String taskNo, String dateToDisplay,
+//			String timeToDisplay, String tasks) throws BadLocationException {
+//		if (display.getCommand().equals(COMMAND_TYPE.DELETE)) {
+//			formatDeletedTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		} else if (display.getCommand().equals(COMMAND_TYPE.ADD)) {
+//			formatAddTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		} else if (display.getCommand().equals(COMMAND_TYPE.DONE)) {
+//			formatDoneTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		} else if (display.getCommand().equals(COMMAND_TYPE.EDIT)) {
+//			formatEditTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		}
+//	}
+
+//	private void formatDeletedTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + dateToDisplay + timeToDisplay + "</strike>", 3);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+//	}
+//
+//	private void formatEditTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//
+//	}
+//
+//	private void formatDoneTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300",  dateToDisplay + timeToDisplay , 3);
+//		appendTasks("#00A300", tasks, 4);
+//	}
+//
+//	private void formatAddTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C", "<font size=\"4\">" +  dateToDisplay + timeToDisplay 
+//				+ "</font>", 3);
+//		appendTasks("#B8005C", "<font size=\"4\">" + tasks + "</font>", 4);
+//
+//	}
+
+	private void formatTasks(String taskNo, String dateToDisplay,String timeToDisplay,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#01A9DB", dateToDisplay + "<font color=\"#1F3D7A\">" + timeToDisplay + "</font>", 3);
+		appendTasks("#0A1B2A", tasks, 4);
+	}
+
+	private String formatStartEndTime() {
+		String startTimeToDisplay = startTime.format(formatTime);
+		startTimeToDisplay = startTimeToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+		startTimeToDisplay = startTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String endTimeToDisplay = endTime.format(formatTime);
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String timeToDisplay = "<p align=\"left\">"
+				+ startTimeToDisplay + " - " + endTimeToDisplay + "</p>";
+
+		return timeToDisplay;
+	}
+
+	private String formatStartEndDate() {
+		String startDateToDisplay = startDate.format(formatter);
+		startDateToDisplay = startDateToDisplay.replaceAll("\\[", "")
+				.replaceAll("\\]", "");
+
+		String endDateToDisplay = endDate.format(formatter);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+
+		String dateToDisplay = "<p align=\"left\">" + startDateToDisplay
+				+ " - " + endDateToDisplay + "</p>";
+		return dateToDisplay;
+	}
+
+	private String formatTimeDate() {
+		String endDateToDisplay = endDate.format(formatter);
+		String endTimeToDisplay = endTime.format(formatTime);
+		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replaceAll("\\[", "").replaceAll(
+				"\\]", "");
+		endTimeToDisplay = endTimeToDisplay.replace("AM", "am")
+				.replace("PM", "pm").replace(".00", "");
+
+		String endDateTime = "<p align=\"left\">" + endDateToDisplay + "</p>"
+				+ "<p align=\"left\"><font color=\"#1F3D7A\">"
+				+ endTimeToDisplay + "</font></p>";
+		return endDateTime;
+	}
+
+	/**
+	 * Appends to Stringbuilder output
+	 * 
+	 * @param textColour
+	 *            ,text,row
+	 */
+	public void appendTasks(String textColour, String text, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td valign=\"top\" width=\"180px\"><font face=\"Rockwell\" size=\"3.5\" color=\""
+					+ textColour + "\"><b>" + text + "</b></font></td>");
+		} else if (row == 4) {
+			output.append("<td valign=\"top\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"3.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		}
+
+	}
+
+	/**
+	 * Table created using Html code to append to JTextpane
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String show() throws BadLocationException {
+		output = new StringBuilder();
+		display = Display.getInstance();
+		page = display.getPaging();
+
+		output.append("<html>");
+
+		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"7px\" cellspacing=\"0px\" width=\"100%\">");
+		output.append("<tr STYLE=\"margin-bottom: 5px;\" width=\"100px\" bgcolor=\"#084B8A\"><td height =\"30px\" width=\"100px\"colspan=\"4\"><font face=\"Tempus Sans ITC\" size=\"5\" color=\"#FFFFFF\"><p align=\"center\"><b>Upcoming </b></p></font></td></tr>");
+		getUpcoming();
+		output.append("</table>");
+
+		output.append("</html>");
+
+		return output.toString();
+
+	}
+
+	/**
+	 * This is used for Testing
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getUpcomingList() {
+		ArrayList<Task> upcomingList = data.getUpcoming();
+		return upcomingList;
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\UpcomingView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\UpcomingViewTest.java
+	 */
+
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+
+public class UpcomingViewTest {
+
+	private String addUpcomingTask1 = "add Submit assignment by June 15 6pm";
+	private String addUpcomingTask2 = "add Holiday with family in Rome from 11am 17 June to 1pm 27 June";
+	private String addUpcomingTask3 = "add Dental appointment by 3pm 23 July";
+	private String addUpcomingTask4 = "add Birthday Celebration from 06 july 2pm to 06 july 7pm";
+
+	private String deleteTask1 = "delete 1";
+	private String deleteTask3 = "delete 3";
+	
+	private String editDesTask3 = "edit 3 Dental appointment at NDC";
+
+	private String markDoneTask1 = "done 1";
+	
+	@Before
+	public void beforeTesting() {
+		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
+		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
+	}
+
+	@After
+	public void clearAfterTesting() {
+		File file = new File("oneTag.json");
+		File file2 = new File("config.json");
+		file.delete();
+		file2.delete();
+		ArrayList<Task> arrayList = new ArrayList<Task>();
+		Data data = Data.getInstance();
+		data.set(arrayList);
+	}
+
+	@Test
+	public void testAddingTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addUpcomingTask1);
+
+		control.executeCommand(addUpcomingTask2);
+
+		control.executeCommand(addUpcomingTask3);
+
+		control.executeCommand(addUpcomingTask4);
+
+		UpcomingView upcoming = new UpcomingView();
+		String actualResult = upcoming.getUpcomingList().toString();
+		String expectedResult = "[[18:00] Submit assignment , [11:00 - 13:00] Holiday with family in Rome , [14:00 - 19:00] Birthday Celebration , [15:00] Dental appointment ]";	
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+
+	@Test
+	public void testDeletingTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addUpcomingTask1);
+
+		control.executeCommand(addUpcomingTask2);
+
+		control.executeCommand(addUpcomingTask3);
+
+		control.executeCommand(addUpcomingTask4);
+
+		control.executeCommand(deleteTask3);
+
+		UpcomingView today = new UpcomingView();
+		String actualResult = today.getUpcomingList().toString();
+		String expectedResult = "[[18:00] Submit assignment , [11:00 - 13:00] Holiday with family in Rome , [15:00] Dental appointment ]";
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+	
+	@Test
+	public void testEditingTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addUpcomingTask1);
+
+		control.executeCommand(addUpcomingTask2);
+
+		control.executeCommand(addUpcomingTask3);
+
+		control.executeCommand(addUpcomingTask4);
+
+		control.executeCommand(editDesTask3);
+
+		UpcomingView today = new UpcomingView();
+		String actualResult = today.getUpcomingList().toString();
+		String expectedResult = "[[18:00] Submit assignment , [11:00 - 13:00] Holiday with family in Rome , [14:00 - 19:00] Dental appointment at NDC, [15:00] Dental appointment ]";
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+	
+	@Test
+	public void testMarkingDoneTasks() {
+		Controller control = Controller.getInstance();
+		control.executeCommand(addUpcomingTask1);
+
+		control.executeCommand(addUpcomingTask2);
+
+		control.executeCommand(addUpcomingTask3);
+
+		control.executeCommand(addUpcomingTask4);
+
+		control.executeCommand(markDoneTask1);
+
+		UpcomingView today = new UpcomingView();
+		String actualResult = today.getUpcomingList().toString();
+		String expectedResult = "[[11:00 - 13:00] Holiday with family in Rome , [14:00 - 19:00] Birthday Celebration , [15:00] Dental appointment ]";
+		assertEquals(actualResult, expectedResult);
+
+		// clear the tasks from file for next testing
+		for (int i = 0; i < 6; i++) {
+			control.executeCommand(deleteTask1);
+		}
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\UpcomingViewTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\UserInterface.java
+	 */
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.Point;
+
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+
+import java.awt.BorderLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultStyledDocument;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.JButton;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+
+import javax.swing.UIManager;
+import javax.swing.JLabel;
+
+public class UserInterface {
+
+	private JFrame frame;
+	public static JTextPane commandFromUser;
+	public static JTextPane showToUser;
+	private static Controller control;
+	private static JPanel outerPanel;
+	private DefaultStyledDocument doc = new DefaultStyledDocument();
+	private static UserInterface UI = null;
+	private JPanel feedbackPanel;
+	private JPanel topPanel;
+	private JTextPane feedback;
+	private JButton closeButton;
+	private JButton minimiseButton;
+	private JPanel buttonPanel;
+	private JLabel welcomeLabel;
+	private Point mouseDownCoords;
+	private int noOfCurrentCmd;
+	private ArrayList<String> commandsEntered = new ArrayList<String>();
+	private int noOfCommandsEntered;
+	private String message = "";
+	private String CLASS_MESSAGE = "UserInterface";
+	private String ERROR_DISPLAYING_VIEW_MESSAGE = "Error in displaying the view.";
+	private String INVALID_INPUT_MESSAGE ="Invalid input entered.";
+	
+	OneTagLogger logger = OneTagLogger.getInstance();
+
+	
+	public static UserInterface getInstance() {
+		if (UI == null) {
+			UI = new UserInterface();
+		}
+		return UI;
+	}
+
+
+	/**
+	 * Executes the program
+	 * @ 
+	 */
+	public void executeInterface() {
+		control = Controller.getInstance();
+		UserInterface window = UserInterface.getInstance();
+		window.initialize();
+		showToUser.setContentType("text/html");
+		try {
+			showToUser.setText(Display.getInstance().getView().show());
+		} catch (BadLocationException | IOException e) {
+			e.printStackTrace();
+		}
+
+		window.frame.setUndecorated(true);
+		window.frame.setOpacity(0.99f);
+		window.frame.setVisible(true);
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	public void initialize() {
+		frame = new JFrame();
+		frame.setResizable(false);
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(552, 535);
+		frame.getRootPane().setBorder(
+				BorderFactory.createMatteBorder(2, 2, 2, 2, new Color(84, 121,
+						163).darker()));
+
+		makeFrameMovable();
+		initializeCmdFromUser();
+		initializeShowToUser();
+		initializeFeedback();
+		initializeCloseButton();
+		initializeMinimizeButton();
+		initializeWelcomeLabel();
+		processKeyPressed();
+	}
+
+	/**
+	 * As frame is undecorated, frame is made movable here (user can move gui)
+	 */
+	private void makeFrameMovable() {
+		mouseDownCoords = null;
+		frame.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {
+				mouseDownCoords = null;
+			}
+
+			public void mousePressed(MouseEvent e) {
+				mouseDownCoords = e.getPoint();
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+			}
+
+		});
+
+		frame.addMouseMotionListener(new MouseMotionListener() {
+			public void mouseMoved(MouseEvent e) {
+			}
+
+			public void mouseDragged(MouseEvent e) {
+				Point currCoords = e.getLocationOnScreen();
+				frame.setLocation(currCoords.x - mouseDownCoords.x,
+						currCoords.y - mouseDownCoords.y);
+			}
+		});
+
+	}
+
+	/**
+	 * The label on top is initialized
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	private void initializeWelcomeLabel() {
+		welcomeLabel = new JLabel(" OneTag", SwingConstants.LEFT);
+		welcomeLabel.setFont(new Font("Elephant", Font.PLAIN, 16));
+		welcomeLabel.setForeground(new Color(255, 255, 255));
+		topPanel.add(welcomeLabel, BorderLayout.CENTER);
+	}
+
+	/**
+	 * The JtextPane(textbox) which receives user input is initialized
+	 */
+	private void initializeCmdFromUser() {
+		outerPanel = new JPanel();
+		frame.getContentPane().add(outerPanel, BorderLayout.CENTER);
+		outerPanel.setLayout(new BorderLayout(0, 0));
+		outerPanel.setBackground(Color.WHITE);
+		outerPanel.setBounds(0, 0, 612, 425);
+		outerPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(
+				30, 144, 255), new Color(0, 0, 0)));
+		highlightKeywords();
+		commandFromUser = new JTextPane(doc);
+		commandFromUser.setToolTipText("Enter command here");
+		outerPanel.add(commandFromUser, BorderLayout.SOUTH);
+		commandFromUser.setFont(new Font("Calibri", Font.PLAIN, 20));
+		commandFromUser.setBackground(new Color(255, 255, 255));
+		commandFromUser.setBounds(20, 371, 573, 43);
+		commandFromUser.setForeground(new Color(0, 0, 0));
+		commandFromUser.setBorder(new EtchedBorder(EtchedBorder.LOWERED,
+				new Color(30, 144, 255), new Color(0, 0, 0)));
+
+	}
+
+	/**
+	 * The JtextPane(textbox) which shows the output is initialized
+	 */
+	private void initializeShowToUser() {
+		feedbackPanel = new JPanel();
+		outerPanel.add(feedbackPanel, BorderLayout.CENTER);
+		feedbackPanel.setLayout(new BorderLayout(0, 0));
+		showToUser = new JTextPane();
+		showToUser.setContentType("text/html");
+		feedbackPanel.add(showToUser, BorderLayout.CENTER);
+		showToUser.setContentType("");
+		showToUser.setFont(new Font("Lucida Fax", Font.PLAIN, 16));
+		showToUser.setBackground(new Color(255, 255, 255));
+		showToUser.setEditable(false);
+		showToUser.setForeground(new Color(0, 0, 128));
+		showToUser.setBorder(null);
+		showToUser.setBounds(20, 10, 573, 350);
+	}
+
+	/**
+	 * The JtextPane(textbox) which shows the feedback for each command execution is initialized
+	 */
+	private void initializeFeedback() {
+		feedback = new JTextPane();
+		feedback.setForeground(new Color(153, 0, 153));
+		feedback.setFont(new Font("Candara", Font.BOLD | Font.ITALIC, 6));
+		feedback.setEditable(false);
+		feedbackPanel.add(feedback, BorderLayout.SOUTH);
+		feedback.setContentType("text/html");
+	}
+
+	/**
+	 * Close button initialized
+	 */
+	private void initializeCloseButton() {
+		topPanel = new JPanel();
+		topPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(30,
+				144, 255), new Color(0, 0, 0)));
+		topPanel.setBackground(new Color(34, 77, 124));
+		outerPanel.add(topPanel, BorderLayout.NORTH);
+		topPanel.setLayout(new BorderLayout(0, 0));
+
+		buttonPanel = new JPanel();
+		topPanel.add(buttonPanel, BorderLayout.EAST);
+		buttonPanel.setLayout(new BorderLayout(0, 0));
+
+		closeButton = new JButton("X");
+		buttonPanel.add(closeButton, BorderLayout.EAST);
+		closeButton.setFont(new Font("Calibri", Font.BOLD, 12));
+		closeButton.setBorder(UIManager.getBorder("Button.border"));
+		closeButton.setBackground(new Color(255, 255, 255));
+		closeButton.setForeground(new Color(0, 0, 128));
+		closeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				System.exit(0);
+			}
+		});
+	}
+
+	/**
+	 * Minimize button is initialized
+	 */
+	private void initializeMinimizeButton() {
+		minimiseButton = new JButton("-");
+		buttonPanel.add(minimiseButton, BorderLayout.WEST);
+		buttonPanel.setBorder(UIManager.getBorder("TextArea.border"));
+		minimiseButton.setFont(new Font("Calibri", Font.BOLD, 13));
+		minimiseButton.setBackground(new Color(255, 255, 255));
+		minimiseButton.setForeground(new Color(0, 0, 128));
+		minimiseButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// minimizeApplication();
+				frame.setState(Frame.ICONIFIED);
+			}
+		});
+	}
+	
+	/**
+	 * If enter is pressed, process command, else
+	 * Stores previous commands entered by user, navigated using up and down keys
+	 */
+	public void processKeyPressed() {
+		inputBoxChangeColour();
+		commandFromUser.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(java.awt.event.KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+						setCommand();
+					
+					e.consume();
+					commandFromUser.setText("");
+				} else if (e.getKeyCode() == KeyEvent.VK_UP) {
+					pressedUpKey();
+				} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+					pressedDownKey();
+				}
+
+			}
+		});
+	}
+	
+	/**
+	 * Gets and sets command to be processed
+	 * @ 
+	 */
+	public void setCommand(){
+		String command = commandFromUser.getText();
+		commandsEntered.add(command);
+		noOfCommandsEntered = commandsEntered.size();
+		processCommand(command);
+	}
+
+	/**
+	 * Executes the command, any error is shown to user. Else,
+	 * The relevant view is shown
+	 * 
+	 */
+	private void processCommand(String command)  {
+		showToUser.setContentType("text/html");
+		try{
+		control.executeCommand(command);
+		}catch(ArithmeticException | Error e){
+			logger.log(Level.WARNING, CLASS_MESSAGE, INVALID_INPUT_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Invalid input. Enter \"help\" for assistance.", "Error", JOptionPane.ERROR_MESSAGE);   
+		}
+		showMessageToUser();
+		try {
+			showToUser.setText(Display.getInstance().getView().show());
+			
+		} catch (BadLocationException | IOException e1) {
+			logger.log(Level.WARNING, CLASS_MESSAGE, ERROR_DISPLAYING_VIEW_MESSAGE);
+		}
+			
+		
+	}
+
+	/**
+	 * Navigating previous commands
+	 */
+	private void pressedUpKey() {
+		noOfCommandsEntered--;
+		try {
+			commandFromUser.setText(commandsEntered.get(noOfCommandsEntered));
+			noOfCurrentCmd = noOfCommandsEntered;
+		} catch (ArrayIndexOutOfBoundsException e1) {
+			noOfCommandsEntered = 0;
+		}
+	}
+
+	private void pressedDownKey() {
+		try {
+			commandFromUser.setText(commandsEntered.get(noOfCurrentCmd++));
+			noOfCommandsEntered = noOfCurrentCmd;
+		}
+		catch (IndexOutOfBoundsException e2) {
+			commandFromUser.setText("");
+			noOfCommandsEntered = commandsEntered.size();
+		}
+	}
+
+
+	private void inputBoxChangeColour() {
+		commandFromUser.addMouseListener(new MouseListener() {
+			public void mouseReleased(MouseEvent e) {
+			}
+
+			public void mousePressed(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				commandFromUser.setBackground(Color.LIGHT_GRAY);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				commandFromUser.setBackground(Color.WHITE);
+			}
+		});
+
+	}
+
+	/**
+	 * Get and show the feedback message to user
+	 */
+	private void showMessageToUser() {
+		StringBuilder htmlMessage = new StringBuilder();
+		feedback.setContentType("text/html");
+		message = Display.getInstance().getMessage();
+		
+			if (!message.isEmpty()) {
+				htmlMessage.append("<html><p valign=\"top\" align=\"center\"><font face=\"Lucida sans\" color=\"#660000\" size=\"4.5\"><b>"+Display.getInstance().getMessage()+"</b></font></p></html>");
+				feedback.setText((htmlMessage.toString()) + "\n");
+			}
+			else{
+				assert message=="";
+				feedback.setText(message);
+			}
+	}
+
+	/**
+	 * Add colour to keywords such as by,from and to. For design purposes.
+	 */
+	private void highlightKeywords() {
+		StyleContext style = StyleContext.getDefaultStyleContext();
+		final AttributeSet attrRed = style.addAttribute(style.getEmptySet(),
+				StyleConstants.Foreground, Color.RED);
+		
+		final AttributeSet attrBlack = style.addAttribute(style.getEmptySet(),
+				StyleConstants.Foreground, Color.BLACK);
+		
+		doc = new DefaultStyledDocument() {
+			public void insertString(int offset, String str, AttributeSet a)
+					throws BadLocationException {
+				super.insertString(offset, str, a);
+
+				String text = getText(0, getLength());
+				int before = findLastNonWordChar(text, offset);
+				if (before < 0)
+					before = 0;
+				int after = findFirstNonWordChar(text, offset + str.length());
+				int wordL = before;
+				int wordR = before;
+
+				while (wordR <= after) {
+					if (wordR == after
+							|| String.valueOf(text.charAt(wordR))
+									.matches("\\W")) {
+						if (text.substring(wordL, wordR)
+								.toLowerCase()
+								.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
+							setCharacterAttributes(wordL, wordR - wordL, attrRed,
+									false);
+						} else {
+							setCharacterAttributes(wordL, wordR - wordL,
+									attrBlack, false);
+						}
+						wordL = wordR;
+					}
+					wordR++;
+				}
+			}
+
+			public void remove(int offs, int len) throws BadLocationException {
+				super.remove(offs, len);
+
+				String text = getText(0, getLength());
+				int before = findLastNonWordChar(text, offs);
+				if (before < 0)
+					before = 0;
+				int after = findFirstNonWordChar(text, offs);
+
+				if (text.substring(before, after).toLowerCase()
+						.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
+					setCharacterAttributes(before, after - before, attrRed, false);
+				} else {
+					setCharacterAttributes(before, after - before, attrBlack,
+							false);
+				}
+			}
+
+		};
+	}
+
+	private int findLastNonWordChar(String text, int index) {
+		while (--index >= 0) {
+			if (String.valueOf(text.charAt(index)).matches("\\W")) 
+			{
+				break;
+			}
+		}
+		return index;
+	}
+
+	private int findFirstNonWordChar(String text, int index) {
+		while (index < text.length()) {
+			if (String.valueOf(text.charAt(index)).matches("\\W")) {
+				break;
+			}
+			index++;
+		}
+		return index;
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\UserInterface.java
+
+
+
+
+

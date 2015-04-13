@@ -13,7 +13,7 @@ public class SomedayView extends SingleView implements View {
 	private String CLASS_MESSAGE = "UpcomingView";
 	OneTagLogger logger = OneTagLogger.getInstance();
 	Display display;
-	boolean isCommandExecuted = false;
+	private int taskLimit = 15;
 
 	/**
 	 * Updates the list of tasks
@@ -35,9 +35,9 @@ public class SomedayView extends SingleView implements View {
 		List<Task> tasksForPage = new ArrayList<Task>();
 		int startTaskNo = 0;
 
-		if (getList().size() >= 5) {
-			startTaskNo = (page - 1) * 5;
-			int endTaskNo = startTaskNo + 5;
+		if (getList().size() >= taskLimit) {
+			startTaskNo = (page - 1) * taskLimit;
+			int endTaskNo = startTaskNo + taskLimit;
 			try {
 				tasksForPage = getList().subList(startTaskNo, endTaskNo);
 			} catch (IndexOutOfBoundsException e) {
@@ -65,65 +65,54 @@ public class SomedayView extends SingleView implements View {
 			i++;
 			String taskNoFormatted = "     " + i + ".   ";
 			String tasks = task.toString() + "\n";
-			
-			
-			isCommandExecuted = (display.getCommand().equals(
-					COMMAND_TYPE.DELETE)
-					|| display.getCommand().equals(COMMAND_TYPE.ADD)
-					|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
-					.getCommand().equals(COMMAND_TYPE.EDIT));
-			
-			if (isCommandExecuted && i == display.getViewIndex()) {
-				formatTaskAccdCommand(taskNoFormatted, tasks);
-			} else {
 				appendTasks("#848484", taskNoFormatted, 1);
 				appendTasks("#FFFFFF", "!", 2);
 				appendTasks("#0A1B2A", tasks, 3);
-			}
+			
 		}
 	}
 
-	private void formatTaskAccdCommand(String taskNo,
-			String tasks) throws BadLocationException {
-		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
-			formatDeletedTask(taskNo,tasks);
-		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
-			formatAddTask(taskNo,tasks);
-		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
-			formatDoneTask(taskNo,tasks);
-		}
-		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
-			formatEditTask(taskNo,tasks);
-		}
-		
-	}
-	private void formatDeletedTask(String taskNo, 
-			String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#848484", "<strike>" + tasks + "</strike>", 3);
-		
-	}
-
-	private void formatEditTask(String taskNo, String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#006666", tasks , 3);
-		
-	}
-
-	private void formatDoneTask(String taskNo, String tasks) throws BadLocationException {
-
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#00A300", tasks , 3);
-	}
-
-	private void formatAddTask(String taskNo,String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 3);
-	}
+//	private void formatTaskAccdCommand(String taskNo,
+//			String tasks) throws BadLocationException {
+//		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+//			formatDeletedTask(taskNo,tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+//			formatAddTask(taskNo,tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+//			formatDoneTask(taskNo,tasks);
+//		}
+//		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+//			formatEditTask(taskNo,tasks);
+//		}
+//		
+//	}
+//	private void formatDeletedTask(String taskNo, 
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 3);
+//		
+//	}
+//
+//	private void formatEditTask(String taskNo, String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#006666", tasks , 3);
+//		
+//	}
+//
+//	private void formatDoneTask(String taskNo, String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300", tasks , 3);
+//	}
+//
+//	private void formatAddTask(String taskNo,String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 3);
+//	}
 
 	/**
 	 * Appends to Stringbuilder output

@@ -1,16 +1,9 @@
-import java.awt.Color;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
-import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+
 
 public class HelpView extends SingleView implements View {
-	private int i;
+
 
 	private StringBuilder output = new StringBuilder();
 
@@ -23,13 +16,12 @@ public class HelpView extends SingleView implements View {
 			+ "<p>2. &nbsp Edit taskno desc by date </p>"
 			+ "<p>3. &nbsp Edit taskno by date </p>"
 			+ "<p>4. &nbsp Edit taskno desc from date to date </p>"
-			+ "<p>5. &nbsp Edit taskno from date to date </p>"
-			+ "<p>6. &nbsp Edit taskno someday </p>"
-			+ "<p>7. &nbsp Edit taskno desc from date </p>"
-			+ "<p>8. &nbsp Edit taskno from date</p>"
-			+ "<p>9. &nbsp Edit taskno desc to date </p>"
-			+ "<p>10. Edit taskno to date </p>"
-			+ "<p>11. Edit taskno desc someday</p>";
+			+ "<p>5. &nbsp Edit taskno someday </p>"
+			+ "<p>6. &nbsp Edit taskno desc from date </p>"
+			+ "<p>7. &nbsp Edit taskno from date</p>"
+			+ "<p>8. &nbsp Edit taskno desc to date </p>"
+			+ "<p>9. Edit taskno to date </p>"
+			+ "<p>10. Edit taskno desc someday</p>";
 
 	private String helpToDelete = "<p>1. &nbsp Delete taskno </p>";
 	private String helpToMarkComplete = "<p>1. &nbsp Done taskno </p>";

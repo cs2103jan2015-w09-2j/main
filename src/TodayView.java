@@ -106,15 +106,17 @@ public class TodayView extends SingleView implements View {
 		String taskNoFormatted = "" + taskNo + ".   ";
 		String tasks = taskDes;
 		String timeToDisplay = formatStartEndTimeToDisplay();
-		boolean isCommandExecuted = (display.getCommand().equals(
-				COMMAND_TYPE.DELETE)
-				|| display.getCommand().equals(COMMAND_TYPE.ADD)
-				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
-				.getCommand().equals(COMMAND_TYPE.EDIT));
-		
-		if (isCommandExecuted && taskNo == display.getViewIndex()) {
-			formatTaskAccdCommand(taskNoFormatted, timeToDisplay, tasks);
-		} else if (task.isOverdue()) {
+//		boolean isCommandExecuted = (display.getCommand().equals(
+//				COMMAND_TYPE.DELETE)
+//				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//				.getCommand().equals(COMMAND_TYPE.EDIT));
+//		
+//		if (isCommandExecuted && taskNo == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNoFormatted, timeToDisplay, tasks);
+//		} else 
+//			
+			if (task.isOverdue()) {
 			formatOverdueTasks(taskNoFormatted, timeToDisplay, tasks);
 		} else {
 			formatTasks(taskNoFormatted, timeToDisplay, tasks);
@@ -142,15 +144,17 @@ public class TodayView extends SingleView implements View {
 		String tasks = taskDes;
 		String taskNoFormatted = "" + taskNo + ".   ";
 		String endTimeToDisplay = formatEndTimeToDisplay();
-		boolean isCommandExecuted = (display.getCommand().equals(
-				COMMAND_TYPE.DELETE)
-				|| display.getCommand().equals(COMMAND_TYPE.ADD)
-				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
-				.getCommand().equals(COMMAND_TYPE.EDIT));
-		
-		if (isCommandExecuted && taskNo == display.getViewIndex()) {
-			formatTaskAccdCommand(taskNoFormatted, endTimeToDisplay, tasks);
-		} else if (task.isOverdue()) {
+//		boolean isCommandExecuted = (display.getCommand().equals(
+//				COMMAND_TYPE.DELETE)
+//				|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//				|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//				.getCommand().equals(COMMAND_TYPE.EDIT));
+//		
+//		if (isCommandExecuted && taskNo == display.getViewIndex()) {
+//			formatTaskAccdCommand(taskNoFormatted, endTimeToDisplay, tasks);
+//		} else 
+			
+			if (task.isOverdue()) {
 			formatOverdueTasks(taskNoFormatted, endTimeToDisplay, tasks);
 		} else {
 			formatTasks(taskNoFormatted, endTimeToDisplay, tasks);
@@ -158,52 +162,52 @@ public class TodayView extends SingleView implements View {
 
 	}
 
-	private void formatTaskAccdCommand(String taskNo, String endTimeToDisplay,
-			String tasks) throws BadLocationException {
-		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
-			formatDeletedTask(taskNo, endTimeToDisplay, tasks);
-		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
-			formatAddTask(taskNo, endTimeToDisplay, tasks);
-		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
-			formatDoneTask(taskNo, endTimeToDisplay, tasks);
-		}
-		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
-			formatEditTask(taskNo, endTimeToDisplay, tasks);
-		}
-		
-		
-	}
-	private void formatDeletedTask(String taskNo, String dateTimeToDisplay,
-			String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#848484", "<strike>" + dateTimeToDisplay + "</strike>", 3);
-		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
-	}
-
-	private void formatEditTask(String taskNo, String dateTimeToDisplay,
-			String tasks) {
-
-		
-	}
-
-	private void formatDoneTask(String taskNo, String dateTimeToDisplay,
-			String tasks) throws BadLocationException {
-
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#00A300",  dateTimeToDisplay, 3);
-		appendTasks("#00A300", tasks , 4);
-	}
-
-	private void formatAddTask(String taskNo, String dateTimeToDisplay,
-			String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#B8005C",  "<font size=\"4\">"+dateTimeToDisplay+"</font>", 3);
-		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 4);
-		
-	}
+//	private void formatTaskAccdCommand(String taskNo, String endTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+//			formatDeletedTask(taskNo, endTimeToDisplay, tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+//			formatAddTask(taskNo, endTimeToDisplay, tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+//			formatDoneTask(taskNo, endTimeToDisplay, tasks);
+//		}
+//		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+//			formatEditTask(taskNo, endTimeToDisplay, tasks);
+//		}
+//		
+//		
+//	}
+//	private void formatDeletedTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + dateTimeToDisplay + "</strike>", 3);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+//	}
+//
+//	private void formatEditTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) {
+//
+//		
+//	}
+//
+//	private void formatDoneTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300",  dateTimeToDisplay, 3);
+//		appendTasks("#00A300", tasks , 4);
+//	}
+//
+//	private void formatAddTask(String taskNo, String dateTimeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C",  "<font size=\"4\">"+dateTimeToDisplay+"</font>", 3);
+//		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 4);
+//		
+//	}
 
 	private String formatEndTimeToDisplay() {
 		String timeToDisplay = endTime.format(formatTime).replace("AM", "am")

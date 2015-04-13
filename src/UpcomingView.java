@@ -98,17 +98,18 @@ public class UpcomingView extends SingleView implements View {
 				String taskNoFormatted = "     " + i + ".   ";
 				String endDateTime = formatTimeDate();
 
-				boolean isCommandExecuted = (display.getCommand().equals(
-						COMMAND_TYPE.DELETE)
-						|| display.getCommand().equals(COMMAND_TYPE.ADD)
-						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
-						.getCommand().equals(COMMAND_TYPE.EDIT));
-
-				if (isCommandExecuted && i == display.getViewIndex()) {
-					formatTaskAccdCommand(taskNoFormatted, endDateTime,"", tasks);
-				} else {
-					formatTasks(taskNoFormatted, endDateTime,"", tasks);
-				}
+//				boolean isCommandExecuted = (display.getCommand().equals(
+//						COMMAND_TYPE.DELETE)
+//						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//						.getCommand().equals(COMMAND_TYPE.EDIT));
+//
+//				if (isCommandExecuted && i == display.getViewIndex()) {
+//					formatTaskAccdCommand(taskNoFormatted, endDateTime,"", tasks);
+//				} else {
+//					
+//				}
+				formatTasks(taskNoFormatted, endDateTime,"", tasks);
 			}
 
 			else {
@@ -117,67 +118,68 @@ public class UpcomingView extends SingleView implements View {
 				String dateToDisplay = formatStartEndDate();
 				String timeToDisplay = formatStartEndTime();
 	
-				boolean isCommandExecuted = (display.getCommand().equals(
-						COMMAND_TYPE.DELETE)
-						|| display.getCommand().equals(COMMAND_TYPE.ADD)
-						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
-						.getCommand().equals(COMMAND_TYPE.EDIT));
-
-				if (isCommandExecuted && i == display.getViewIndex()) {
-					formatTaskAccdCommand(taskNoFormatted, dateToDisplay, timeToDisplay,
+//				boolean isCommandExecuted = (display.getCommand().equals(
+//						COMMAND_TYPE.DELETE)
+//						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//						.getCommand().equals(COMMAND_TYPE.EDIT));
+//
+//				if (isCommandExecuted && i == display.getViewIndex()) {
+//					formatTaskAccdCommand(taskNoFormatted, dateToDisplay, timeToDisplay,
+//							tasks);
+//				} else {
+//					
+//				}
+				formatTasks(taskNoFormatted, dateToDisplay, timeToDisplay,
 							tasks);
-				} else {
-					formatTasks(taskNoFormatted, dateToDisplay, timeToDisplay,
-							tasks);
-				}
 			}
 		}
 	}
 
-	private void formatTaskAccdCommand(String taskNo, String dateToDisplay,
-			String timeToDisplay, String tasks) throws BadLocationException {
-		if (display.getCommand().equals(COMMAND_TYPE.DELETE)) {
-			formatDeletedTask(taskNo, dateToDisplay,timeToDisplay, tasks);
-		} else if (display.getCommand().equals(COMMAND_TYPE.ADD)) {
-			formatAddTask(taskNo, dateToDisplay,timeToDisplay, tasks);
-		} else if (display.getCommand().equals(COMMAND_TYPE.DONE)) {
-			formatDoneTask(taskNo, dateToDisplay,timeToDisplay, tasks);
-		} else if (display.getCommand().equals(COMMAND_TYPE.EDIT)) {
-			formatEditTask(taskNo, dateToDisplay,timeToDisplay, tasks);
-		}
-	}
+//	private void formatTaskAccdCommand(String taskNo, String dateToDisplay,
+//			String timeToDisplay, String tasks) throws BadLocationException {
+//		if (display.getCommand().equals(COMMAND_TYPE.DELETE)) {
+//			formatDeletedTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		} else if (display.getCommand().equals(COMMAND_TYPE.ADD)) {
+//			formatAddTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		} else if (display.getCommand().equals(COMMAND_TYPE.DONE)) {
+//			formatDoneTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		} else if (display.getCommand().equals(COMMAND_TYPE.EDIT)) {
+//			formatEditTask(taskNo, dateToDisplay,timeToDisplay, tasks);
+//		}
+//	}
 
-	private void formatDeletedTask(String taskNo, String dateToDisplay,String timeToDisplay,
-			String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#848484", "<strike>" + dateToDisplay + timeToDisplay + "</strike>", 3);
-		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
-	}
-
-	private void formatEditTask(String taskNo, String dateToDisplay,String timeToDisplay,
-			String tasks) throws BadLocationException {
-
-	}
-
-	private void formatDoneTask(String taskNo, String dateToDisplay,String timeToDisplay,
-			String tasks) throws BadLocationException {
-
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#00A300",  dateToDisplay + timeToDisplay , 3);
-		appendTasks("#00A300", tasks, 4);
-	}
-
-	private void formatAddTask(String taskNo, String dateToDisplay,String timeToDisplay,
-			String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#B8005C", "<font size=\"4\">" +  dateToDisplay + timeToDisplay 
-				+ "</font>", 3);
-		appendTasks("#B8005C", "<font size=\"4\">" + tasks + "</font>", 4);
-
-	}
+//	private void formatDeletedTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + dateToDisplay + timeToDisplay + "</strike>", 3);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 4);
+//	}
+//
+//	private void formatEditTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//
+//	}
+//
+//	private void formatDoneTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300",  dateToDisplay + timeToDisplay , 3);
+//		appendTasks("#00A300", tasks, 4);
+//	}
+//
+//	private void formatAddTask(String taskNo, String dateToDisplay,String timeToDisplay,
+//			String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C", "<font size=\"4\">" +  dateToDisplay + timeToDisplay 
+//				+ "</font>", 3);
+//		appendTasks("#B8005C", "<font size=\"4\">" + tasks + "</font>", 4);
+//
+//	}
 
 	private void formatTasks(String taskNo, String dateToDisplay,String timeToDisplay,
 			String tasks) throws BadLocationException {

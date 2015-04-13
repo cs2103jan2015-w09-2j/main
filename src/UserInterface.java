@@ -9,7 +9,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
@@ -56,7 +55,6 @@ public class UserInterface {
 	private ArrayList<String> commandsEntered = new ArrayList<String>();
 	private int noOfCommandsEntered;
 	private String message = "";
-	private String THREAD_INTERUPPTED_MESSAGE= "Error in thread.";
 	private String CLASS_MESSAGE = "UserInterface";
 	private String ERROR_DISPLAYING_VIEW_MESSAGE = "Error in displaying the view.";
 	private String INVALID_INPUT_MESSAGE ="Invalid input entered.";
@@ -430,7 +428,7 @@ public class UserInterface {
 									.matches("\\W")) {
 						if (text.substring(wordL, wordR)
 								.toLowerCase()
-								.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|at|on|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
+								.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
 							setCharacterAttributes(wordL, wordR - wordL, attrRed,
 									false);
 						} else {
@@ -453,7 +451,7 @@ public class UserInterface {
 				int after = findFirstNonWordChar(text, offs);
 
 				if (text.substring(before, after).toLowerCase()
-						.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|at|on|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
+						.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
 					setCharacterAttributes(before, after - before, attrRed, false);
 				} else {
 					setCharacterAttributes(before, after - before, attrBlack,

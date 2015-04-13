@@ -1,0 +1,1971 @@
+//@author: a0111867a
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\AddCmd.java
+	 */
+
+
+public class AddCmd extends ModifiableCmd{
+
+	private Task task;
+	
+	public AddCmd(Task task){
+		this.task = task;
+	}
+	
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute(){	
+		data.add(task);
+		writeToFile();
+	     
+		String addMessage = String.format(ADD_TASK_MESSAGE, task.getDescription(), getTaskType(task));
+	    display.set(addMessage, COMMAND_TYPE.ADD);
+	}
+	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
+	public void undo(){
+		data.remove(task);
+		writeToFile();
+		
+		String undoMessage = String.format(UNDO_ADD_MESSAGE, task.getDescription());
+	    display.set(undoMessage, COMMAND_TYPE.DELETE);
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof AddCmd){
+			AddCmd otherAddCmd = (AddCmd)o;
+			return this.task.equals(otherAddCmd.task);
+		}
+		else{
+			return false;
+		}
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\AddCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\AddCmdTest.java
+	 */
+
+public class AddCmdTest {
+	
+	private static final String TASK_GO_HIKING = "Go Hiking";
+	private static final String TASK_BUY_ORANGE = "Buy orange";
+	
+	protected static final String ADD_TASK_MESSAGE = "Added <font color=\"#CC3300\"><i>%1$s</i></font> to <font color=\"#CC3300\"><i>%2$s</i></font>";
+	protected static final String UNDO_ADD_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>\"Add %1$s\"</i></font>";
+	
+	Data data;
+	Storage storage;
+	Display display;
+	
+	AddCmd addCmd, sameAddCmd, anotherAddCmd;
+	Task task, anotherTask;
+	ArrayList<Task> emptyList, list;
+	String addMessage, undoMessage;
+	
+	@Before
+	public void setUp() throws Exception {
+		data = Data.getInstance();
+		storage = new Storage();
+		display = Display.getInstance();
+		
+		task = new Task(TASK_GO_HIKING);
+		anotherTask = new Task(TASK_BUY_ORANGE);
+		addCmd = new AddCmd(task);
+		sameAddCmd = new AddCmd(task);
+		anotherAddCmd = new AddCmd(anotherTask);
+		
+		list = new ArrayList<Task>();
+		list.add(task);
+		
+		emptyList = new ArrayList<Task>();
+		
+		addMessage = String.format(ADD_TASK_MESSAGE, task.getDescription(), Cmd.getTaskType(task));
+		undoMessage = String.format(UNDO_ADD_MESSAGE, task.getDescription());
+	}
+	
+	@Test
+	public void testExecute() {
+		data.set(emptyList);
+		addCmd.execute();
+		assertEquals("data", data.getData(), list);
+		try {
+			assertEquals("file", storage.getData(), list);
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", addMessage, display.getMessage());
+	}
+
+	@Test
+	public void testUndo() {
+		addCmd.undo();
+		assertEquals("data", data.getData(), emptyList);
+		try {
+			assertEquals("file", storage.getData(), emptyList);
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", undoMessage, display.getMessage());
+	}
+	
+	
+	@Test
+	public void testEquals() {
+		assertTrue("same cmd", addCmd.equals(sameAddCmd));
+		assertFalse("different cmd", addCmd.equals(anotherAddCmd));
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\AddCmdTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Cmd.java
+	 */
+
+public abstract class Cmd {
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\Cmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Cmd.java
+	 */
+
+	/**
+	 * Execute the command specified in this class
+	 */
+	public abstract void execute();
+
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	public void undo() {
+		execute();
+	}
+
+	/**
+	 * Returns the task specified by index
+	 * 
+	 * @param index reference of the task
+	 */
+	protected Task getViewTask(int index) throws IndexOutOfBoundsException {
+		View view = display.getView();
+
+		return view.getTask(index);
+	}
+
+	/**
+	 * Returns the task type of the specified task
+	 * 
+	 * @param task object representation of user's task
+	 */
+	protected static String getTaskType(Task task) {
+		String taskType = "";
+
+		if (task.isTodayTask()) {
+			taskType = TODAY_TASK;
+		} else if (task.isUpcomingTask()) {
+			taskType = UPCOMING_TASK;
+		} else {
+			assert (task.isSomedayTask());
+			taskType = SOMEDAY_TASK;
+		}
+
+		return taskType;
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	public abstract boolean equals(Object o);
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\Cmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\CompletedCmd.java
+	 */
+
+public class CompletedCmd extends ModifiableCmd{
+	
+	private Task task;
+	private int index;
+	
+	public CompletedCmd(int index){		
+		this.index = index;
+		this.task = new Task("");
+	}
+	
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute() throws IndexOutOfBoundsException{	
+		task = getViewTask(index);
+		
+		task.setIsCompleted(true);
+		writeToFile();
+		
+		String completeMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription());
+		display.set(completeMessage, index, COMMAND_TYPE.DONE);
+	}
+	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
+	public void undo(){
+		System.out.println(task);
+		task.setIsCompleted(false);
+		writeToFile();
+		
+		String undoCompleteMessage = String.format(UNDO_COMPLETED_MESSAGE, task.getDescription());
+		display.set(undoCompleteMessage, index, COMMAND_TYPE.DONE);
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof CompletedCmd){
+			CompletedCmd otherCompletedCmd = (CompletedCmd)o;
+			return this.task.equals(otherCompletedCmd.task) && this.index == otherCompletedCmd.index;
+		}
+		else{
+			return false;
+		}
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\CompletedCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\CompletedCmdTest.java
+	 */
+
+public class CompletedCmdTest {
+	
+	private static final String TASK_GO_HIKING = "Go Hiking";
+	
+	protected static final String COMPLETE_TASK_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i> is marked as completed!";
+	protected static final String UNDO_COMPLETED_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>\"Mark %1$s as completed\"</i></font>";
+
+	Data data;
+	Storage storage;
+	Display display;
+	
+	CompletedCmd completedCmd, sameCompletedCmd, anotherCompletedCmd;
+	Task task, completedTask;
+	ArrayList<Task> beforeList, afterList; 
+	String completeMessage, undoMessage;
+	
+	@Before
+	public void setUp() throws Exception {
+		data = Data.getInstance();
+		storage = new Storage();
+		display = Display.getInstance();
+		
+		task = new Task(TASK_GO_HIKING);
+		completedTask = new Task(TASK_GO_HIKING);
+		completedTask.setIsCompleted(true);
+		
+		completedCmd = new CompletedCmd(1);
+		sameCompletedCmd = new CompletedCmd(1);
+		anotherCompletedCmd = new CompletedCmd(2);
+		
+		beforeList = new ArrayList<Task>();
+		afterList = new ArrayList<Task>();
+		
+		beforeList.add(task);
+		afterList.add(completedTask);
+		
+		completeMessage = String.format(COMPLETE_TASK_MESSAGE, task.getDescription(), Cmd.getTaskType(task));
+		undoMessage = String.format(UNDO_COMPLETED_MESSAGE, task.getDescription());
+		
+		data.set(beforeList);
+		display.set("");
+	}
+	
+	@Test
+	public void testExecute() {
+		completedCmd.execute();
+		assertEquals("data", data.getData(), afterList);
+		try {
+			assertEquals("file", storage.getData(), afterList);
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", completeMessage, display.getMessage());
+		System.out.println(data.getData());
+	}
+
+	@Test
+	public void testUndo() {
+		completedCmd.execute();
+		completedCmd.undo();
+		assertEquals("data", beforeList, data.getData());
+		try {
+			assertEquals("file", storage.getData(), beforeList);
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", undoMessage, display.getMessage());
+	}
+	
+	
+	@Test
+	public void testEquals() {
+		assertTrue("same cmd", completedCmd.equals(sameCompletedCmd));
+		assertFalse("different cmd", completedCmd.equals(anotherCompletedCmd));
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\CompletedCmdTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Controller.java
+	 */
+
+public class Controller {
+	
+	protected static final String MESSAGE_INVALID_INDEX = "The number you enter is invalid";
+	protected static final String MESSAGE_FILE_ACCESS_NOT_ALLOWED = "Error with oneTag.json file access";
+	protected static final String NAME_CLASS_STORAGE = "storage";
+	private static Controller controller = null;
+	
+	private Storage file;
+	Data data = Data.getInstance();
+	Display display = Display.getInstance();
+	History history = History.getInstance();
+	OneTagLogger logger = OneTagLogger.getInstance();
+	
+	private Controller(){
+		try{
+		file = new Storage();
+		data.set(file.getData());
+		}catch(IOException ex){
+			logger.log(Level.WARNING, NAME_CLASS_STORAGE, MESSAGE_FILE_ACCESS_NOT_ALLOWED);
+		}
+		
+		display.set(new HomeView());
+	}
+	
+	/**
+	 * Returns an instance of this class
+	 */
+	public static Controller getInstance(){
+		if(controller == null){
+			controller = new Controller();
+		}
+		return controller;
+	}
+	
+	/**
+	 * Parse the input and update file and display.
+	 * 
+	 * @param input raw string input by user
+	 */
+	public void executeCommand(String input) {
+		
+		try{
+			OneTagParser oneTagParser = new OneTagParser(input);
+			Cmd cmd = oneTagParser.toCmd();
+			cmd.execute();
+			
+			if(!(cmd instanceof UndoCmd)){
+				history.add(cmd);
+			}
+		}
+		catch(IndexOutOfBoundsException ex){
+			display.set(MESSAGE_INVALID_INDEX);
+		}
+	}
+
+}
+	// End of segment: C:\Users\Ganga\workspace\main\src\Controller.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Data.java
+	 */
+
+public class Data{
+
+	private static Data data;
+	
+	private ArrayList<Task> myList; //the arraylist whose task are to be placed into this list
+	
+	//Constructor
+	private Data(){
+		myList = new ArrayList<Task>();
+	}
+	
+	/**
+	 * Returns an instance of this class
+	 */
+	public static Data getInstance(){
+		if(data == null){
+			data = new Data();
+		}
+		return data;
+	}
+		
+	/**
+	 * Returns an arraylist containing all of the task in this list.
+	 */
+	public ArrayList<Task> getData(){
+		return myList;
+	}
+		
+	/**
+	 * Returns an arraylist containing today task in this list.
+	 */
+	public ArrayList<Task> getToday(){
+		ArrayList<Task> todayList = new ArrayList<Task>();
+		
+		for(Task task : myList){
+			if(task.isTodayTask() && !task.getIsCompleted()){
+				todayList.add(task);
+			}
+		}
+		Collections.sort(todayList, new EndTimeComparator());
+		return todayList;
+	}
+	
+	/**
+	 * Returns an arraylist containing upcoming task in this list.
+	 */
+	public ArrayList<Task> getUpcoming(){
+		ArrayList<Task> upcomingList = new ArrayList<Task>();
+		
+		for(Task task : myList){
+			if(task.isUpcomingTask() && !task.getIsCompleted()){
+				upcomingList.add(task);
+			}
+		}
+		Collections.sort(upcomingList, new EndTimeComparator());
+		return upcomingList;
+	}
+	
+	/**
+	 * Returns an arraylist containing someday task in this list.
+	 */
+	public ArrayList<Task> getSomeday(){
+		ArrayList<Task> somedayList = new ArrayList<Task>();
+		
+		for(Task task : myList){
+			if(task.isSomedayTask() && !task.getIsCompleted()){
+				somedayList.add(task);
+			}
+		}
+		return somedayList;
+	}
+	
+	/**
+	 * Returns an arraylist containing completed task in this list.
+	 */
+	public ArrayList<Task> getCompleted(){
+		ArrayList<Task> completedList = new ArrayList<Task>();
+		
+		for(Task task : myList){
+			if(task.getIsCompleted()){
+				completedList.add(task);
+			}
+		}
+		return completedList;
+	}
+	
+	/**
+	 * Returns an arraylist containing task containing text(not case sensitive) in this list.
+	 * 
+	 * @param text String to search for
+	 */
+	public ArrayList<Task> getSearched(String text){
+		ArrayList<Task> searchedList = new ArrayList<Task>();
+
+		for(Task task : myList){	
+			if(task.getDescription().toLowerCase().contains(text.toLowerCase())){
+				searchedList.add(task);
+			}
+		}
+		return searchedList;	
+	}
+		
+	/**
+	 * Replace the current list with myList.
+	 * 
+	 * @param myList the arraylist whose task are to be placed into this list
+	 */
+	public void set(ArrayList<Task> myList){
+		this.myList = myList;
+	}
+	
+	/**
+	 * Appends the specified task to the end of this list.
+	 * 
+	 * @param task task to be appended to this list
+	 */
+	public boolean add(Task task){
+		return myList.add(task);
+	}
+	
+	/**
+	 * Removes the task at the specified position in this list.
+	 * 
+	 * @param task task to be remove
+	 */
+	public boolean remove(Task task){
+		return myList.remove(task);
+	}
+			
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\Data.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\DataTest.java
+	 */
+
+public class DataTest {
+	
+	Data data;
+	
+	LocalDateTime today;
+	LocalDateTime tomorrow;
+	
+	private static final String TASK_GO_HIKING = "Go Hiking";
+	private static final String TASK_BUY_APPLE = "Buy apple";
+	private static final String TASK_BUY_ORANGE = "Buy orange";
+	private static final String TASK_GO_RUNNING = "Go running";
+	private static final String TASK_GO_HOME = "Go Home";
+	private static final String TASK_GO_RT = "Go RT";
+	private static final int oneDay = 1;
+	
+	private Task floatingTask;
+	private Task todayTask;
+	private Task tomorrowTask;
+	private Task completedFloatingTask;
+	private Task completedTodayTask;
+	private Task completedTomorrowTask;
+	
+	private ArrayList<Task> emptyList;
+	private ArrayList<Task> oneItemList;
+	private ArrayList<Task> allList;
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+	}
+
+	@Before
+	public void setUp() throws Exception {
+		data = Data.getInstance();
+
+		today = LocalDateTime.now();
+		tomorrow = LocalDateTime.now().plusDays(oneDay);
+		
+		todayTask = new Task(LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute()), LocalDateTime.of(today.getYear(), today.getMonthValue(), today.getDayOfMonth(), today.getHour(), today.getMinute()), TASK_GO_HIKING);
+		tomorrowTask = new Task(tomorrow, TASK_BUY_APPLE);
+		floatingTask = new Task(TASK_BUY_ORANGE);
+		completedTodayTask = new Task(today, TASK_GO_RUNNING);
+		completedTodayTask.setIsCompleted(true);
+		completedTomorrowTask = new Task(tomorrow, TASK_GO_HOME);
+		completedTomorrowTask.setIsCompleted(true);
+		completedFloatingTask = new Task(TASK_GO_RT);
+		completedFloatingTask.setIsCompleted(true);
+		
+		emptyList = new ArrayList<Task>();
+		
+		oneItemList = new ArrayList<Task>();
+		oneItemList.add(floatingTask);
+		
+		allList = new ArrayList<Task>();
+		allList.add(todayTask);
+		allList.add(tomorrowTask);
+		allList.add(floatingTask);
+		allList.add(completedTodayTask);
+		allList.add(completedTomorrowTask);
+		allList.add(completedFloatingTask);
+	
+	}
+	
+	@Test
+	public void testSet() {
+		data.set(emptyList);
+		assertEquals("set empty list", data.getData().toString(), "[]");
+		 
+		data.set(oneItemList);
+		assertEquals("set one item list", data.getData().toString(), "[" + floatingTask.toString() + "]");
+	}
+
+	@Test
+	public void testAdd() {
+		data.set(emptyList);
+		assertEquals("add one item", data.add(floatingTask), true);
+	}
+	
+	@Test
+	public void testRemove() {
+		data.set(emptyList);
+		assertFalse("empty list", data.remove(floatingTask));
+		
+		data.add(floatingTask);
+		assertTrue("list with one item", data.remove(floatingTask));
+	}
+
+	@Test
+	public void testGetToday() {
+		data.set(allList);
+		assertEquals("today and not completed", data.getToday().toString(), "[" + todayTask.toString() + "]");
+	}
+	
+	@Test
+	public void testGetUpcoming() {
+		data.set(allList);
+		assertEquals("upcoming and not completed", data.getUpcoming().toString(), "[" + tomorrowTask.toString() + "]");	
+	}
+	
+	@Test
+	public void testGetSomeday() {
+		data.set(allList);
+		assertEquals("someday and not completed", data.getSomeday().toString(), "[" + floatingTask.toString() + "]");	
+	}
+	
+	@Test
+	public void testGetCompleted() {
+		data.set(allList);
+		assertEquals("completed today, upcoming and someday", data.getCompleted().toString(), 
+				"[" + completedTodayTask.toString() + ", "
+						+ completedTomorrowTask.toString() + ", "
+						+ completedFloatingTask.toString() + "]");	
+	}
+	
+	@Test
+	public void testGetSearched() {
+		data.set(oneItemList);
+		assertEquals("is description", data.getSearched(TASK_BUY_ORANGE), oneItemList);
+		assertEquals("is not description", data.getSearched(TASK_GO_RT), emptyList);	
+		assertEquals("search upper case", data.getSearched(TASK_BUY_ORANGE.toUpperCase()), oneItemList);
+		assertEquals("search lower case", data.getSearched(TASK_BUY_ORANGE.toLowerCase()), oneItemList);
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\DataTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\DeleteCmd.java
+	 */
+
+public class DeleteCmd extends ModifiableCmd{
+
+	private Task task;
+	private int index;
+	
+	public DeleteCmd(int index){
+		this.index = index;
+		this.task = new Task("");
+	}
+	
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute(){
+		task = getViewTask(index);
+		
+		data.remove(task);
+		writeToFile();
+	     
+		String deleteMsg = String.format(DELETE_TASK_MESSAGE, task.getDescription());
+		display.set(deleteMsg, index, COMMAND_TYPE.DELETE);
+	}
+	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
+	public void undo(){
+		data.add(task);
+		writeToFile();
+		
+		String undoMessage = String.format(UNDO_DELETE_MESSAGE, task.getDescription(), getTaskType(task));
+		display.set(undoMessage, index, COMMAND_TYPE.ADD);
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof DeleteCmd){
+			DeleteCmd otherDeleteCmd = (DeleteCmd)o;
+			return this.task.equals(otherDeleteCmd.task) && this.index == otherDeleteCmd.index;
+		}
+		else{
+			return false;
+		}
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\DeleteCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\DeleteCmdTest.java
+	 */
+
+public class DeleteCmdTest {
+	
+	private static final String TASK_GO_HIKING = "Go Hiking";
+	
+	protected static final String DELETE_TASK_MESSAGE = "Deleted <font color=\"#CC3300\"><i>%1$s</i></font>";
+	protected static final String UNDO_DELETE_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>\"Delete %1$s\"</i></font>";
+
+	Data data;
+	Storage storage;
+	Display display;
+	
+	DeleteCmd deleteCmd, sameDeleteCmd, anotherDeleteCmd;
+	Task task;
+	ArrayList<Task> beforeList, afterList; 
+	String deleteMessage, undoMessage;
+	
+	@Before
+	public void setUp() throws Exception {
+		data = Data.getInstance();
+		storage = new Storage();
+		display = Display.getInstance();
+		
+		task = new Task(TASK_GO_HIKING);
+		
+		deleteCmd = new DeleteCmd(1);
+		sameDeleteCmd = new DeleteCmd(1);
+		anotherDeleteCmd = new DeleteCmd(2);
+		
+		beforeList = new ArrayList<Task>();
+		afterList = new ArrayList<Task>();
+		
+		beforeList.add(task);
+		
+		deleteMessage = String.format(DELETE_TASK_MESSAGE, task.getDescription(), Cmd.getTaskType(task));
+		undoMessage = String.format(UNDO_DELETE_MESSAGE, task.getDescription());
+		
+		data.set(beforeList);
+		display.getView().update();
+	}
+	
+	@Test
+	public void testExecute() {
+		deleteCmd.execute();
+		assertEquals("data", data.getData(), afterList);
+		try {
+			assertEquals("file", afterList, storage.getData());
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", deleteMessage, display.getMessage());
+		System.out.println(data.getData());
+	}
+
+	@Test
+	public void testUndo() {
+		deleteCmd.execute();
+		deleteCmd.undo();
+		assertEquals("data", beforeList, data.getData());
+		try {
+			assertEquals("file", storage.getData(), beforeList);
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", undoMessage, display.getMessage());
+	}
+	
+	
+	@Test
+	public void testEquals() {
+		assertTrue("same cmd", deleteCmd.equals(sameDeleteCmd));
+		assertFalse("different cmd", deleteCmd.equals(anotherDeleteCmd));
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\DeleteCmdTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Display.java
+	 */
+
+
+public class Display {
+
+	final static int DEFAULT_PAGE = 1;
+	final static int INVALID_INDEX = -1;
+	
+	private static Display display = null;
+	
+	private View view; 	           //current view shown to user
+	private String message;        //current message to be displayed to user
+	private int viewIndex;         //index of task modified 
+	private COMMAND_TYPE command;  //current command executed
+	private int paging;            //current page the user is viewing   
+
+	//Constructor
+	private Display(){
+		this.view = new HomeView();	
+		this.message = "";
+		this.viewIndex = INVALID_INDEX;
+		this.command = COMMAND_TYPE.HOME;
+		this.paging = DEFAULT_PAGE;
+	}
+	
+	/**
+	 * Returns an instance of this class
+	 */
+	public static Display getInstance() {
+		if (display == null) {
+			display = new Display();
+		}
+		return display;
+	}
+	
+	/**
+	 * Returns the reference of the current view
+	 */
+	public View getView() {
+		return view;
+	}
+
+	/**
+	 * Returns the reference of the current message
+	 */
+	public String getMessage() {
+		return message;
+	}
+	
+	/**
+	 * Returns the reference of the current view index
+	 */
+	public int getViewIndex() {
+		return viewIndex;
+	}
+
+	/**
+	 * Returns the reference of the current command type
+	 */
+	public COMMAND_TYPE getCommand(){
+		return command;
+	}
+	
+	/**
+	 * Returns the reference of the current paging
+	 */
+	public int getPaging(){
+		return paging;
+	}
+	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param view current view shown to user
+	 */
+	public void set(View view) {
+		set(view, 1);
+		this.command = COMMAND_TYPE.HOME;
+	}
+	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param view current view shown to user
+	 * @param paging current page the user is viewing
+	 */
+	public void set(View view, int paging) {
+		view.update();
+		this.view = view;
+		this.paging = paging;
+		this.command = COMMAND_TYPE.HOME;
+	}
+	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param message current message to be displayed to user
+	 */
+	public void set(String message) {
+		this.message = message;
+			this.view.update();
+		this.command = COMMAND_TYPE.HOME;
+	}
+	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param message current message to be displayed to user
+	 * @param command current command executed
+	 */
+	public void set(String message, COMMAND_TYPE command){
+		set(message, -1, command);
+		this.view.update();
+	}
+	
+	/**
+	 * Replaces the target field with the specified element.
+	 * 
+	 * @param message current message to be displayed to user
+	 * @param viewIndex index of task modified 
+	 * @param command current command executed
+	 */
+	public void set(String message, int viewIndex, COMMAND_TYPE command){
+		this.message = message;
+		this.viewIndex = viewIndex;
+		this.command = command;
+		this.view.update();
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\Display.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\DisplayTest.java
+	 */
+
+public class DisplayTest {
+	
+	protected static final String ADD_TASK_MESSAGE = "Added <font color=\"#CC3300\"><i>%1$s</i></font> to <font color=\"#CC3300\"><i>%2$s</i></font>";
+	protected static final String UNDO_ADD_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>\"Add %1$s\"</i></font>";
+	
+	Display display;
+	HomeView homeView;
+	TodayView todayView;
+	
+	@Before
+	public void setUp() throws Exception {
+		display = Display.getInstance();
+		display.set(ADD_TASK_MESSAGE, -1, COMMAND_TYPE.HOME);
+		homeView = new HomeView();
+		todayView = new TodayView();
+		
+	}
+	
+	@Test
+	public void testGetView() {
+		assertEquals(display.getView().getList(), homeView.getList());
+	}
+	
+	@Test
+	public void testGetMessage() {
+		assertEquals(ADD_TASK_MESSAGE, display.getMessage());
+	}
+	
+	@Test
+	public void testGetViewIndex() {
+		assertEquals(display.getViewIndex(), -1);
+	}
+	
+	@Test
+	public void testGetCommand() {
+		assertEquals(COMMAND_TYPE.HOME, display.getCommand());
+	}
+	
+	@Test
+	public void testGetPaging() {
+		assertEquals(display.getPaging(), 1);
+	}
+	
+	@Test
+	public void testSetView() {
+		display.set(todayView);
+		assertEquals("test view of set view", display.getView().getClass(), todayView.getClass());
+		
+		display.set(homeView, 2);
+		assertEquals("test view of set view and pageing", display.getView().getClass(), homeView.getClass());
+		assertEquals("test paging of set view and paging", display.getPaging(), 2);
+		
+		display.set(ADD_TASK_MESSAGE);
+		assertEquals("test message of set message", display.getMessage(), ADD_TASK_MESSAGE);
+		
+		display.set(UNDO_ADD_MESSAGE, COMMAND_TYPE.UNDO);
+		assertEquals("test message of set message and command", display.getMessage(), UNDO_ADD_MESSAGE);
+		assertEquals("test command of set message and command", display.getCommand(), COMMAND_TYPE.UNDO);
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\DisplayTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\EditCmd.java
+	 */
+
+public class EditCmd extends ModifiableCmd{
+	
+	private Task task = new Task("");
+	private int index = -1;
+	private int viewIndex = 0;
+	
+	private String description = null;
+	private LocalDateTime start = null;
+	private LocalDateTime end = null;
+	private boolean isSomeday = false;
+	
+	private EditCmd(int index){
+		this.index = index;
+	}
+	
+	public EditCmd(int index, boolean isSomeday){
+		this(index);
+		assert(isSomeday);
+		this.isSomeday = isSomeday;
+		this.viewIndex = 1;
+	}
+	
+	public EditCmd(int index, String description){
+		this(index);
+		this.description = description;
+		this.viewIndex = 2;
+	}
+	
+	public EditCmd(int index, String description, boolean isSomeday){
+		this(index, description);
+		assert(isSomeday);
+		this.isSomeday = isSomeday;
+		this.viewIndex = 3;
+	}
+	
+	//indicate: 1= start, 2= end
+	public EditCmd(int index, LocalDateTime time, int indicate){
+		this(index);
+		if(indicate == 1){
+			this.start = time;
+			this.end = null;
+			this.viewIndex = 4;
+		}
+		else{
+			assert(indicate == 2);
+			this.start = null;
+			this.end = time;
+			this.viewIndex = 5;
+		}
+	}
+	
+	public EditCmd(int index, LocalDateTime start, LocalDateTime end){
+		this.start = start;
+		this.end = end;
+		this.viewIndex = 6;
+	}
+	
+	//indicate: 1= start, 2= end
+	public EditCmd(int index, String description, LocalDateTime time, int indicate){
+		this(index, time, indicate);
+		this.description = description;
+		this.viewIndex += 3; //start = 7, end = 8
+	}
+	
+	public EditCmd(int index, String description, LocalDateTime start, LocalDateTime end){
+		this(index, description);
+		this.start = start;
+		this.end = end;
+		this.viewIndex = 9;
+	}
+	
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute() throws IndexOutOfBoundsException{
+		
+		task = getViewTask(index);
+		
+		//store current task in temp before edit
+		String tempDescription = task.getDescription();
+		LocalDateTime tempStart = task.getStart();
+		LocalDateTime tempEnd = task.getEnd();
+		
+		if(isSomeday){
+			if(description != null){
+				task.setDescription(description);
+			}
+			task.setStart(null);
+			task.setEnd(null);
+		}
+		else{
+			 update();
+		}
+		writeToFile();
+		
+		//keep temp for undo
+		description = tempDescription;
+		start = tempStart;
+		end = tempEnd;
+		
+		display.set(getMessage());
+	}
+	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
+	public void undo(){
+		update();
+		writeToFile();
+		
+		display.set(getUndoMessage());
+	}
+	
+	//update the field of task if it is not null
+	private void update(){
+		if(description != null){
+			task.setDescription(description);
+		}
+		if(start != null){
+			task.setStart(start);
+		}
+		if(end != null){
+			task.setEnd(end);
+		}
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof EditCmd){
+			EditCmd otherEditCmd = (EditCmd)o;
+			
+			Boolean isSameTask = this.task.equals(otherEditCmd.task);
+			Boolean isSameIndex = this.index == otherEditCmd.index;
+			Boolean isSameViewIndex = this.viewIndex == otherEditCmd.viewIndex;
+			Boolean isSameDescription = this.description.equals(otherEditCmd.description);
+			Boolean isSameStart = this.start == otherEditCmd.start;
+			Boolean isSameEnd = this.end == otherEditCmd.end;
+			Boolean isSameIsSomeday = this.isSomeday == otherEditCmd.isSomeday;
+			
+			return isSameTask && isSameIndex && isSameViewIndex && isSameDescription 
+					&& isSameStart && isSameEnd && isSameIsSomeday;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	// End of segment: C:\Users\Ganga\workspace\main\src\EditCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\EditCmdTest.java
+	 */
+
+public class EditCmdTest {
+	
+	private static final String TASK_GO_HIKING = "Go Hiking";
+	private static final String TASK_BUY_ORANGE = "Buy orange";
+	
+	protected static final String EDIT_DES_MESSAGE = "Task description is changed to <font color=\"#CC3300\"><i>%1$s</i></font>";
+	protected static final String UNDO_EDIT_DES_MESSAGE = "Undo action: Task description is changed to <font color=\"#CC3300\"><i>%1$s</i></font>";
+	
+	Data data;
+	Storage storage;
+	Display display;
+	
+	EditCmd editCmd, sameEditCmd, anotherEditCmd;
+	Task task, editedTask;
+	ArrayList<Task> beforeList, afterList; 
+	String editedMessage, undoMessage;
+	
+	@Before
+	public void setUp() throws Exception {
+		data = Data.getInstance();
+		storage = new Storage();
+		display = Display.getInstance();
+		
+		task = new Task(TASK_GO_HIKING);
+		editedTask = new Task(TASK_BUY_ORANGE);
+		
+		editCmd = new EditCmd(1, TASK_BUY_ORANGE);
+		sameEditCmd = new EditCmd(1, TASK_BUY_ORANGE);
+		anotherEditCmd = new EditCmd(2, TASK_BUY_ORANGE);
+		
+		beforeList = new ArrayList<Task>();
+		afterList = new ArrayList<Task>();
+		
+		beforeList.add(task);
+		afterList.add(editedTask);
+		
+		editedMessage = String.format(EDIT_DES_MESSAGE, editedTask.getDescription(), Cmd.getTaskType(editedTask));
+		undoMessage = String.format(UNDO_EDIT_DES_MESSAGE, task.getDescription());
+		
+		data.set(beforeList);
+		display.set("");
+	}
+	
+	@Test
+	public void testExecute() {
+		editCmd.execute();
+		assertEquals("data", data.getData(), afterList);
+		try {
+			assertEquals("file", storage.getData(), afterList);
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", editedMessage, display.getMessage());
+		System.out.println(data.getData());
+	}
+
+	@Test
+	public void testUndo() {
+		editCmd.execute();
+		editCmd.undo();
+		assertEquals("data", beforeList, data.getData());
+		try {
+			assertEquals("file", storage.getData(), beforeList);
+		} catch (IOException e) {
+			assert false;
+		}
+		assertEquals("message", undoMessage, display.getMessage());
+	}
+	
+	
+	@Test
+	public void testEquals() {
+		assertTrue("same cmd", editCmd.equals(sameEditCmd));
+		assertFalse("different cmd", editCmd.equals(anotherEditCmd));
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\EditCmdTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\EndTimeComparator.java
+	 */
+
+public class EndTimeComparator implements Comparator<Task>{
+
+	@Override
+	public int compare(Task task1, Task task2) {
+		LocalDateTime end1 = task1.getEnd();
+		LocalDateTime end2 = task2.getEnd();
+		
+		return end1.compareTo(end2);
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\EndTimeComparator.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\History.java
+	 */
+
+public class History {
+
+	private static History history = null;
+	
+	private Stack<Cmd> list;
+	
+	private History(){
+		list = new Stack<Cmd>();
+	}
+	
+	/**
+	 * Returns an instance of this class
+	 */
+	public static History getInstance(){
+		if(history == null){
+			history = new History();
+		}
+		return history;
+	}
+	
+	/**
+	 * Looks at the object at the top of history without removing it from the history.
+	 */
+	public Cmd peep() throws EmptyStackException{
+		return list.peek();
+	}
+	
+	/**
+	 * Appends the specified cmd to the start of this list.
+	 * 
+	 * @param cmd cmd to be appended to this list
+	 */
+	public void add(Cmd cmd){
+		list.push(cmd);
+	}
+	
+	/**
+	 * Removes the cmd at the start of this list.
+	 */
+	public Cmd remove() throws EmptyStackException{
+		return list.pop();
+	}
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\History.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HistoryTest.java
+	 */
+
+public class HistoryTest {
+
+	private History history;
+	private UndoCmd undoCmd;
+	private ExitCmd exitCmd;
+	
+	@Before
+	public void setUp() throws Exception {
+		history = History.getInstance();
+		
+		undoCmd = new UndoCmd();
+		exitCmd = new ExitCmd();
+	}
+	
+	@Test
+	public void testAdd() {
+		history.add(undoCmd);
+		assertEquals(undoCmd.getClass(), history.peep().getClass());
+	}
+
+	@Test
+	public void testRemove() {
+		history.add(exitCmd);
+		history.remove();
+		assertEquals(undoCmd.getClass(), history.peep().getClass());
+	}
+		
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\HistoryTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	public HomeView() {
+		update();
+	}
+
+	/**
+	 * Sets the list of tasks for each category
+	 */
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
+	 */
+
+	public void update() {
+		Data data = Data.getInstance();
+		this.today = data.getToday();
+		this.upcoming = data.getUpcoming();
+		this.someday = data.getSomeday();
+	}
+
+	/**
+	 * Gets the task based on the number
+	 * 
+	 * @param numbering
+	 * @return Task
+	 */
+	public Task getTask(int numbering) throws IndexOutOfBoundsException {
+		int index = numbering - 1;
+
+		int todaySize = Math.min(today.size(), todayLimit);
+		int dateSize = Math.min(todaySize + upcoming.size(), upcomingLimit);
+		int allSize = Math.min(dateSize + someday.size(), somedayLimit);
+
+		if (index > -1 && index < todaySize) {
+			return today.get(index);
+		} else if (index < dateSize) {
+			int upcomingIndex = index - todaySize;
+			return upcoming.get(upcomingIndex);
+		} else if (index < allSize) {
+			int somedayIndex = index - dateSize;
+			return someday.get(somedayIndex);
+		} else {
+			throw new IndexOutOfBoundsException();
+		}
+	}
+
+	/**
+	 * Sets the combined list. Used for testing.
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	@Override
+	public ArrayList<Task> getList() {
+		List<Task> combinedList = new ArrayList<Task>();
+		combinedList.addAll(today);
+		combinedList.addAll(upcoming);
+		combinedList.addAll(someday);
+
+		return (ArrayList<Task>) combinedList;
+	}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\ModifiableCmd.java
+	 */
+
+public abstract class ModifiableCmd extends Cmd{
+	
+	protected static final String NAME_CLASS_MODIFIABLECMD = "ModifiableCmd";
+	
+	// End of segment: C:\Users\Ganga\workspace\main\src\ModifiableCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\SearchCmd.java
+	 */
+
+public class SearchCmd extends Cmd{
+	
+	private String searchedText = "";
+	private View preView;
+	
+	public SearchCmd(String searchedText){
+		this.searchedText = searchedText;
+		this.preView = display.getView();
+	}
+	
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute(){	
+		if(data.getSearched(searchedText).isEmpty()){
+			display.set(SEARCH_KEYWORD_IS_EMPTY);
+		}
+		preView = display.getView();
+		display.set(new SearchView(searchedText));
+	}
+	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
+	public void undo(){
+		display.set(preView);
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof SearchCmd){
+			SearchCmd otherSearchCmd = (SearchCmd)o;
+			return this.searchedText.equals(otherSearchCmd.searchedText) && this.preView.equals(otherSearchCmd.preView);
+		}
+		else{
+			return false;
+		}
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\SearchCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\SearchCmdTest.java
+	 */
+
+public class SearchCmdTest {
+
+	private static final String TASK_GO_HIKING = "Go Hiking";
+	
+	private final static String USER_QUERY_ONE = "hiking";
+	private final static String USER_QUERY_TWO = "orange";
+	Display display;
+	Data data;
+	
+	SearchCmd searchCmd, sameSearchCmd, anotherSearchCmd;
+	Task task;
+	ArrayList<Task> list, emptyList;
+	SearchView searchView;
+	HomeView homeView;
+	
+	@Before
+	public void setUp() throws Exception {
+		display = Display.getInstance();
+		data = Data.getInstance();
+		
+		task = new Task(TASK_GO_HIKING);
+		
+		searchCmd = new SearchCmd(USER_QUERY_ONE);
+		sameSearchCmd = new SearchCmd(USER_QUERY_ONE);
+		anotherSearchCmd = new SearchCmd(USER_QUERY_TWO);
+		
+		list = new ArrayList<Task>();
+		emptyList = new ArrayList<Task>();
+		
+		list.add(task);
+		
+		homeView = new HomeView();
+		searchView = new SearchView(USER_QUERY_ONE);
+		
+		data.set(list);
+		display.set("");
+	}
+	
+	@Test
+	public void testExecute() {
+		searchCmd.execute();
+		assertEquals(list, display.getView().getList());
+	}
+
+	@Test
+	public void testUndo() {
+		display.set(homeView);
+		searchCmd.execute();
+		searchCmd.undo();
+		assertEquals(homeView.getClass(), display.getView().getClass());
+	}
+	
+	
+	@Test
+	public void testEquals() {
+		assertTrue("same cmd", searchCmd.equals(sameSearchCmd));
+		assertFalse("different cmd", searchCmd.equals(anotherSearchCmd));
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\SearchCmdTest.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\SingleView.java
+	 */
+
+public abstract class SingleView implements View{
+
+	protected Data data = Data.getInstance();
+	private ArrayList<Task> list;
+	
+	public ArrayList<Task> getList() {
+		return list;
+	}
+
+	protected void setList(ArrayList<Task> list) {
+		this.list = list;
+	}
+
+	public Task getTask(int index) throws IndexOutOfBoundsException{
+		index--;
+		
+		return list.get(index);
+	}
+		
+	public abstract void update();
+}
+	// End of segment: C:\Users\Ganga\workspace\main\src\SingleView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Task.java
+	 */
+
+	/*@Override
+	public int compareTo(Task task) {
+		
+		int completed, floating;
+		
+		if((completed = compareCompleted(task)) != 0){
+			return completed;
+		}
+		else if((floating = compareFloating(task)) != 0){
+			return floating;
+		}
+		return compareTimed(task);
+		
+	}
+
+	private int compareTimed(Task task) {
+		if(!this.start.equals(task.start) && !this.end.equals(task.end)){
+			return this.start.compareTo(task.start);
+		}
+		
+		else if(this.start.equals(task.start) && !this.end.equals(task.end)){
+			return this.end.compareTo(task.end);
+		}
+		else{
+			return 0;
+		}
+	}
+
+	private int compareFloating(Task task) {
+		if(this.isFloatingTask() && !task.isFloatingTask()){
+			return -1;
+		}
+		else if(!this.isFloatingTask() && task.isFloatingTask()){
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}
+
+	private int compareCompleted(Task task) {
+		if(this.isCompleted && !task.isCompleted){
+			return -1;
+		}
+		else if(!this.isCompleted && task.isCompleted){
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}*/
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\Task.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\UndoCmd.java
+	 */
+
+public class UndoCmd extends Cmd {
+
+	public UndoCmd(){
+	}
+	
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute() {
+		History history = History.getInstance();
+		
+		try{
+			Cmd cmd = history.remove();
+			cmd.undo();
+		}
+		catch(EmptyStackException ex){
+			display.set(UNDO_EMPTY_MESSAGE);
+		}
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o){
+		return (o instanceof UndoCmd);
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\UndoCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\View.java
+	 */
+
+public interface View {
+		
+	/**
+	 * Call to get update from data
+	 */
+	public void update();
+	
+	/**
+	 * Returns the html intepretation of data
+	 */
+	public String show() throws BadLocationException, IOException;
+	
+	/**
+	 * Returns the task specified by index
+	 * 
+	 * @param index reference of the task
+	 */
+	public Task getTask(int index) throws IndexOutOfBoundsException;
+	
+	/**
+	 * Returns the arraylist of task representation of this class
+	 */
+	public ArrayList<Task> getList();
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\View.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\ViewCmd.java
+	 */
+
+public class ViewCmd extends Cmd{
+
+	final static int PAGE_ONE = 1;
+	COMMAND_TYPE command;
+	View preView;
+	int paging;
+	
+	public ViewCmd(COMMAND_TYPE command) {
+		this.command = command;
+		this.preView = display.getView();
+		this.paging = PAGE_ONE;
+	}
+	
+	public ViewCmd(COMMAND_TYPE command, int paging) {
+		this.command = command;
+		this.preView = display.getView();
+		this.paging = paging;
+	}
+
+	/**
+	 * Execute the command specified in this class
+	 */
+	public void execute(){
+		this.preView = display.getView();
+
+		switch(command){
+			case HOME :
+				display.set(new HomeView(), paging); 
+				break;
+			case TODAY :
+				display.set(new TodayView(), paging);
+				break;
+			case UPCOMING :
+				display.set(new UpcomingView(), paging);
+				break;
+			case SOMEDAY :
+				display.set(new SomedayView(), paging);
+				break;
+			case DONE :
+				display.set(new CompletedView(), paging);
+				break;
+			case HELP :
+				display.set(new HelpView());
+				break;
+			default :
+				display.set(new HomeView());
+				break;
+		}	
+	}
+	
+	/**
+	 * Undo the command previously executed by this class
+	 */
+	@Override
+	public void undo(){
+		display.set(preView, paging);
+	}
+	
+	/**
+	 * Indicates whether some other object is "equal to" this one.
+	 * 
+	 * @param o the reference object with which to compare.
+	 */
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof ViewCmd){
+			ViewCmd otherViewCmd = (ViewCmd)o;
+			return this.command.equals(otherViewCmd.command) && this.preView.equals(otherViewCmd.preView)
+					&& this.paging == otherViewCmd.paging;
+		}
+		else{
+			return false;
+		}
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\ViewCmd.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\ViewCmdTest.java
+	 */
+
+public class ViewCmdTest {
+	
+	final static int SECOND_PAGE = 2;
+	
+	Display display;
+	
+	ViewCmd viewCmd, sameViewCmd, anotherViewCmd;
+	TodayView todayView;
+	HomeView homeView;
+	
+	@Before
+	public void setUp() throws Exception {
+		display = Display.getInstance();
+		
+		viewCmd = new ViewCmd(COMMAND_TYPE.TODAY, SECOND_PAGE);
+		sameViewCmd = new ViewCmd(COMMAND_TYPE.TODAY, SECOND_PAGE);
+		anotherViewCmd = new ViewCmd(COMMAND_TYPE.HOME);
+		
+		todayView = new TodayView();
+		homeView = new HomeView();
+	}
+	
+	@Test
+	public void testExecute() {
+		viewCmd.execute();
+		assertEquals(todayView.getClass(), display.getView().getClass());
+		assertEquals("page", SECOND_PAGE, display.getPaging());
+	}
+
+	@Test
+	public void testUndo() {
+		display.set(homeView);
+		viewCmd.execute();
+		viewCmd.undo();
+		assertEquals("view", homeView.getClass(), display.getView().getClass());
+		assertEquals("page", SECOND_PAGE, display.getPaging());
+	}
+	
+	
+	@Test
+	public void testEquals() {
+		assertTrue("same cmd", viewCmd.equals(sameViewCmd));
+		assertFalse("different cmd", viewCmd.equals(anotherViewCmd));
+	}
+	
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\ViewCmdTest.java
+
+
+
+
+

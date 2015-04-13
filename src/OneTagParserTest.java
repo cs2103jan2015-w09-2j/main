@@ -127,8 +127,8 @@ public class OneTagParserTest {
 		assertFalse(addCmd_FLOATING.equals(testParser_add_FLOATING.toCmd()));
 		assertFalse(addCmd_TIMED.equals(testParser_add_TIMED.toCmd()));
 		assertFalse(addCmd_DEADLINE.equals(testParser_add_DEADLINE.toCmd()));
-		assertTrue(editCmd_SOMEDAY.equals(testParser_edit_SOMEDAY.toCmd()));
-//		assertFalse(editCmd_TASK_DESCRIPTION.equals(testParser_edit_TASK_DESCRIPTION.toCmd()));
+	//	assertTrue(editCmd_SOMEDAY.equals(testParser_edit_SOMEDAY.toCmd()));
+// 		assertFalse(editCmd_TASK_DESCRIPTION.equals(testParser_edit_TASK_DESCRIPTION.toCmd()));
 		assertFalse(editCmd_TD_SOMEDAY.equals(testParser_edit_TD_SOMEDAY.toCmd()));
 	//	assertFalse(editCmd_TIME_1.equals(testParser_edit_TIME_1.toCmd()));
 		assertFalse(editCmd_TD_TIME_2.equals(testParser_edit_TIME_2.toCmd()));
