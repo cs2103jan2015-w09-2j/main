@@ -1,12 +1,17 @@
 //@author A0112715R
 import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.text.BadLocationException;
 
 public class SomedayView extends SingleView implements View {
 	private StringBuilder output;
 	private int i = 0;
-	private int page =1;
+	private int page = 1;
 
+	/**
+	 * Updates the list of tasks 
+	 */
 	@Override
 	public void update() {
 		Data data = Data.getInstance();
@@ -14,80 +19,92 @@ public class SomedayView extends SingleView implements View {
 		setList(data.getSomeday());
 
 	}
-	protected ArrayList<Task> getTasksForPage() {
-		ArrayList<Task> tasksForPage = new ArrayList<Task>();
-		int startTaskNo = 0;
-		if (page != 1) {
-			startTaskNo = (page - 1) * 15;
+
+	/**
+	 * Supports paging. Sets the tasks to be shown for each "page"
+	 * 
+	 * @return List<Task>
+	 */
+	protected List<Task> getTasksForPage() {
+		if (page == 0) {
+			page = 1;
 		}
-		i = startTaskNo;
-		int endTaskNo = startTaskNo + 15;
-		if (getList().size() >= 15) {
+		List<Task> tasksForPage = new ArrayList<Task>();
+		int startTaskNo = 0;
+
+		if (getList().size() >= 5) {
+			startTaskNo = (page - 1) * 5;
+			int endTaskNo = startTaskNo + 5;
 			try {
-				for (Task task : getList().subList(startTaskNo, endTaskNo)) {
-					tasksForPage.add(task);
-				}
+				tasksForPage = getList().subList(startTaskNo, endTaskNo);
 			} catch (IndexOutOfBoundsException e) {
-				try{
-					for (Task task : getList().subList(startTaskNo,
-							getList().size())) {
-						tasksForPage.add(task);
-					}
-					}catch(IllegalArgumentException e1){
-						page=1;
-					}
+				try {
+					tasksForPage = getList().subList(startTaskNo,
+							getList().size());
+				} catch (IllegalArgumentException e1) {
+					page = 1;
+					getTasksForPage();
+				}
 			}
+
 		} else {
 			tasksForPage = getList();
 		}
+		i = startTaskNo;
 		return tasksForPage;
 	}
 
+	/**
+	 * Gets list of someday task and formats them
+	 */
 	protected void getSomeday() throws BadLocationException {
 		for (Task task : getTasksForPage()) {
 			i++;
 			String taskNo = "     " + i + ".   ";
 			String tasks = task.toString() + "\n";
-			if (task.getIsCompleted()) { //completed tasks are green and striked thru
 				appendTasks("#848484", taskNo, 1);
 				appendTasks("#FFFFFF", "!", 2);
-				appendTasks("#848484", "<strike>"+tasks+"</strike>", 5);
-			} else{
-			appendTasks("#848484", taskNo, 1);
-			appendTasks("#FFFFFF", "!", 2);
-			appendTasks("#0A1B2A", tasks, 5);
-			}	
-	}
-	}
-
-
-	public void appendTasks(String textColour, String s, int row)
-			throws BadLocationException {
-		if (row == 1) {
-			output.append("<tr width=\"100px\" >"
-					+ "<td valign=\"top\""
-					+ " width=\"40px\"><font size=\"4\" color=\""
-					+ textColour + "\"><p align=\"right\"><b>" + s
-					+ "</b></p></font></td>");
-		} else if (row == 2) {
-			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
-			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
-					+ textColour + "\"><p align=\"center\"><b>" + s
-					+ "</b></p></font></td>");
-		} else if (row == 5) {
-			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"4\" color=\""
-					+ textColour + "\"><p align=\"left\">" + s + "</p></font></td></tr>");
+				appendTasks("#0A1B2A", tasks, 3);
 		}
 	}
 
+	/**
+	 * Appends to Stringbuilder output
+	 * @param textColour,text,row
+	 */
+	public void appendTasks(String textColour, String text, int row)
+			throws BadLocationException {
+		if (row == 1) {
+			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
+					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
+					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
+		} else if (row == 2) {
+			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
+			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
+					+ textColour
+					+ "\"><p align=\"center\"><b>"
+					+ text
+					+ "</b></p></font></td>");
+		} else if (row == 3) {
+			output.append("<td valign=\"top\" colspan=\"420px\" width=\"420px\"><font face=\"Eras Demi ITC\" size=\"4\" color=\""
+					+ textColour
+					+ "\"><p align=\"left\">"
+					+ text
+					+ "</p></font></td></tr>");
+		}
+	}
+	
+	/**
+	 * Table created using Html code to append to JTextpane
+	 * 
+	 * @return String
+	 */
 	@Override
 	public String show() throws BadLocationException {
 		output = new StringBuilder();
 		Display display = Display.getInstance();
 		page = display.getPaging();
-		if(page ==0){
-			page=1;
-		}
+
 		output.append("<html>");
 
 		output.append("<table STYLE=\"margin-bottom: 15px;\" cellpadding=\"3px\" cellspacing=\"0px\" width=\"100%\">");
@@ -98,6 +115,16 @@ public class SomedayView extends SingleView implements View {
 		output.append("</html>");
 
 		return output.toString();
+	}
+
+	/**
+	 * This is used for Testing
+	 * 
+	 * @return ArrayList<Task>
+	 */
+	public ArrayList<Task> getSomedayList() {
+		ArrayList<Task> somedayList = data.getSomeday();
+		return somedayList;
 	}
 
 }

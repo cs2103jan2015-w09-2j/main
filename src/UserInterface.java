@@ -63,14 +63,12 @@ public class UserInterface {
 		}
 		return UI;
 	}
-//	
-//	public static void main (String [] args){
-//		executeInterface();
-//	}
 
+
+	/**
+	 * Executes the program
+	 */
 	public void executeInterface(){
-	SwingUtilities.invokeLater(new Runnable(){
-	public void run() {
 		control = Controller.getInstance();
 		UserInterface window = UserInterface.getInstance();
 		window.initialize();
@@ -85,7 +83,6 @@ public class UserInterface {
 		window.frame.setOpacity(0.99f);
 		window.frame.setVisible(true);
 	}
-	});}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -110,7 +107,9 @@ public class UserInterface {
 		processKeyPressed();
 	}
 
-	
+	/**
+	 * As frame is undecorated, frame is made movable here (user can move gui)
+	 */
 	private void makeFrameMovable() {
 		mouseDownCoords = null;
 		frame.addMouseListener(new MouseListener() {
@@ -151,6 +150,11 @@ public class UserInterface {
 
 	}
 
+	/**
+	 * The label on top is initialized
+	 * 
+	 * @return ArrayList<Task>
+	 */
 	private void initializeWelcomeLabel() {
 		welcomeLabel = new JLabel(" OneTag", SwingConstants.LEFT);
 		welcomeLabel.setFont(new Font("Elephant", Font.PLAIN, 16));
@@ -158,6 +162,9 @@ public class UserInterface {
 		topPanel.add(welcomeLabel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * The JtextPane(textbox) which receives user input is initialized
+	 */
 	private void initializeCmdFromUser() {
 		outerPanel = new JPanel();
 		frame.getContentPane().add(outerPanel, BorderLayout.CENTER);
@@ -166,7 +173,7 @@ public class UserInterface {
 		outerPanel.setBounds(0, 0, 612, 425);
 		outerPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, new Color(
 				30, 144, 255), new Color(0, 0, 0)));
-		colourRestrictedWords();
+		highlightKeywords();
 		commandFromUser = new JTextPane(doc);
 		commandFromUser.setToolTipText("Enter command here");
 		outerPanel.add(commandFromUser, BorderLayout.SOUTH);
@@ -179,6 +186,9 @@ public class UserInterface {
 
 	}
 
+	/**
+	 * The JtextPane(textbox) which shows the output is initialized
+	 */
 	private void initializeShowToUser() {
 		feedbackPanel = new JPanel();
 		outerPanel.add(feedbackPanel, BorderLayout.CENTER);
@@ -195,14 +205,21 @@ public class UserInterface {
 		showToUser.setBounds(20, 10, 573, 350);
 	}
 
+	/**
+	 * The JtextPane(textbox) which shows the feedback for each command execution is initialized
+	 */
 	private void initializeFeedback() {
 		feedback = new JTextPane();
 		feedback.setForeground(new Color(153, 0, 153));
 		feedback.setFont(new Font("Candara", Font.BOLD | Font.ITALIC, 6));
 		feedback.setEditable(false);
 		feedbackPanel.add(feedback, BorderLayout.SOUTH);
+		feedback.setContentType("text/html");
 	}
 
+	/**
+	 * Close button initialized
+	 */
 	private void initializeCloseButton() {
 		topPanel = new JPanel();
 		topPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, new Color(30,
@@ -229,6 +246,9 @@ public class UserInterface {
 		});
 	}
 
+	/**
+	 * Minimize button is initialized
+	 */
 	private void initializeMinimizeButton() {
 		minimiseButton = new JButton("-");
 		buttonPanel.add(minimiseButton, BorderLayout.WEST);
@@ -245,6 +265,10 @@ public class UserInterface {
 		});
 	}
 	
+	/**
+	 * If enter is pressed, process command, else
+	 * Stores previous commands entered by user, navigated using up and down keys
+	 */
 	public void processKeyPressed() {
 		inputBoxChangeColour();
 		commandFromUser.addKeyListener(new KeyAdapter() {
@@ -264,6 +288,9 @@ public class UserInterface {
 		});
 	}
 	
+	/**
+	 * Gets and sets command to be processed
+	 */
 	public void setCommand(){
 		String command = commandFromUser.getText();
 		commandsEntered.add(command);
@@ -271,6 +298,10 @@ public class UserInterface {
 		processCommand(command);
 	}
 
+	/**
+	 * Executes the command, any error is shown to user. Else,
+	 * The relevant view is shown
+	 */
 	private void processCommand(String command) {
 		showToUser.setContentType("text/html");
 		try{
@@ -289,6 +320,9 @@ public class UserInterface {
 		
 	}
 
+	/**
+	 * Navigating previous commands
+	 */
 	private void pressedUpKey() {
 		noOfCommandsEntered--;
 		try {
@@ -310,6 +344,7 @@ public class UserInterface {
 			noOfCommandsEntered = commandsEntered.size();
 		}
 	}
+
 
 	private void inputBoxChangeColour() {
 		commandFromUser.addMouseListener(new MouseListener() {
@@ -336,6 +371,9 @@ public class UserInterface {
 
 	}
 
+	/**
+	 * Get and show the feedback message to user
+	 */
 	private void showMessageToUser() {
 		StringBuilder htmlMessage = new StringBuilder();
 		feedback.setContentType("text/html");
@@ -350,7 +388,10 @@ public class UserInterface {
 		}
 	}
 
-	private void colourRestrictedWords() {
+	/**
+	 * Add colour to keywords such as by,from and to. For design purposes.
+	 */
+	private void highlightKeywords() {
 		StyleContext cont = StyleContext.getDefaultStyleContext();
 		final AttributeSet attr = cont.addAttribute(cont.getEmptySet(),
 				StyleConstants.Foreground, Color.RED);
