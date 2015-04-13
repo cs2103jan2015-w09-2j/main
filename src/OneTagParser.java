@@ -1,4 +1,4 @@
-
+//@author A0108436H
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import com.joestelmach.natty.Parser;
 import com.joestelmach.natty.DateGroup;
 
-//@author A0108436H
+
 public class OneTagParser {
 
 	private static final int NUM_ZERO = 0;
