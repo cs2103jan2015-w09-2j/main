@@ -440,16 +440,17 @@ public class OneTagParser {
 				}
 			}
 		String taskDescription = userChanges.trim();
-		if(taskDescription.endsWith("someday")) {
+		if(taskDescription.equals("someday")){
+			return new EditCmd(index,true);
+		} else if(taskDescription.endsWith("someday")) {
 			taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
 			taskDescription.trim();
 			return new EditCmd(index, taskDescription,true);
-		}else if(taskDescription == "someday"){
-			return new EditCmd(index,true);
 		}
 		return new EditCmd(index,taskDescription);
 		
 	}
+	
 	
 	/**This method returns the getParseDate
 	 * 
