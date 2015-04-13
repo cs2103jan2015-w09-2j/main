@@ -36,9 +36,10 @@ public class SearchView extends SingleView implements View {
 	public void update() {
 		setList(data.getSearched(searchedText));
 	}
-	
+
 	/**
 	 * Gets the information of each task
+	 * 
 	 * @param task
 	 */
 	private void getTaskInfo(Task task) {
@@ -53,8 +54,7 @@ public class SearchView extends SingleView implements View {
 
 		}
 	}
-	
-	
+
 	/**
 	 * Gets the search results
 	 */
@@ -76,15 +76,20 @@ public class SearchView extends SingleView implements View {
 
 	/**
 	 * Formats the deadline tasks
-	 * @param task,taskNo
+	 * 
+	 * @param task
+	 *            ,taskNo
 	 */
 	private void formatDeadlineTasks(Task task, String taskNo)
 			throws BadLocationException {
 		String tasks = taskDes;
 
-		String endDateTime = formatEndDateTime();
+		String endDateTime = formatEndDateTime(task);
 
-		if (task.isOverdue()) {
+		if (task.getIsCompleted()) {
+			formatCompletedTasks(taskNo, endDateTime, tasks);
+
+		} else if (task.isOverdue()) {
 			fomatOverdueTasks(taskNo, endDateTime, tasks);
 
 		} else {
@@ -93,7 +98,16 @@ public class SearchView extends SingleView implements View {
 
 	}
 
-	private String formatEndDateTime() {
+	private void formatCompletedTasks(String taskNo, String endDateTime,
+			String tasks) throws BadLocationException {
+		appendTasks("#848484", taskNo, 1);
+		appendTasks("#FFFFFF", "!", 2);
+		appendTasks("#00A300", endDateTime, 3);
+		appendTasks("#00A300", tasks, 4);
+
+	}
+
+	private String formatEndDateTime(Task task) {
 		String endDateToDisplay = endDate.format(formatter);
 		String endTimeToDisplay = endTime.format(formatTime);
 		endDateToDisplay = endDateToDisplay.replaceAll("\\[", "").replaceAll(
@@ -106,6 +120,13 @@ public class SearchView extends SingleView implements View {
 		String endDateTime = "<p align=\"left\">" + endDateToDisplay + "</p>"
 				+ "<p align=\"left\"><font color=\"#1F3D7A\">"
 				+ endTimeToDisplay + "</font></p>";
+
+		if (task.getIsCompleted()) {
+			endDateTime = "<p align=\"left\">" + endDateToDisplay + "</p>"
+					+ "<p align=\"left\"><font color=\"#00A300\">"
+					+ endTimeToDisplay + "</font></p>";
+		}
+
 		return endDateTime;
 	}
 
@@ -128,7 +149,9 @@ public class SearchView extends SingleView implements View {
 
 	/**
 	 * Formats the timed tasks and floating tasks
-	 * @param task,taskNo
+	 * 
+	 * @param task
+	 *            ,taskNo
 	 */
 	private void formatTimedAndFloatingTasks(Task task, String taskNo)
 			throws BadLocationException {
@@ -141,13 +164,15 @@ public class SearchView extends SingleView implements View {
 			dateToDisplay = formatStartEndDate();
 			timeToDisplay = formatStartEndTime();
 		}
-		
-		if (task.isOverdue()) {
-			String dateTime = dateToDisplay + timeToDisplay;
-			fomatOverdueTasks(taskNo,dateTime,tasks);
+
+		String dateTime = dateToDisplay + timeToDisplay;
+		if (task.getIsCompleted()) {
+			formatCompletedTasks(taskNo, dateTime, tasks);
+
+		} else if (task.isOverdue()) {
+			fomatOverdueTasks(taskNo, dateTime, tasks);
 		} else {
-			String dateTime = dateToDisplay + timeToDisplay;
-			formatTasks(taskNo,dateTime,tasks);
+			formatTasks(taskNo, dateTime, tasks);
 		}
 
 	}
@@ -188,14 +213,17 @@ public class SearchView extends SingleView implements View {
 
 	/**
 	 * Appends to Stringbuilder output
-	 * @param textColour,text,row
+	 * 
+	 * @param textColour
+	 *            ,text,row
 	 */
 	public void appendTasks(String textColour, String text, int row)
 			throws BadLocationException {
 		if (row == 1) {
 			output.append("<tr width=\"100px\" >" + "<td valign=\"top\""
 					+ " width=\"40px\"><font size=\"4\" color=\"" + textColour
-					+ "\"><p align=\"right\"><b>" + text + "</b></p></font></td>");
+					+ "\"><p align=\"right\"><b>" + text
+					+ "</b></p></font></td>");
 		} else if (row == 2) {
 			// output.append("<td width=\"1px\"><img src=\"alert.jpg\"></td>");
 			output.append("<td valign=\"top\" width=\"1px\"><font size=\"4.5\" color=\""
@@ -247,7 +275,7 @@ public class SearchView extends SingleView implements View {
 	 * @return ArrayList<Task>
 	 */
 	public ArrayList<Task> getSearchList() {
-		ArrayList<Task> searchList =data.getSearched(searchedText);
+		ArrayList<Task> searchList = data.getSearched(searchedText);
 		return searchList;
 	}
 
