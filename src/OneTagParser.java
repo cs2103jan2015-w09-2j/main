@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import com.joestelmach.natty.Parser;
 import com.joestelmach.natty.DateGroup;
 
-
 public class OneTagParser {
 
 	private static final int NUM_ZERO = 0;
@@ -89,7 +88,7 @@ public class OneTagParser {
 			default:
 				break;
 			}
-		}catch(IllegalArgumentException e){
+		}catch(IllegalArgumentException e) {
 			logger.log(Level.WARNING,ERROR_ADD_CMD, input);
 			throw new Error(INVALID_MSG);
 		}
@@ -205,7 +204,6 @@ public class OneTagParser {
 		    } catch(NullPointerException e) {
 		        return false;
 		    }
-		    // only got here if we didn't return false
 		    return true;
 	}
 	/**Parses the dateString and return an array with date & time information.
@@ -287,17 +285,13 @@ public class OneTagParser {
 				}
 			}else{
 				/*Sample Case: (edit <index> <string> by <string>)
-				 * 1. edit 1 pick up Johnson by tomorrow
+				* 1. edit 1 pick up Johnson by tomorrow
 				 * 2. edit 1 read CSLR by Thomas Cormen
 				 * 3. edit 1 read CSLR by Thomas Cormen someday 
 				 */
 				int posLastBy = userChanges.lastIndexOf(BY);
 				String taskDescription = userChanges.substring(0,posLastBy).trim();
 				String dateTimeString = userChanges.substring(posLastBy+2).trim();
-		/*		String[] splitBy = userChanges.split(BY);
-				String taskDescription = splitBy[0].trim();
-				String dateTimeString = splitBy[1].trim();*/
-				
 				/*Code: 
 				 * edit 1 read CLRS by Thomas Cormen from today to tomorrow.
 				 */
@@ -305,7 +299,7 @@ public class OneTagParser {
 					//Case 1 
 					dateTime = parseDate(dateTimeString);
 					return new EditCmd(index, taskDescription,dateTime,2);	
-				}else{
+				}else {
 					if(userChanges.endsWith(SOMEDAY)) {
 						//Case 3
 						taskDescription = userChanges.substring(0, userChanges.lastIndexOf(SOMEDAY));
@@ -408,12 +402,12 @@ public class OneTagParser {
 				}else {
 					String taskDescription = userChanges.substring(0,posLastTo).trim();
 					String dateTimeString = userChanges.substring(posLastTo + 2).trim();
-					if(isValidDateTime(dateTimeString)){
+					if(isValidDateTime(dateTimeString)) {
 						LocalDateTime endDateTime = parseDate(dateTimeString);
 						return new EditCmd(index,taskDescription,endDateTime,2);
 					}else{
 						taskDescription = userChanges;
-						if(taskDescription.endsWith(SOMEDAY)){
+						if(taskDescription.endsWith(SOMEDAY)) {
 							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 							taskDescription.trim();
 							return new EditCmd(index, taskDescription,true);
@@ -423,7 +417,7 @@ public class OneTagParser {
 				}
 			}
 		String taskDescription = userChanges.trim();
-		if(taskDescription.equals(SOMEDAY)){
+		if(taskDescription.equals(SOMEDAY)) {
 			return new EditCmd(index,true);
 		} else if(taskDescription.endsWith(SOMEDAY)) {
 			taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
@@ -478,7 +472,6 @@ public class OneTagParser {
 		}
 		return parseDate;
 	}
-
 	/**Returns the string of date and time for the "from DATE&TIME" component as "to DATE&TIME" has been parsed.
 	 * @param parseDate
 	 * @param posKeyword
@@ -510,8 +503,6 @@ public class OneTagParser {
 	 * @param message (type String)
 	 * @return integer value of the string
 	 */
-	
-	
 	private int numForView(String element) {
 		int num;
 		 try { 
