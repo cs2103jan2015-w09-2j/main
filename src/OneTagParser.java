@@ -100,7 +100,7 @@ public class OneTagParser {
 		case DONE:
 			return new ViewCmd(command);
 		case EXIT:
-			System.exit(0);
+			return new ExitCmd();
 		default:
 			throw new IllegalArgumentException();
 		}
