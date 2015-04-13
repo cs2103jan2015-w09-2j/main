@@ -4,44 +4,28 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.joestelmach.natty.Parser;
 import com.joestelmach.natty.DateGroup;
 
 //@author A0108436H
 public class OneTagParser {
-	private static final String BACKSLASH = "/";
-	//private static final String INVALID_EDIT_COMMAND = "INVALID ERROR COMMAND!";
-	//	private static final int DUMMY_VALUE = -1;
+
 	private static final int NUM_ZERO = 0;
 	private static final int POS_ZERO = 0;
-	//	private static final int SIZE_ONE = 1;
 	private static final int NUM_ONE = 1;
 	private static final int POS_ONE = 1;
-	private static final int POS_TWO = 2;
-	//	private static final int NUM_TWO = 2;
-	private static final int POS_THREE = 3;
-	private static final int SIZE_THREE = 3;
-	private static final int POS_FOUR = 4; 
-	private static final int SIZE_DATE_TIME = 5;
-	private static final int POS_FIVE = 5;
-
-	
 	//TO SPLIT A STRING
 	private static final int INPUT_SPLIT_THIRD = 2;
 	private static final int INPUT_SPLIT_FIRST = 0;
 	private static final int INPUT_SPLIT_SECOND = 1;	
 	//private static final int INPUT_SPLIT_FOURTH = 3;	
 
-	//String used in parser
-	private static final String COLON = ":";
 	private static final String SPACE = " ";
 
 	//Error Messages: WILL BE HANDLED BY CONTROLLER.
 	private static final String INVALID_MSG = "invalid";
-	private static final String INVALID_CMD_MSG = "command type string cannot be null!";
-	private static final String ERROR_EDIT = "Edit cannot be a null";
-	private static final String ERROR_MONTH = "Month cannot be a null value";
 	private static final String ERROR_ADD_CMD = "ERROR DETECTED IN PARSING FOR ADDING TASK";
 
 	//Commands
@@ -64,6 +48,7 @@ public class OneTagParser {
 	private static final String TO = "to";
 	private static final String BY = "by";
 	private String input;
+	OneTagLogger logger = OneTagLogger.getInstance();
 	
 	public OneTagParser(String input) {
 		this.input = input.trim();
@@ -88,25 +73,27 @@ public class OneTagParser {
 	 */
 	private Cmd parseOneWordCmd() {
 		COMMAND_TYPE command = getCommand(input);
-		//This can be re-factored further.
-		switch (command) {
-		case UNDO:
-			return new UndoCmd();
-		case HELP:
-		case HOME:
-		case UPCOMING:
-		case SOMEDAY :
-		case TODAY :
-		case DONE:
-			return new ViewCmd(command);
-		case EXIT:
-			return new ExitCmd();
-		default:
-			throw new IllegalArgumentException();
+		try{
+			switch (command) {
+				case UNDO:
+						return new UndoCmd();
+				case HELP:
+				case HOME:
+				case UPCOMING:
+				case SOMEDAY :
+				case TODAY :
+				case DONE:
+						return new ViewCmd(command);
+				case EXIT:
+						return new ExitCmd();
+			default:
+				break;
+			}
+		}catch(IllegalArgumentException e){
+			logger.log(Level.WARNING,ERROR_ADD_CMD, input);
+			throw new Error(INVALID_MSG);
 		}
-		
-		
-		
+		throw new Error(INVALID_MSG);
 	}
 	/**Separates the command from the message and sends the information for parsing.
 	 * 
@@ -195,15 +182,12 @@ public class OneTagParser {
 	private boolean isValidDateTime(String dateString) {
 		LocalDateTime testDate;
 		String[] words = dateString.split(SPACE);
-		int count = words.length; 
 		for(String element: words) {
 			testDate = parseDate(element.trim());
 			if(testDate != null) {
-				count--;
 				continue;
 			}else if(testDate == null) {
 				if(checkIfInteger(element)) {
-					count--; 
 					continue;
 				}else{
 				return false;
@@ -238,7 +222,6 @@ public class OneTagParser {
 			List<Date> dates = group.getDates();
 			Date thisDate = dates.get(POS_ZERO);
 			instant = Instant.ofEpochMilli(thisDate.getTime());
-			LocalDateTime test = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 			break;
 		}
 		if(instant == null) {
@@ -274,7 +257,7 @@ public class OneTagParser {
 		if(userChanges.contains(BY)) {
 			mainloop: 
 			if(userChanges.lastIndexOf(BY) == 0) {//by something.
-				if(userChanges.contains("to")||userChanges.contains("from")){
+				if(userChanges.contains(TO)||userChanges.contains(FROM)){
 					/*edit 1 by J.K. Rowling from <time> 
 					 * edit 1 by J.K. Rowling to <time>
 					 *edit 1 by J.K. Rowling from <date/time> to <date/time>
@@ -294,8 +277,8 @@ public class OneTagParser {
 					return new EditCmd(index, dateTime, 3);
 				}else{//by task description.
 					String taskDescription = userChanges;
-					if(taskDescription.endsWith("someday")) {
-						taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+					if(taskDescription.endsWith(SOMEDAY)) {
+						taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 						taskDescription.trim();
 						return new EditCmd(index, taskDescription,true);
 					}
@@ -323,9 +306,9 @@ public class OneTagParser {
 					dateTime = parseDate(dateTimeString);
 					return new EditCmd(index, taskDescription,dateTime,2);	
 				}else{
-					if(userChanges.endsWith("someday")) {
+					if(userChanges.endsWith(SOMEDAY)) {
 						//Case 3
-						taskDescription = userChanges.substring(0, userChanges.lastIndexOf("someday"));
+						taskDescription = userChanges.substring(0, userChanges.lastIndexOf(SOMEDAY));
 						taskDescription.trim();
 						return new EditCmd(index, taskDescription,true);
 					}else{
@@ -335,13 +318,14 @@ public class OneTagParser {
 					}
 				}	
 			}
-		}else if(userChanges.contains("from")) {
-			int posLastFrom = userChanges.lastIndexOf("from");
+		}else if(userChanges.contains(FROM)) {
+			int posLastFrom = userChanges.lastIndexOf(FROM);
 			if(posLastFrom == 0){
 				String from = userChanges.substring(0,4);
 				String dateTimeString = userChanges.substring(4).trim();
-				if(dateTimeString.contains("to")) {
-					int posLastTo = dateTimeString.lastIndexOf("to");
+				if(dateTimeString.contains(TO)) {
+					System.out.println("Test code");
+					int posLastTo = dateTimeString.lastIndexOf(TO);
 					String stringFrom = dateTimeString.substring(0,posLastTo-1).trim();
 					String stringTo = dateTimeString.substring(posLastTo + 2).trim(); 
 					if(isValidDateTime(stringFrom) && isValidDateTime(stringTo)){
@@ -350,8 +334,8 @@ public class OneTagParser {
 						return new EditCmd(index,startDateTime,endDateTime);
 					}else if(!isValidDateTime(stringFrom) && !isValidDateTime(stringTo)) {
 						String taskDescription = userChanges; 
-						if(taskDescription.endsWith("someday")) {
-							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+						if(taskDescription.endsWith(SOMEDAY)) {
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 							taskDescription.trim();
 							return new EditCmd(index, taskDescription,true);
 						}
@@ -367,8 +351,8 @@ public class OneTagParser {
 						return new EditCmd(index,startDateTime,1);
 					}else{
 						String taskDescription = userChanges; 
-						if(taskDescription.endsWith("someday")) {
-							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+						if(taskDescription.endsWith(SOMEDAY)) {
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 							taskDescription.trim();
 							return new EditCmd(index, taskDescription,true);
 						}
@@ -376,10 +360,10 @@ public class OneTagParser {
 					}
 				}
 			}else {
-					String taskDescription = userChanges.substring(0,userChanges.lastIndexOf("from")).trim();
-					String dateTimeString = userChanges.substring(userChanges.lastIndexOf("from")+4).trim();
-					if(dateTimeString.contains("to")) {
-						int lastPosTo = dateTimeString.lastIndexOf("to");
+					String taskDescription = userChanges.substring(0,userChanges.lastIndexOf(FROM)).trim();
+					String dateTimeString = userChanges.substring(userChanges.lastIndexOf(FROM)+4).trim();
+					if(dateTimeString.contains(TO)) {
+						int lastPosTo = dateTimeString.lastIndexOf(TO);
 						String startDateTimeString = dateTimeString.substring(0,lastPosTo-1).trim();
 						String endDateTimeString = dateTimeString.substring(lastPosTo + 2).trim();
 						if(isValidDateTime(startDateTimeString) && isValidDateTime(endDateTimeString)) {
@@ -388,7 +372,7 @@ public class OneTagParser {
 							return new EditCmd(index,taskDescription,startDateTime,endDateTime);
 						}else if(!isValidDateTime(startDateTimeString) && isValidDateTime(endDateTimeString)) {
 							LocalDateTime endDateTime = parseDate(dateTimeString);
-							taskDescription = userChanges.substring(0,userChanges.lastIndexOf("to")).trim();
+							taskDescription = userChanges.substring(0,userChanges.lastIndexOf(TO)).trim();
 							return new EditCmd(index, taskDescription,endDateTime,2);
 						}
 					}
@@ -397,26 +381,25 @@ public class OneTagParser {
 						return new  EditCmd(index,taskDescription,startDateTime,1);
 					}else{
 						taskDescription = userChanges; 
-						if(taskDescription.endsWith("someday")) {
-							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+						if(taskDescription.endsWith(SOMEDAY)) {
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 							taskDescription.trim();
 							return new EditCmd(index, taskDescription,true);
 						}
 						return new EditCmd(index,userChanges);
 					}
 				}
-			}else if(userChanges.contains("to")) {
-				int posLastTo = userChanges.lastIndexOf("to");
+			}else if(userChanges.contains(TO)) {
+				int posLastTo = userChanges.lastIndexOf(TO);
 				if(posLastTo == 0) {
-					String to = userChanges.substring(0,1);
 					String dateTimeString = userChanges.substring(2).trim();
 					if(isValidDateTime(dateTimeString)) {
 						LocalDateTime endDateTime = parseDate(dateTimeString);
 						return new EditCmd(index,endDateTime,2);
 					}else {
 						String taskDescription = userChanges; 
-						if(taskDescription.endsWith("someday")) {
-							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+						if(taskDescription.endsWith(SOMEDAY)) {
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 							taskDescription.trim();
 							return new EditCmd(index, taskDescription,true);
 						}
@@ -430,8 +413,8 @@ public class OneTagParser {
 						return new EditCmd(index,taskDescription,endDateTime,2);
 					}else{
 						taskDescription = userChanges;
-						if(taskDescription.endsWith("someday")){
-							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+						if(taskDescription.endsWith(SOMEDAY)){
+							taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 							taskDescription.trim();
 							return new EditCmd(index, taskDescription,true);
 						}
@@ -440,17 +423,16 @@ public class OneTagParser {
 				}
 			}
 		String taskDescription = userChanges.trim();
-		if(taskDescription.equals("someday")){
+		if(taskDescription.equals(SOMEDAY)){
 			return new EditCmd(index,true);
-		} else if(taskDescription.endsWith("someday")) {
-			taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf("someday"));
+		} else if(taskDescription.endsWith(SOMEDAY)) {
+			taskDescription = taskDescription.substring(0, taskDescription.lastIndexOf(SOMEDAY));
 			taskDescription.trim();
 			return new EditCmd(index, taskDescription,true);
 		}
 		return new EditCmd(index,taskDescription);
 		
 	}
-	
 	
 	/**This method returns the getParseDate
 	 * 
@@ -480,22 +462,6 @@ public class OneTagParser {
 			taskDescription += word[i] + SPACE;			
 		}
 		return taskDescription;
-	}
-
-	/**Converts the Date into a String.
-	 * @param groups
-	 * @return testDate
-	 */	
-	private String getDateTimeinString(List<DateGroup> groups) {
-		String testDate = null;
-		Date parseResult = null;
-		for(DateGroup group:groups) {
-			List<Date> dates = group.getDates();
-			parseResult = dates.get(POS_ZERO);
-			testDate = dates.get(POS_ZERO).toString();
-			break;
-		}
-		return testDate;
 	}
 
 	/**This method returns the date and time string which can be parsed by the parser.
@@ -587,13 +553,6 @@ public class OneTagParser {
 	private boolean isDeadlineTask(String testWord) {
 		return (testWord.equalsIgnoreCase(BY));
 	}
-	/**Returns true if testWord is "BY","AT","ON","IN" for deadlined task.
-	 * 
-	 * @param testWord
-	 */
-	private boolean isTaskTime(String testWord) {
-		return (testWord.equalsIgnoreCase(BY)|| testWord.equalsIgnoreCase(FROM)|| testWord.equalsIgnoreCase(TO));
-	}
 	/**This method determines if the task is floating or not
 	 * 
 	 * @param isDeadlineTask
@@ -647,6 +606,9 @@ public class OneTagParser {
 	}
 }
 
+
+//@author A0108436H-unused
+//These codes were not used as we found a faster way to do things.
 /*
 /** This method converts the MONTH_TYPE to the position they occupy in the year (Jan == 1, Dec == 12)
  * 
