@@ -3,6 +3,129 @@
 
 
 	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\Cmd.java
+	 */
+
+	// the task and the category
+	protected static final String ADD_TASK_MESSAGE = "Added <font color=\"#CC3300\"><i>%1$s</i></font> to <font color=\"#CC3300\"><i>%2$s</i></font>";
+
+	// task
+	protected static final String UNDO_ADD_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>\"Add %1$s\"</i></font>";
+
+//----------------------------------edit messages-------------------------------------------------------------------
+	// new task desc
+	protected static final String EDIT_DES_MESSAGE = "Task description is changed to <font color=\"#CC3300\"><i>%1$s</i></font>";
+	
+	// current task name, start time, first - new time, second- previous time
+	protected static final String EDIT_START_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will begin on <font color=\"#CC3300\"><i>%2$s</i></font> instead of <font color=\"#CC3300\"><i>%3$s</i></font>";
+
+	// task, new end time
+	protected static final String EDIT_DES_END_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>. It is moved to <font color=\"#CC3300\"><i>%3$s</i></font>";
+
+	// prev des, new des, start time, end time
+	protected static final String EDIT_DES_AND_DATETIME_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%4$s</i></p></font>";
+
+	// prev des, current task category
+	protected static final String EDIT_TASK_TO_SOMEDAY_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> moved from <font color=\"#CC3300\"><i>%2$s</i></font> to Someday";
+
+	// prev des, new des, new start time
+	protected static final String EDIT_DES_START_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>. It will start <font color=\"#CC3300\"><i>%3$s</i></font>";
+
+	// prev des, new time
+	protected static final String EDIT_END_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will end at <font color=\"#CC3300\"><i>%2$s</i></font>";
+
+	// prev des, new start time, new end time
+	protected static final String EDIT_TIME_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i></font> will start at <font color=\"#CC3300\"><i>%2$s</i></font> and will end at <font color=\"#CC3300\"><i>%2$s</i></font>";
+
+	// prev des, new des, prev category
+	protected static final String EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It is moved from<font color=\"#CC3300\"><i>%3$s</i></font> to Someday.</p>";
+
+	//----------------------------------edit messages-------------------------------------------------------------------
+	
+
+	//----------------------------------undo edit messages-------------------------------------------------------------------
+		// new task desc
+		protected static final String UNDO_EDIT_DES_MESSAGE = "Undo action: Task description is changed to <font color=\"#CC3300\"><i>%1$s</i></font>";
+		
+		// current task name, start time, first - new time, second- previous time
+		protected static final String UNDO_EDIT_TIME_MESSAGE= "<font color=\"#CC3300\">Undo action: <i>%1$s</i></font> will begin on <font color=\"#CC3300\"><i>%2$s</i></font> instead of <font color=\"#CC3300\"><i>%3$s</i></font>";
+
+		// prev des, new start date
+		protected static final String UNDO_EDIT_START_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>%1$s</i></font> will begin at <font color=\"#CC3300\"><i>%2$s</i></font>";
+
+		// task, new end time
+		protected static final String UNDO_EDIT_END_MESSAGE = "<font color=\"#CC3300\">Undo action: <i>%1$s</i></font> is moved to <font color=\"#CC3300\"><i>%2$s</i></font>";
+
+		// prev des, new des, end time
+		protected static final String UNDO_EDIT_DES_AND_DEADLINE_MESSAGE = "<p align=\"center\">Undo action: <font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It is moved to <font color=\"#CC3300\"><i>%3$s</i></font></p>";
+
+		// prev des, new des, start time, end time
+		protected static final String UNDO_EDIT_DES_AND_TIME_MESSAGE = "<p align=\"center\">Undo action: <font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%4$s</i></p></font>";
+
+		// prev des, new des, start date, end date
+		protected static final String UNDO_EDIT_DES_AND_DATE_MESSAGE = "<p align=\"center\">Undo action: <font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%3$s</i></font></p>";
+
+		// prev des, new des, start datetime, end datetime
+		protected static final String UNDO_EDIT_DES_AND_DATETIME_MESSAGE = "<p align=\"center\">Undo action: <font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font> and will end at <font color=\"#CC3300\"><i>%4$s</i></font></p>";
+
+		// prev des, current task category
+		protected static final String UNDO_EDIT_TASK_TO_SOMEDAY_MESSAGE = "<font color=\"#CC3300\">Undo action: <i>%1$s</i></font> moved from Someday to <font color=\"#CC3300\"><i>%2$s</i></font>";
+
+		// prev des, new des, new start date
+		protected static final String UNDO_EDIT_DES_START_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\">Undo action: <i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will begin at <font color=\"#CC3300\"><i>%3$s</i></font>";
+
+		// prev des, new des, new end date
+		protected static final String UNDO_EDIT_DES_END_MESSAGE = "<p align=\"center\"><font color=\"#CC3300\">Undo action: <i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It will end at <font color=\"#CC3300\"><i>%3$s</i></font>";
+
+
+		// prev des, new des, new category
+		protected static final String UNDO_EDIT_TASK_DEC_AND_TO_SOMEDAY_MESSAGE = "<p align=\"center\">Undo action: <font color=\"#CC3300\"><i>%1$s</i></font> is changed to <font color=\"#CC3300\"><i>%2$s</i></font>.</p><p align=\"center\">It is moved from Someday to <font color=\"#CC3300\"><i>%3$s</i></font>.</p>";
+
+		//---------------------------------- undo edit messages-------------------------------------------------------------------
+	
+	// des
+	protected static final String DELETE_TASK_MESSAGE = "Deleted <font color=\"#CC3300\"><i>%1$s</i></font>";
+
+	// des
+	protected static final String UNDO_DELETE_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>\"Delete %1$s\"</i></font>";
+
+	// des
+	protected static final String COMPLETE_TASK_MESSAGE = "<font color=\"#CC3300\"><i>%1$s</i> is marked as completed!";
+
+	// des
+	protected static final String UNDO_COMPLETED_MESSAGE = "Undo action: <font color=\"#CC3300\"><i>\"Mark %1$s as completed\"</i></font>";
+
+	// keyword
+	protected static final String SEARCH_KEYWORD_IS_EMPTY = "No task contains the keyword <font color=\"#CC3300\"><i>%1$s</i></font>";
+	protected static final String UNDO_EMPTY_MESSAGE = "No action to undo";
+	protected static final String INVALID_MESSAGE = "<p align=\"center\">You have entered an invalid command.</p><p align=\"center\">Enter a valid command or <font color=\"#CC3300\"><i>Help</i></font> for assistance.</p>";
+
+	protected static final String EMPTY_DES_MESSAGE = "Please enter a task description to add.";
+
+	// storage file specified by user
+	protected static final String NO_FILE_FOUND_MESSAGE = "The storage file <font color=\"#CC3300\"><i>%1$s</i></font> is not available";
+
+	private static final String TODAY_TASK = "Today";
+	private static final String UPCOMING_TASK = "Upcoming";
+	private static final String SOMEDAY_TASK = "Someday";
+
+	protected static final String MESSAGE_SAVE_CONFIG_NOT_FOUND = "config.json file not found";
+	protected static final String MESSAGE_SAVE_NEW_USER_DIRECTORY = "Directory has been set to <font color=\"#CC3300\"><i>%1$s</i></font> ";
+	protected static final String MESSAGE_UNDO_SAVE = "Undo save: old file location restored";
+	protected static final String MESSAGE_STORAGE_FILE_NOT_FOUND = "OneTag.json is not found!\r\n";
+	protected static final String NAME_CLASS_STORAGE = "storage";
+	protected static final String MESSAGE_FILE_ACCESS_NOT_ALLOWED = "Error with oneTag.json file access";
+	protected Data data = Data.getInstance();
+	protected Display display = Display.getInstance();
+	protected OneTagLogger logger = OneTagLogger.getInstance();
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\Cmd.java
+
+
+
+
+
+	/**
 	 * origin: C:\Users\Ganga\workspace\main\src\CompletedView.java
 	 */
 
@@ -385,16 +508,6 @@ public class HomeView implements View {
 	 * 
 	 * @param task
 	 */
-	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
-
-
-
-
-
-	/**
-	 * origin: C:\Users\Ganga\workspace\main\src\HomeView.java
-	 */
-
 	private void getTaskInfo(Task task) {
 		taskDes = task.getDescription();
 		if (!task.isFloatingTask()) {
@@ -783,66 +896,67 @@ public class HomeView implements View {
 				i++;
 				String taskNo = "     " + i + ".   ";
 				String tasks = task.toString() + "\n";
-				boolean isCommandExecuted = (display.getCommand().equals(
-						COMMAND_TYPE.DELETE)
-						|| display.getCommand().equals(COMMAND_TYPE.ADD)
-						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
-						.getCommand().equals(COMMAND_TYPE.EDIT));
-				
-				if (isCommandExecuted && i == display.getViewIndex()) {
-					formatTaskAccdCommandSomeday(taskNo, tasks);
-				} else {
+//				boolean isCommandExecuted = (display.getCommand().equals(
+//						COMMAND_TYPE.DELETE)
+//						|| display.getCommand().equals(COMMAND_TYPE.ADD)
+//						|| display.getCommand().equals(COMMAND_TYPE.DONE) || display
+//						.getCommand().equals(COMMAND_TYPE.EDIT));
+//				
+//				if (isCommandExecuted && i == display.getViewIndex()) {
+//					formatTaskAccdCommandSomeday(taskNo, tasks);
+//				} else {
 				formatSomedayTasks(taskNo, tasks);
-				}
-			}
+			//	}
+			//}
+		}
 		}
 	}
-
-	private void formatTaskAccdCommandSomeday(String taskNo, String tasks) throws BadLocationException {
-		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
-			formatDeletedTaskSomeday(taskNo,tasks);
-		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
-			formatAddTaskSomeday(taskNo,tasks);
-		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
-			formatDoneTaskSomeday(taskNo,tasks);
-		}
-		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
-			formatEditTaskSomeday(taskNo,tasks);
-		}		
-	}
-
-	private void formatDeletedTaskSomeday(String taskNo, String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#848484", "<strike>" + tasks + "</strike>", 3);
-		
-	}
-	
-	private void formatEditTaskSomeday(String taskNo, String tasks) {
-
-		
-	}
-
-	private void formatDoneTaskSomeday(String taskNo, String tasks) throws BadLocationException {
-
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#00A300", tasks , 3);
-	}
-
-	private void formatAddTaskSomeday(String taskNo,String tasks) throws BadLocationException {
-		appendTasks("#848484", taskNo, 1);
-		appendTasks("#FF0000", "", 2);
-		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 3);
-		
-	}
-
-	/**
-	 * Format tasks under someday
-	 * 
-	 * @param taskNo
-	 *            , tasks
-	 */
+//
+//	private void formatTaskAccdCommandSomeday(String taskNo, String tasks) throws BadLocationException {
+//		if(display.getCommand().equals(COMMAND_TYPE.DELETE)){
+//			formatDeletedTaskSomeday(taskNo,tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.ADD)){
+//			formatAddTaskSomeday(taskNo,tasks);
+//		}else if(display.getCommand().equals(COMMAND_TYPE.DONE)){
+//			formatDoneTaskSomeday(taskNo,tasks);
+//		}
+//		else if(display.getCommand().equals(COMMAND_TYPE.EDIT)){
+//			formatEditTaskSomeday(taskNo,tasks);
+//		}		
+//	}
+//
+//	private void formatDeletedTaskSomeday(String taskNo, String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#848484", "<strike>" + tasks + "</strike>", 3);
+//		
+//	}
+//	
+//	private void formatEditTaskSomeday(String taskNo, String tasks) {
+//
+//		
+//	}
+//
+//	private void formatDoneTaskSomeday(String taskNo, String tasks) throws BadLocationException {
+//
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#00A300", tasks , 3);
+//	}
+//
+//	private void formatAddTaskSomeday(String taskNo,String tasks) throws BadLocationException {
+//		appendTasks("#848484", taskNo, 1);
+//		appendTasks("#FF0000", "", 2);
+//		appendTasks("#B8005C", "<font size=\"4\">"+tasks+"</font>" , 3);
+//		
+//	}
+//
+//	/**
+//	 * Format tasks under someday
+//	 * 
+//	 * @param taskNo
+//	 *            , tasks
+//	 */
 	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
 
 
@@ -955,6 +1069,24 @@ public class HomeView implements View {
 }
 
 	// End of segment: C:\Users\Ganga\workspace\main\src\HomeView.java
+
+
+
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\OneTag.java
+	 */
+
+public class OneTag {
+	public static void main(String[] args){
+		UserInterface UI = UserInterface.getInstance();
+		UI.executeInterface();
+	}
+
+}
+
+	// End of segment: C:\Users\Ganga\workspace\main\src\OneTag.java
 
 
 
@@ -3046,19 +3178,15 @@ public class UserInterface {
 			}
 
 		});
+	// End of segment: C:\Users\Ganga\workspace\main\src\UserInterface.java
 
-		frame.addMouseMotionListener(new MouseMotionListener() {
-			public void mouseMoved(MouseEvent e) {
-			}
 
-			public void mouseDragged(MouseEvent e) {
-				Point currCoords = e.getLocationOnScreen();
-				frame.setLocation(currCoords.x - mouseDownCoords.x,
-						currCoords.y - mouseDownCoords.y);
-			}
-		});
 
-	}
+
+
+	/**
+	 * origin: C:\Users\Ganga\workspace\main\src\UserInterface.java
+	 */
 
 	/**
 	 * The label on top is initialized
@@ -3304,90 +3432,6 @@ public class UserInterface {
 
 	/**
 	 * Add colour to keywords such as by,from and to. For design purposes.
-	 */
-	private void highlightKeywords() {
-		StyleContext style = StyleContext.getDefaultStyleContext();
-		final AttributeSet attrRed = style.addAttribute(style.getEmptySet(),
-				StyleConstants.Foreground, Color.RED);
-		
-		final AttributeSet attrBlack = style.addAttribute(style.getEmptySet(),
-				StyleConstants.Foreground, Color.BLACK);
-		
-		doc = new DefaultStyledDocument() {
-			public void insertString(int offset, String str, AttributeSet a)
-					throws BadLocationException {
-				super.insertString(offset, str, a);
-
-				String text = getText(0, getLength());
-				int before = findLastNonWordChar(text, offset);
-				if (before < 0)
-					before = 0;
-				int after = findFirstNonWordChar(text, offset + str.length());
-				int wordL = before;
-				int wordR = before;
-
-				while (wordR <= after) {
-					if (wordR == after
-							|| String.valueOf(text.charAt(wordR))
-									.matches("\\W")) {
-						if (text.substring(wordL, wordR)
-								.toLowerCase()
-								.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
-							setCharacterAttributes(wordL, wordR - wordL, attrRed,
-									false);
-						} else {
-							setCharacterAttributes(wordL, wordR - wordL,
-									attrBlack, false);
-						}
-						wordL = wordR;
-					}
-					wordR++;
-				}
-			}
-
-			public void remove(int offs, int len) throws BadLocationException {
-				super.remove(offs, len);
-
-				String text = getText(0, getLength());
-				int before = findLastNonWordChar(text, offs);
-				if (before < 0)
-					before = 0;
-				int after = findFirstNonWordChar(text, offs);
-
-				if (text.substring(before, after).toLowerCase()
-						.matches("(\\W)*(^(add)|^(delete)|^(exit)|^(edit)|^(search)|^(undo)|from(?!.*from)|to|by|^(today|upcoming|someday)|^(help)|^(done)|^(save)|^(home))")) {
-					setCharacterAttributes(before, after - before, attrRed, false);
-				} else {
-					setCharacterAttributes(before, after - before, attrBlack,
-							false);
-				}
-			}
-
-		};
-	}
-
-	private int findLastNonWordChar(String text, int index) {
-		while (--index >= 0) {
-			if (String.valueOf(text.charAt(index)).matches("\\W")) 
-			{
-				break;
-			}
-		}
-		return index;
-	}
-
-	private int findFirstNonWordChar(String text, int index) {
-		while (index < text.length()) {
-			if (String.valueOf(text.charAt(index)).matches("\\W")) {
-				break;
-			}
-			index++;
-		}
-		return index;
-	}
-
-}
-
 	// End of segment: C:\Users\Ganga\workspace\main\src\UserInterface.java
 
 
